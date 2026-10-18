@@ -1,159 +1,167 @@
-# CIS Palo Alto Security Auditor (prototype/teaching project)
+# CIS Palo Alto Security Auditor
 
-**Dự án:** Xây dựng hệ thống tự động đánh giá và khắc phục cấu hình bảo mật tường lửa Palo Alto dựa trên tiêu chuẩn CIS Benchmark.  
-**Benchmark:** CIS Palo Alto Firewall 11 Benchmark v1.2.0 (đối chiếu các mục 1.2.3, 1.3.1–1.3.9, 1.4.1, 1.6.2, 3.1, 3.2).  
-**Lab:** PAN-OS 11.2.5, PA-CIS-01 `10.0.10.11`, PA-CIS-02 `10.0.10.12`, Linux CIS Bastion `10.0.10.20` (Tailscale VPN).  
-**Mức độ hoàn thành:** 14 control chọn lọc, scan multi-device, HTML & JSON, dry-run, remediation giới hạn 4 control, test fixture. **Không khẳng định bao phủ toàn bộ CIS Benchmark, không coi phiên bản này là công cụ production.**
+**Hệ thống tự động đánh giá và hỗ trợ khắc phục cấu hình bảo mật tường lửa Palo Alto theo tiêu chuẩn CIS Benchmark**
 
-## 1. Tại sao cần chuyển sang thư mục mới?
+> **Automated Security Configuration Assessment & Controlled Remediation for Palo Alto Firewalls**  
+> Đồ án tập trung xây dựng quy trình **Audit → Phân tích tuân thủ → Remediation có kiểm soát → Re-Audit**, giúp giảm thao tác kiểm tra thủ công, chuẩn hóa bằng chứng và theo dõi sự thay đổi mức độ tuân thủ cấu hình bảo mật.
 
-Project này độc lập, không sửa cấu hình `/root/cis-paloalto` hiện có. Triển khai trong `/root/cis-paloalto-v2` để bạn quay lại bản đang chạy tốt bất cứ lúc nào.
+| Thông tin | Chi tiết |
+|---|---|
+| **Lĩnh vực** | Network Security · Security Automation · Configuration Compliance |
+| **Chuẩn đánh giá** | CIS Palo Alto Firewall 11 Benchmark v1.2.0 |
+| **Nền tảng kiểm thử** | Palo Alto VM-Series · PAN-OS 11.2.5 · CMC Cloud |
+| **Ngôn ngữ / giao diện** | Python 3 · PAN-OS XML API · Rich CLI |
+| **Đầu ra** | Báo cáo HTML, JSON; lịch sử kết quả đánh giá |
+| **Trạng thái** | Prototype đang được kiểm thử trong môi trường lab, **không phải công cụ production** |
 
-## 2. Cài đặt trên Linux Bastion bằng VS Code Remote-SSH
+## 1. Tổng quan đề tài
 
-Sao chép file ZIP từ laptop lên Bastion bằng VS Code Explorer hoặc:
+Trong môi trường doanh nghiệp, tường lửa thường được triển khai với nhiều thiết lập quản trị, xác thực, dịch vụ hệ thống và High Availability (HA). Việc đối chiếu từng mục cấu hình với chuẩn bảo mật bằng phương pháp thủ công tốn thời gian, khó thực hiện lặp lại và dễ thiếu nhất quán giữa các thiết bị.
 
-```powershell
-scp "C:\Users\<TEN_WINDOWS>\Downloads\CIS-PaloAlto-Auditor.zip" root@100.91.45.26:/root/
+Dự án **CIS Palo Alto Security Auditor** xây dựng một hệ thống tự động thu thập thông tin cấu hình và trạng thái vận hành từ tường lửa Palo Alto, đối chiếu với các khuyến nghị được lựa chọn trong **CIS Palo Alto Firewall 11 Benchmark v1.2.0**, đồng thời hỗ trợ lập kế hoạch và thực hiện **một số thao tác khắc phục có kiểm soát**.
+
+Mục tiêu của hệ thống không chỉ là đưa ra kết quả `PASS` hoặc `FAIL`, mà còn xác định trường hợp thiếu bằng chứng (`REVIEW`), ghi nhận nguyên nhân, tạo báo cáo có thể kiểm tra lại và hỗ trợ quy trình **Before / After** sau khi khắc phục.
+
+## 2. Mục tiêu và đóng góp
+
+- **Tự động hóa đánh giá cấu hình:** Thu thập *Running Configuration* qua PAN-OS XML API, kết hợp trạng thái vận hành khi tiêu chí yêu cầu.
+- **Chuẩn hóa quy tắc CIS:** Phân tách dữ liệu cấu hình, logic đánh giá và metadata/chính sách trong các module Python và YAML.
+- **Đánh giá dựa trên bằng chứng:** Phân biệt `PASS`, `FAIL`, `REVIEW` và `ERROR`; không tự cho `PASS` khi XML thiếu dữ liệu hoặc điều kiện chưa được kiểm chứng.
+- **Hỗ trợ nhiều thiết bị:** Thực hiện đánh giá độc lập trên các firewall trong cùng phiên chạy.
+- **Khắc phục có kiểm soát:** Giới hạn các control được phép thay đổi; hỗ trợ xem trước kế hoạch (*dry-run*), xác nhận rõ ràng, kiểm tra Candidate Configuration, Commit và đánh giá lại.
+- **Báo cáo và truy vết:** Xuất JSON có cấu trúc và HTML trực quan; lưu thời điểm quét, giá trị thực tế, kết quả và lý do đánh giá.
+
+## 3. Kiến trúc hệ thống
+
+```mermaid
+flowchart TD
+    U["Quản trị viên / VS Code / CLI"] --> APP["Security Auditor · Python"]
+    APP --> API["PAN-OS XML API · HTTPS"]
+    API --> PA1["PA-CIS-01"]
+    API --> PA2["PA-CIS-02"]
+    APP --> COL["Thu thập Running Config & HA State"]
+    COL --> ENGINE["CIS Rules Engine"]
+    RULES["CIS Control Definitions · YAML"] --> ENGINE
+    SITE["Site Policy · NTP Allowlist"] --> ENGINE
+    ENGINE --> RESULT["PASS · FAIL · REVIEW · ERROR"]
+    RESULT --> REPORT["HTML / JSON Reports"]
+    RESULT --> PLAN["Remediation Plan · Allowlist"]
+    PLAN --> GUARD["Dry-run · Approval · Candidate Guard"]
+    GUARD --> CHANGE["PAN-OS Config API · Commit"]
+    CHANGE --> VERIFY["Post-remediation Re-Audit"]
+    VERIFY --> REPORT
 ```
 
-Trên terminal Bastion:
+**Nguyên tắc thiết kế:** Chức năng **Audit** mặc định chỉ đọc, tách biệt với chức năng **Remediation**. Mọi thay đổi cấu hình phải được yêu cầu một cách tường minh và có bước xác nhận trước khi áp dụng.
 
-```bash
-cd /root
-mkdir -p cis-paloalto-v2
-unzip -o CIS-PaloAlto-Auditor.zip -d cis-paloalto-v2
-cd /root/cis-paloalto-v2/CIS-PaloAlto-Auditor
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-dev.txt
-python -m pytest -q
-```
+## 4. Các chức năng chính
 
-Nếu đã có `.venv` cũ tại `/root/cis-paloalto/.venv`, cũng **không copy** nó sang. Mỗi thư mục tự tạo venv riêng.
+| Nhóm chức năng | Mô tả |
+|---|---|
+| **Configuration Collection** | Xác thực PAN-OS XML API, đọc Running Configuration và thông tin HA vận hành cần thiết |
+| **CIS Compliance Assessment** | Đối chiếu cấu hình với điều kiện CIS, trả kết quả kèm giá trị và bằng chứng |
+| **Multi-Firewall Audit** | Quét PA-CIS-01 và PA-CIS-02, báo cáo theo từng thiết bị |
+| **Compliance Metrics** | Thống kê số control `PASS / FAIL / REVIEW / ERROR`, tỷ lệ đánh giá được và điểm tuân thủ trong phạm vi đã đánh giá |
+| **Controlled Remediation** | Dry-run, allowlist, xác nhận người vận hành, kiểm tra thay đổi chờ và xác minh sau Commit |
+| **Reporting** | Sinh báo cáo JSON/HTML có timestamp, phục vụ đối chiếu trước và sau khắc phục |
+| **Offline Testing** | Bộ XML fixture và unit tests để kiểm tra logic mà không cần kết nối firewall thật |
 
-## 3. Chạy thử OFFLINE (không cần firewall/mật khẩu)
+### Phạm vi CIS Controls hiện được triển khai
 
-```bash
-python main.py --offline-fixture tests/fixtures/synthetic_running.xml
-```
+| Nhóm | Control | Nội dung đánh giá |
+|---|---|---|
+| Management Interface | `1.2.3` | Vô hiệu hóa HTTP và Telnet trên Management Interface |
+| Password Security | `1.3.1–1.3.9` | Bật Password Complexity; chiều dài, thành phần và chính sách mật khẩu |
+| Authentication | `1.4.1` | Management Idle Timeout không vượt quá 10 phút |
+| Device Services | `1.6.2` | NTP chính và NTP dự phòng phù hợp chính sách tổ chức |
+| High Availability | `3.1` | Trạng thái HA peer, configuration/session synchronization |
+| High Availability | `3.2` | Link Monitoring hoặc Path Monitoring |
 
-Bạn sẽ thấy giao diện Rich và 2 file `reports/<host>_<timestamp>.json/.html`. Mẫu XML là **giả lập**, tuyệt đối không dùng đầu ra này làm bằng chứng firewall thật.
+Tổng cộng có **14 control được lựa chọn để triển khai**. Đây là phạm vi nghiên cứu và thử nghiệm của nhóm, **không đại diện cho toàn bộ CIS Benchmark**. Một số trường hợp cần đối chiếu thêm GUI/CLI, trạng thái vận hành hoặc chính sách tổ chức trước khi kết luận.
 
-## 4. Chạy audit thật: PA01 và PA02
+### Phạm vi Automated Remediation
 
-```bash
-python main.py --host 10.0.10.11 --lab-insecure
-python main.py --hosts 10.0.10.11 10.0.10.12 --lab-insecure
-```
+Phiên bản hiện tại chỉ cho phép lên kế hoạch và khắc phục theo **allowlist gồm 4 control**: `1.2.3`, `1.3.1`, `1.3.2`, `1.4.1`. Các thay đổi về HA và NTP không được tự động áp dụng trong phiên bản này. Tính năng remediation yêu cầu quyền quản trị phù hợp và chưa được xác nhận đầy đủ trên mọi trường hợp vận hành thực tế.
 
-Mỗi thiết bị yêu cầu mật khẩu tài khoản `cis-auditor` (nếu cùng tên). Không dùng command argument chứa mật khẩu. `--lab-insecure` chỉ sử dụng trong lab vì bỏ xác thực chứng chỉ HTTPS.
+## 5. Môi trường triển khai và kết quả thực nghiệm
 
-Nếu có CA bundle tin cậy:
+Hệ thống được thử nghiệm trong môi trường **CMC Cloud**, gồm hai firewall **Palo Alto VM-Series** chạy **PAN-OS 11.2.5** và một **Linux Bastion** làm máy điều khiển. Môi trường truy cập quản trị được tổ chức qua mạng riêng và Tailscale VPN. Các IP quản trị và thông tin xác thực không được công bố trong README.
 
-```bash
-python main.py --hosts 10.0.10.11 10.0.10.12 --ca-bundle /path/to/ca.pem
-```
+**Kết quả đã ghi nhận:**
 
-### Lưu ý về kết quả
-- PASS = thu thập dữ liệu và có đủ căn cứ đáp ứng điều kiện.
-- FAIL = thu thập dữ liệu và xác định điều kiện không đáp ứng.
-- REVIEW = cần xác minh giá trị mặc định, trạng thái thực tế hoặc chính sách site.
-- ERROR = lỗi code/thu thập hoặc cấu trúc XML; không được tính là không tuân thủ.
-- Compliance = PASS/(PASS+FAIL), với `evaluation coverage = (PASS+FAIL)/total`. Không gọi là tỷ lệ toàn bộ Benchmark.
-- Không lưu toàn bộ running config hoặc API key. JSON chứa giá trị được chọn và lý do, HTML hiển thị dữ liệu được escape.
+- Chạy thành công **12/12 unit tests** với dữ liệu XML giả lập.
+- Kết nối và xác thực PAN-OS XML API trên **cả hai firewall**.
+- Thu thập Running Configuration và dữ liệu HA; thực hiện quét **14 control/thiết bị**.
+- Tạo báo cáo **HTML và JSON** cho từng lần quét.
+- Ghi nhận đúng các trường hợp `PASS`, `FAIL`, `REVIEW`; một số kiểm tra HA chưa đạt vì lab tại thời điểm đó chưa bật HA.
 
-### 1.6.2 NTP
-`rules/site_policy.yaml` đặt danh sách `approved_ntp_servers:` gồm đúng nguồn NTP mà nhóm/chủ quản phê duyệt. Nếu để trống, khi có hai nguồn khác nhau sẽ trả `REVIEW` (không biết nguồn có phù hợp). Việc truy cập được NTP và đồng bộ thời gian vẫn phải kiểm chứng riêng.
+**Snapshot ban đầu — 18/10/2026 (trước khi hoàn thiện HA và remediation):**
 
-### 3.1 & 3.2 HA
-3.1 yêu cầu trạng thái HA operation, gồm local/peer + state sync; chỉ Running Config là chưa đủ. Nếu API không trả đúng schema hoặc không đủ chứng cứ, sẽ `REVIEW`. Kết quả này cần đối chiếu CLI:
+| Thiết bị | PASS | FAIL | REVIEW | Đánh giá được | Compliance* |
+|---|---:|---:|---:|---:|---:|
+| PA-CIS-01 | 3 | 4 | 7 | 7/14 | 42,86% |
+| PA-CIS-02 | 2 | 4 | 8 | 6/14 | 33,33% |
+
+*Compliance = PASS / (PASS + FAIL). Các control `REVIEW`/`ERROR` không được tính là đạt. Đây là **đường cơ sở (baseline)** của các control đã được đánh giá, không phải mức tuân thủ tổng thể CIS Benchmark hay kết quả cuối cùng của hệ thống.*
+
+## 6. Quy trình hoạt động
+
+1. **Collect:** Kết nối firewall và thu thập các trường cấu hình/trạng thái cần thiết.
+2. **Evaluate:** Đối chiếu từng control với ngưỡng và điều kiện từ CIS và chính sách site.
+3. **Report:** Tổng hợp kết quả, nguyên nhân và xuất HTML/JSON.
+4. **Plan:** Với control được hỗ trợ, xây dựng kế hoạch remediation và hiển thị thay đổi dự kiến.
+5. **Apply & Verify:** Chỉ khi được người vận hành cho phép, thực hiện thay đổi có kiểm soát, Commit và quét lại để xác định kết quả sau khắc phục.
+
+## 7. Cấu trúc repository
 
 ```text
-show high-availability state
-show high-availability all
+CIS-PaloAlto-Auditor/
+├── main.py                    # CLI, Rich dashboard, multi-device workflow
+├── src/
+│   ├── panos_client.py        # PAN-OS XML API client
+│   ├── cis_scanner.py         # CIS checks & evidence handling
+│   ├── remediation.py         # Controlled remediation logic
+│   └── reporting.py           # JSON & HTML generation
+├── rules/
+│   ├── cis_controls.yaml      # Control metadata and thresholds
+│   └── site_policy.yaml       # Organization-specific policy
+├── templates/
+│   └── report.html            # HTML report template
+├── tests/                     # Pytest & synthetic XML fixtures
+├── docs/                      # Architecture, deployment, demo, test plan
+├── evidence/                  # Local evidence (excluded from Git)
+└── reports/                   # Local scan reports (excluded from Git)
 ```
 
-3.2 dựa trên phần `deviceconfig/high-availability/group/monitoring`, kiểm tra link/path monitoring có nhóm/target. Nếu phiên bản PAN-OS dùng schema khác, cần đối chiếu GUI và cập nhật XPath; công cụ cố tình bảo thủ.
+## 8. Tài liệu dự án
 
-## 5. Remediation an toàn - mặc định KHÔNG thay đổi firewall
+Để README tập trung vào **giới thiệu và kết quả đồ án**, phần lệnh cài đặt, cấu hình và demo được tách riêng:
 
-**Chỉ** hỗ trợ whitelist:
-- `1.2.3`: Disable HTTP/Telnet.
-- `1.3.1`: Enable password complexity.
-- `1.3.2`: Set length 12, yêu cầu complexity đã bật trước.
-- `1.4.1`: Set idle timeout 10.
+- [Triển khai và vận hành](docs/DEPLOYMENT.md)
+- [Kiến trúc chi tiết](docs/ARCHITECTURE.md)
+- [Kịch bản demo](docs/DEMO_KICH_BAN.md)
+- [Kế hoạch kiểm thử](docs/TEST_PLAN.csv)
+- [Danh sách kiểm tra thủ công](docs/MANUAL_CHECKLIST.csv)
 
-Ví dụ kiểm tra kế hoạch **DRY RUN** (dùng read-only account):
+## 9. Giới hạn và định hướng phát triển
 
-```bash
-python main.py --host 10.0.10.11 --remediate 1.4.1 --lab-insecure
-```
+Dự án là **prototype phục vụ nghiên cứu, học tập và kiểm chứng trên lab**. Các giới hạn quan trọng gồm: mới bao phủ 14 control, một số thiết lập mặc định hoặc dữ liệu HA cần xác minh thêm, chưa có rollback tự động khi Commit thất bại và chưa kiểm thử đầy đủ mọi trạng thái PAN-OS/HA. Chương trình không thay thế quy trình change management hoặc phê duyệt thay đổi cấu hình của doanh nghiệp.
 
-Chỉ khi được phép thay đổi cấu hình, biết tác động của HA và có tài khoản có quyền write+commit:
+Các hướng mở rộng tiếp theo:
 
-```bash
-python main.py --host 10.0.10.11 --username <ADMIN_DUOC_PHEP> \
-  --remediate 1.4.1 --apply --confirm-host 10.0.10.11 \
-  --ack-ha --lab-insecure
-```
+- Chuẩn hóa thêm CIS Controls và mở rộng hệ thống rules dạng YAML.
+- Tăng bộ test dữ liệu thật đã khử thông tin nhạy cảm và kiểm tra khác biệt giữa các phiên bản PAN-OS.
+- Hoàn thiện HA Active/Passive và xác minh đồng bộ, Link/Path Monitoring.
+- So sánh lịch sử tuân thủ theo thời gian; bổ sung báo cáo tổng hợp nhiều thiết bị.
+- Bổ sung quản lý phân quyền, ghi nhật ký hành động và quy trình phê duyệt remediation.
 
-Tool sẽ hỏi mật khẩu, trình bày thay đổi, yêu cầu nhập `APPLY 10.0.10.11 1.4.1`, so sánh Candidate và Running để tránh áp dụng khi đã có thay đổi chờ, chỉ gửi các phần tử trong allowlist, gọi `commit partial` theo tài khoản admin, đợi commit job FIN/OK, scan lại và ghi before/after HTML+JSON.
+## 10. Tài liệu tham khảo
 
-**Quan trọng:**
-1. Tài khoản `cis-auditor` chỉ đọc sẽ không có quyền remediation. Cần dùng user riêng có quyền ghi, phân quyền tối thiểu.
-2. Không có rollback tự động; nếu Commit fail phải kiểm tra/huỷ thay đổi candidate thủ công dưới sự giám sát của quản trị viên.
-3. Không bật HTTP/Telnet để chứng minh lỗi khi đang quản trị qua mạng thật.
-4. Trong HA, thay đổi Management có thể cần áp dụng trên từng firewall (nhiều cài đặt Management không sync). Dùng GUI/CLI của cả PA01 và PA02 xác minh.
-5. Không chạy áp dụng 2 firewall đồng thời. Không áp dụng khi Candidate đã có thay đổi người khác.
-6. `--apply` chỉ thực hiện trong phiên Terminal tương tác và yêu cầu `--ack-ha`.
+- **CIS Palo Alto Firewall 11 Benchmark v1.2.0** — tài liệu chuẩn sử dụng trong phạm vi nghiên cứu; không phân phối lại bản PDF Benchmark trong repository.
+- [Palo Alto Networks — PAN-OS XML API](https://docs.paloaltonetworks.com/ngfw/api/pan-os-xml-api-request-types-and-actions)
+- [Palo Alto Networks — XML API Commit](https://docs.paloaltonetworks.com/ngfw/api/pan-os-xml-api-request-types-and-actions/commit)
+- [Palo Alto Networks — HA Synchronization](https://docs.paloaltonetworks.com/ngfw/administration/high-availability/reference-ha-synchronization)
 
-## 6. Kết quả báo cáo
+---
 
-```
-reports/
-  10_0_10_11_YYYYMMDD_HHMMSS_microseconds.json
-  10_0_10_11_YYYYMMDD_HHMMSS_microseconds.html
-```
-
-Mở file HTML bằng VS Code Live Preview hoặc tải về laptop qua VS Code Explorer. File này tự chứa CSS, mở trực tiếp bằng trình duyệt, không cần webserver.
-
-## 7. Cấu trúc source
-
-```
-main.py                CLI & Rich dashboard, multi-device
-src/panos_client.py    Auth / show / get / op / set / partial commit / job polling
-src/cis_scanner.py     14 CIS checks, conservative evidence handling
-src/remediation.py     XML-only allowlisted safe plans, Candidate guard
-src/reporting.py       JSON & standalone HTML
-rules/cis_controls.yaml  Definition metadata & thresholds
-rules/site_policy.yaml   Approved NTP site-specific whitelist
-templates/report.html     Responsive dark HTML report
-docs/                 Architecture, demo runbook, manual matrix, test plan
-reports/              Local results (Git-ignored)
-docs/MANUAL_CHECKLIST.csv    Manual checks (not automated)
-tests/                synthetic XML fixtures and pytest
-```
-
-## 8. Đề xuất thực hiện trong đêm (khoảng 3–5 giờ, tùy lab)
-
-| Ưu tiên | Công việc | Điều kiện chốt |
-|---|---|---|
-| P0 | Chạy unit tests offline | Toàn bộ `pytest` PASS |
-| P0 | Quét PA01, PA02 | Có báo cáo HTML/JSON thật từ cả hai IP |
-| P0 | Xác minh GUI các CIS 1.2.3, 1.3.1, 1.3.2, 1.4.1 | Giá trị GUI đúng với XML |
-| P0 | Test remediation 1.4.1 | DRY RUN -> APPLY -> Commit FIN/OK -> PASS |
-| P1 | NTP whitelist / HA kiểm chứng | Manual review các mục chưa đủ evidence |
-| P1 | Screenshot + video demo 5 phút | Đủ ảnh trước/sau và hạn chế |
-| P2 | Cleanup/secrets/GitHub | Không có API keys/Running XML công khai |
-
-## 9. Giới hạn cần đưa vào báo cáo
-
-Công cụ đã được test tự động trên mẫu XML giả lập, **chưa thể xác thực hoạt động trên firewall thật từ môi trường tạo ZIP**. Người thực hiện phải đối chiếu trên PA-CIS-01/02. Không đồng nhất mô phỏng với kiểm thử sản phẩm thật. 14 kiểm tra là phạm vi chọn lọc so với toàn bộ CIS Benchmark. Một số điều kiện phụ thuộc giá trị mặc định/phiên bản PAN-OS hoặc trạng thái HA vận hành sẽ trả REVIEW. Không có transaction rollback phân tán HA.
-
-## 10. Tài liệu kỹ thuật tham khảo
-
-- CIS Palo Alto Firewall 11 Benchmark v1.2.0 — bản Benchmark hợp pháp có sẵn trong hồ sơ dự án.
-- PAN-OS XML API: https://docs.paloaltonetworks.com/ngfw/api/pan-os-xml-api-request-types-and-actions
-- PAN-OS Commit: https://docs.paloaltonetworks.com/ngfw/api/pan-os-xml-api-request-types-and-actions/commit
-- Palo Alto HA Sync Reference: https://docs.paloaltonetworks.com/ngfw/administration/high-availability/reference-ha-synchronization
+**CIS Palo Alto Security Auditor** — *Automate assessment. Control remediation. Verify compliance.*
