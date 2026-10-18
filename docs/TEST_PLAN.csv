@@ -1,0 +1,15 @@
+Test ID,Scope,Preconditions,Action,Expected,Proof,Verified live
+T01,Local,Python venv + dependencies,pytest -q,12 unit tests PASS,Terminal screenshot,No
+T02,Live API,443 allowed read-only cis-auditor,Run PA01 audit,XML keygen and running config success,CLI screenshot plus report,No
+T03,Live API,443 allowed PA02 same credentials,Run PA02 audit,XML keygen and running config success,CLI screenshot plus report,No
+T04,CIS 1.4.1,Idle Timeout = 20 committed,Audit,FAIL Actual=20,CLI+GUI before plus JSON,No
+T05,CIS 1.4.1,Idle Timeout = 20 committed,Remediation DRY RUN,No modification or commit,Preview screenshot,No
+T06,CIS 1.4.1,Authorized write admin + backup + Candidate clean,Remediation APPLY,Commit FIN OK and post-audit PASS,Commit job screenshot JSON HTML,No
+T07,CIS 1.3.1,Password Complexity disabled,Audit,FAIL,GUI XML report,No
+T08,CIS 1.3.2,Password Complexity enabled and length=8,Audit,FAIL,GUI XML report,No
+T09,CIS 1.2.3,HTTP and Telnet off by default,Audit,PASS with documented default,GUI XML report,No
+T10,CIS 1.6.2,Two distinct site-approved NTP values,Audit,PASS configuration-only when whitelist matches,GUI HTML+policy YAML,No
+T11,CIS 3.1,HA fully synchronized and operational API available,Audit,PASS only with running-sync synchronized and state-sync Complete,show high-availability state + report,No
+T12,CIS 3.2,Link/Path Monitoring configured,Audit,PASS if explicit matching structure otherwise REVIEW,GUI plus report,No
+T13,Safety,Existing Candidate differs from Running,Attempt APPLY,Refuse before any change,Safety screenshot,No
+T14,Safety,Read-only cis-auditor,Attempt APPLY,Write denied; no commit,Error screenshot,No

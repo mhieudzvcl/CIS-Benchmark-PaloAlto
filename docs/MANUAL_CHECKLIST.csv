@@ -1,0 +1,6 @@
+CIS ID,Type,Description,Where to review,Target,Status,Evidence file,Notes
+1.2.1,Manual,Permitted IP Addresses on Management,Device > Setup > Interfaces > Management,PA-CIS-01,REVIEW,,Restrict to necessary admin Bastion addresses
+1.2.1,Manual,Permitted IP Addresses on Management,Device > Setup > Interfaces > Management,PA-CIS-02,REVIEW,,Restrict to necessary admin Bastion addresses
+1.2.2,Manual,Permitted IPs on management profiles,Network > Network Profiles > Interface Mgmt,PA-CIS-01,REVIEW,,Check all profiles exposing SSH HTTPS or SNMP
+1.2.4,Manual,Disable HTTP and Telnet on all mgmt profiles,Network > Network Profiles > Interface Mgmt,PA-CIS-01,REVIEW,,Evaluate every management profile
+1.2.5,Manual,Valid HTTPS admin certificate,Device > Setup > Management > SSL/TLS Service Profile,PA-CIS-01,REVIEW,,Self-signed cert in lab is not evidence of trusted certificate

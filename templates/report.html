@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIS Security Assessment | {{ report.host }}</title>
+<style>
+:root{--bg:#091121;--card:#111f33;--line:#263852;--fg:#edf3fc;--sub:#9aafc8;--cyan:#6fdef6;--good:#47d7a4;--bad:#ff7c87;--warn:#ffcc7a}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--fg);font-family:Inter,Segoe UI,Arial,sans-serif;margin:0;line-height:1.5}
+main{max-width:1140px;padding:36px 22px 72px;margin:auto}header{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:25px}
+.eyebrow{text-transform:uppercase;letter-spacing:.17em;color:var(--cyan);font-size:12px;font-weight:700}h1{margin:6px 0;font-size:29px;letter-spacing:-.05em}h2{font-size:17px;margin:0 0 18px}p,.small{color:var(--sub);font-size:13px}.meta{font-size:13px;color:var(--sub)}
+.pill{display:inline-block;border:1px solid var(--line);padding:7px 12px;border-radius:99px;color:var(--cyan);font-size:12px;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:22px 0}.metric{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:19px 16px}.metric strong{font-size:27px;display:block}.metric span{font-size:12px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em}
+.score{display:flex;align-items:center;justify-content:space-between;gap:18px;background:linear-gradient(115deg,#132a46,#0b182a);padding:23px;border:1px solid var(--line);border-radius:16px;margin:20px 0 28px}.score b{font-size:33px;color:var(--cyan)}
+section{margin-top:28px}.tablewrap{border:1px solid var(--line);border-radius:14px;overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px;min-width:830px}th{background:#14243b;text-transform:uppercase;letter-spacing:.06em;font-size:11px;color:var(--sub);text-align:left;padding:14px}td{padding:16px 14px;border-top:1px solid var(--line);vertical-align:top}tr:nth-child(even){background:#0f1b2e}
+.code{font-family:Consolas,ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}td:nth-child(2){min-width:210px}.badge{font-weight:800;font-size:11px;letter-spacing:.04em;padding:6px 10px;border-radius:7px;display:inline-block}.PASS{background:#143b32;color:var(--good)}.FAIL,.ERROR{background:#432332;color:var(--bad)}.REVIEW,.NA{background:#463822;color:var(--warn)}
+footer{border-top:1px solid var(--line);padding-top:20px;margin-top:30px;color:var(--sub);font-size:12px}
+@media(max-width:760px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.score{flex-direction:column;align-items:flex-start}}
+@media print{:root{--bg:white;--fg:#182334;--card:#f4f7fb;--line:#dce3ee;--sub:#475569;--cyan:#146b95}main{padding:10px}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}header,.score{break-inside:avoid}table{font-size:10px}td,th{padding:8px}}
+</style>
+</head>
+<body><main>
+<header><div><div class="eyebrow">Security Configuration Assessment</div><h1>CIS Palo Alto Auditor</h1><div class="meta">{{ report.benchmark }} &nbsp;·&nbsp; {{ report.timestamp_utc }}</div></div><div><span class="pill">{{ report.mode }}</span><div class="meta" style="margin-top:9px">Target: {{ report.host }}<br>Account: {{ report.username }}</div></div></header>
+<div class="cards">
+ <div class="metric"><strong>{{ report.summary.total }}</strong><span>Selected controls</span></div>
+ <div class="metric"><strong style="color:var(--good)">{{ report.summary.pass }}</strong><span>Pass</span></div>
+ <div class="metric"><strong style="color:var(--bad)">{{ report.summary.fail }}</strong><span>Fail</span></div>
+ <div class="metric"><strong style="color:var(--warn)">{{ report.summary.review }}</strong><span>Review</span></div>
+ <div class="metric"><strong>{{ report.summary.error }}</strong><span>Error</span></div>
+</div>
+<div class="score"><div><div class="eyebrow">Assessed controls only</div><h2 style="margin:6px 0">Compliance score</h2><p style="margin:4px 0">PASS / (PASS + FAIL). REVIEW / ERROR excluded, shown separately.</p></div><b>{% if report.summary.compliance_percent is not none %}{{ '%.2f'|format(report.summary.compliance_percent) }}%{% else %}N/A{% endif %}</b><div>Evaluation coverage <b style="font-size:22px">{{ '%.2f'|format(report.summary.coverage_percent) }}%</b></div></div>
+<section><h2>Control-by-control findings</h2><div class="tablewrap"><table><thead><tr><th>CIS ID</th><th>Security recommendation</th><th>Expected</th><th>Observed</th><th>Result</th><th>Evidence / reason</th></tr></thead><tbody>
+{% for row in report.results %}<tr><td class="code">{{ row.id }}</td><td><strong>{{ row.name }}</strong></td><td>{{ row.expected }}</td><td class="code">{{ row.actual if row.actual is not none else 'Not found' }}</td><td><span class="badge {{ row.status|replace('/', '') }}">{{ row.status }}</span></td><td><div class="code">{{ row.evidence }}</div><div class="small">{{ row.reason }}</div></td></tr>{% endfor %}
+</tbody></table></div></section>
+<section><h2>Run details</h2><p>This report was generated automatically. It does not include full running configuration, passwords or API keys. Validate REVIEW items manually and confirm findings against the device GUI/CLI.</p>
+{% if report.metadata %}<div class="code">{% for k,v in report.metadata.items() %}{{ k }}: {{ v }}
+{% endfor %}</div>{% endif %}</section>
+<footer><strong>Scope limitation:</strong> {{ report.scope_note }} &nbsp;·&nbsp; Generated by CIS Palo Alto Security Auditor.</footer>
+</main></body></html>

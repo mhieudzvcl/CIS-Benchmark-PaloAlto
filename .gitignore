@@ -1,0 +1,42 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+*.xml.secret
+configs/*
+!configs/.gitkeep
+reports/*
+!reports/.gitkeep
+evidence/*
+!evidence/.gitkeep
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Credentials and private certificates
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Firewall configurations and assessment evidence
+configs/
+reports/*
+!reports/.gitkeep
+evidence/*
+!evidence/.gitkeep
+
+# Temporary files
+*.log
+*.bak

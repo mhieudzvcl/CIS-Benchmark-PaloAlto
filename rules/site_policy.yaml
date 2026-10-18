@@ -1,0 +1,3 @@
+# Danh sách nguồn NTP được đơn vị chấp thuận. Thay đúng theo thực tế trước khi cho PASS CIS 1.6.2.
+# Nếu để trống, có 2 nguồn riêng biệt sẽ trả REVIEW để xác minh mức độ appropriate.
+approved_ntp_servers: []
