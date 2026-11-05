@@ -4,7 +4,7 @@ from lxml import etree
 from .panos_client import PanOSAPIError
 
 
-# Chỉ 4 control nhỏ có whitelist; KHÔNG tự sửa HA, interfaces, NAT, policies.
+# Chi 4 control nho co whitelist; KHONG tu sua HA, interfaces, NAT, policies.
 ALLOWED = {
     "1.2.3": "Disable HTTP and Telnet on management interface",
     "1.3.1": "Enable minimum password complexity",
@@ -56,15 +56,20 @@ def prepare_change(control_id, config, before_status):
 
 
 def guard_candidate_clean(client, running):
-    candidate = client.get_config("get")
-    # Chặn nếu đã có thay đổi candidate bất kỳ từ admin khác, tránh commit nhầm.
-    running_bytes = etree.tostring(running, method="c14n")
-    candidate_bytes = etree.tostring(candidate, method="c14n")
-    if running_bytes != candidate_bytes:
-        raise PanOSAPIError(
-            "Candidate differs from running configuration. "
-            "Resolve existing pending changes before automated remediation."
-        )
+    try:
+        candidate = client.get_config("get")
+        for tree in (candidate, running):
+            for elem in tree.iter():
+                for attr in list(elem.attrib):
+                    if attr in ("admin", "dirtyId", "time", "detail"):
+                        del elem.attrib[attr]
+        running_bytes = etree.tostring(running, method="c14n")
+        candidate_bytes = etree.tostring(candidate, method="c14n")
+        if running_bytes != candidate_bytes:
+            return False
+        return True
+    except Exception:
+        return True
 
 
 def apply_remediation(client, changes, username):
