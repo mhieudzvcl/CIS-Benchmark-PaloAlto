@@ -189,7 +189,7 @@ def main():
             if client is None:
                 raise RuntimeError("Live authenticated client required")
             console.print(" [yellow]⚠ Verify HA synchronization, backup and maintenance window.[/yellow]")
-            confirm = input(f"Type 'APPLY {host} {args.remediate}' to modify firewall: ").strip()
+            confirm = input(f"Type 'APPLY {host} {args.remediate}' to modify firewall: ").strip().strip("'\"")
             if confirm != f"APPLY {host} {args.remediate}":
                 console.print(" [yellow]Cancelled - no changes made.[/yellow]")
                 continue
