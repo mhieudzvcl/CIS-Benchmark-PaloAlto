@@ -12,10 +12,18 @@
     <password-history-count>24</password-history-count>
   </password-complexity></mgt-config>
   <devices><entry name="localhost.localdomain"><deviceconfig>
-    <system><service><disable-http>yes</disable-http><disable-telnet>yes</disable-telnet></service>
-    <ntp-servers><primary-ntp-server><ntp-server-address>ntp1.example.test</ntp-server-address></primary-ntp-server><secondary-ntp-server><ntp-server-address>ntp2.example.test</ntp-server-address></secondary-ntp-server></ntp-servers>
+    <system>
+      <login-banner>Authorized Access Only</login-banner>
+      <permitted-ip><entry name="10.0.10.0/24"/></permitted-ip>
+      <service><disable-http>yes</disable-http><disable-telnet>yes</disable-telnet></service>
+      <ntp-servers><primary-ntp-server><ntp-server-address>ntp1.example.test</ntp-server-address></primary-ntp-server><secondary-ntp-server><ntp-server-address>ntp2.example.test</ntp-server-address></secondary-ntp-server></ntp-servers>
+      <update-server-identity-check>yes</update-server-identity-check>
     </system>
-    <setting><management><idle-timeout>10</idle-timeout></management></setting>
+    <setting><management>
+      <idle-timeout>10</idle-timeout>
+      <failed-attempts>3</failed-attempts>
+      <lockout-time>30</lockout-time>
+    </management></setting>
     <high-availability><group><state-synchronization><enabled>yes</enabled></state-synchronization>
     <configuration-synchronization><enabled>yes</enabled></configuration-synchronization>
     <monitoring><link-monitoring><enabled>yes</enabled><link-group><entry name="critical"><interface><member>ethernet1/1</member></interface></entry></link-group></link-monitoring>

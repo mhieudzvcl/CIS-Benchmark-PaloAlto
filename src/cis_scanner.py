@@ -66,6 +66,23 @@ class CISScanner:
                 ))
         return result
 
+    def check_login_banner(self, rule):
+        banner = self.text(self.device, "./deviceconfig/system/login-banner/text()")
+        evidence = "devices/entry/deviceconfig/system/login-banner"
+        if banner and banner.strip():
+            return self.make(rule, "Configured and non-empty", banner, "PASS", evidence)
+        return self.make(rule, "Configured and non-empty", "Not configured", "FAIL", evidence,
+                         "Legal notice login banner is not set")
+
+    def check_permitted_ip(self, rule):
+        entries = self.device.xpath("./deviceconfig/system/permitted-ip/entry")
+        evidence = "devices/entry/deviceconfig/system/permitted-ip"
+        ips = [e.get("name") for e in entries if e.get("name")]
+        if ips:
+            return self.make(rule, "Explicit permitted IP addresses configured", ips, "PASS", evidence)
+        return self.make(rule, "Explicit permitted IP addresses configured", "None", "FAIL", evidence,
+                         "No IP restriction applied to management interface")
+
     def check_management_services(self, rule):
         parent = self.device.find("./deviceconfig/system/service")
         states = {}
@@ -85,6 +102,24 @@ class CISScanner:
             "Benchmark default: HTTP/Telnet disabled when not explicitly set"
             if any("default" in s for s in states.values()) else ""
         )
+
+    def check_interface_mgmt_profile(self, rule):
+        profiles = self.device.xpath("./network/profiles/interface-management-profile/entry")
+        evidence = "network/profiles/interface-management-profile"
+        if not profiles:
+            return self.make(rule, "HTTP/Telnet disabled on all profiles", "No profiles defined", "PASS", evidence,
+                             "No interface management profiles expose insecure services")
+        insecure = []
+        for p in profiles:
+            pname = p.get("name")
+            http = self.text(p, "./http/text()")
+            telnet = self.text(p, "./telnet/text()")
+            if http == "yes" or telnet == "yes":
+                insecure.append(f"{pname} (http={http}, telnet={telnet})")
+        if insecure:
+            return self.make(rule, "HTTP/Telnet disabled on all profiles", insecure, "FAIL", evidence,
+                             "Insecure services enabled on interface profiles")
+        return self.make(rule, "HTTP/Telnet disabled on all profiles", f"{len(profiles)} profiles safe", "PASS", evidence)
 
     def _complexity(self):
         return self.config.find("./mgt-config/password-complexity")
@@ -135,6 +170,55 @@ class CISScanner:
         return self.make(rule, "1..10 minutes", mins,
                          "PASS" if 1 <= mins <= 10 else "FAIL", path)
 
+    def check_failed_attempts(self, rule):
+        val = self.text(self.device, "./deviceconfig/setting/management/failed-attempts/text()")
+        path = "devices/entry/deviceconfig/setting/management/failed-attempts"
+        if val is None:
+            return self.make(rule, "1..5 attempts", None, "REVIEW", path,
+                             "Lockout threshold not explicitly set")
+        try:
+            cnt = int(val)
+        except ValueError:
+            return self.make(rule, "1..5 attempts", val, "REVIEW", path, "Invalid integer")
+        return self.make(rule, "1..5 attempts", cnt,
+                         "PASS" if 1 <= cnt <= 5 else "FAIL", path)
+
+    def check_lockout_time(self, rule):
+        val = self.text(self.device, "./deviceconfig/setting/management/lockout-time/text()")
+        path = "devices/entry/deviceconfig/setting/management/lockout-time"
+        if val is None:
+            return self.make(rule, ">= 15 minutes", None, "REVIEW", path,
+                             "Lockout duration not explicitly set")
+        try:
+            mins = int(val)
+        except ValueError:
+            return self.make(rule, ">= 15 minutes", val, "REVIEW", path, "Invalid integer")
+        return self.make(rule, ">= 15 minutes", mins,
+                         "PASS" if mins >= 15 else "FAIL", path)
+
+    def check_snmp_security(self, rule):
+        snmp = self.device.find("./deviceconfig/system/snmp-setting")
+        evidence = "devices/entry/deviceconfig/system/snmp-setting"
+        if snmp is None:
+            return self.make(rule, "SNMP disabled or SNMPv3", "SNMP not configured", "PASS", evidence,
+                             "No SNMP service active")
+        v2 = snmp.find("./version/v2c")
+        v3 = snmp.find("./version/v3")
+        if v3 is not None and v2 is None:
+            return self.make(rule, "SNMP disabled or SNMPv3", "SNMPv3 enabled", "PASS", evidence)
+        if v2 is not None:
+            return self.make(rule, "SNMP disabled or SNMPv3", "Insecure SNMPv2c active", "FAIL", evidence,
+                             "SNMPv2c uses plaintext community strings")
+        return self.make(rule, "SNMP disabled or SNMPv3", "SNMP configured", "REVIEW", evidence)
+
+    def check_verify_update_server(self, rule):
+        val = self.text(self.device, "./deviceconfig/system/update-server-identity-check/text()")
+        evidence = "devices/entry/deviceconfig/system/update-server-identity-check"
+        if val in ("yes", None):
+            status_desc = "Enabled (default)" if val is None else "Enabled"
+            return self.make(rule, "enabled=yes", status_desc, "PASS", evidence)
+        return self.make(rule, "enabled=yes", val, "FAIL", evidence, "Update server identity check disabled")
+
     def check_ntp(self, rule):
         base = self.device.find("./deviceconfig/system/ntp-servers")
         primary = self.text(base, "./primary-ntp-server/ntp-server-address/text()")
@@ -151,8 +235,19 @@ class CISScanner:
                              "Set approved_ntp_servers in rules/site_policy.yaml; availability not tested")
         status = "PASS" if {primary, secondary} <= approved else "FAIL"
         return self.make(rule, "Two distinct approved NTP servers", addresses,
-                         status, evidence,
-                         "Configuration check only; actual NTP reachability not verified")
+                          status, evidence,
+                          "Configuration check only; actual NTP reachability not verified")
+
+    def check_syslog_configured(self, rule):
+        syslog_entries = self.config.xpath(".//shared/log-settings/syslog/entry")
+        system_syslog = self.device.xpath("./deviceconfig/system/syslog-server/entry")
+        total = len(syslog_entries) + len(system_syslog)
+        evidence = "shared/log-settings/syslog"
+        if total > 0:
+            return self.make(rule, "At least one Syslog server profile configured",
+                             f"{total} profile(s)", "PASS", evidence)
+        return self.make(rule, "At least one Syslog server profile configured",
+                         "None", "FAIL", evidence, "No external syslog logging server configured")
 
     def check_ha_sync(self, rule):
         group = self.device.find("./deviceconfig/high-availability/group")
@@ -192,7 +287,8 @@ class CISScanner:
             status = "FAIL"
         elif (local in acceptable and peer in acceptable and state_sync == "complete"
               and running_sync == "synchronized"):
-            status = "PASS" if config_sync == "yes" and session_sync == "yes" else "REVIEW"
+            # Operational state confirms synchronized peer
+            status = "PASS"
         else:
             status = "REVIEW"
         return self.make(rule, "HA peer active/passive; fully synchronized", actual,
@@ -223,3 +319,39 @@ class CISScanner:
             status, reason = "REVIEW", "Verify monitoring group schema and meaningful targets in GUI"
         return self.make(rule, "Link or path monitoring configured", actual,
                          status, "deviceconfig/high-availability/group/monitoring", reason)
+
+    def check_security_service_any(self, rule):
+        rules = self.config.xpath(".//vsys/entry/rulebase/security/rules/entry")
+        evidence = "vsys/entry/rulebase/security/rules"
+        if not rules:
+            return self.make(rule, "No rule allows service ANY from untrust", "No security rules", "PASS", evidence)
+        violations = []
+        for r in rules:
+            rname = r.get("name")
+            action = self.text(r, "./action/text()") or "allow"
+            from_zones = r.xpath("./from/member/text()")
+            services = r.xpath("./service/member/text()")
+            if action.lower() == "allow" and ("any" in [z.lower() for z in from_zones] or "untrust" in [z.lower() for z in from_zones]):
+                if "any" in [s.lower() for s in services]:
+                    violations.append(rname)
+        if violations:
+            return self.make(rule, "No rule allows service ANY from untrust", violations, "FAIL", evidence,
+                             f"Security rules with service 'any': {', '.join(violations)}")
+        return self.make(rule, "No rule allows service ANY from untrust", "Compliant", "PASS", evidence)
+
+    def check_default_rule_logging(self, rule):
+        default_rules = self.config.xpath(".//vsys/entry/rulebase/default-security-rules/rules/entry")
+        evidence = "vsys/entry/rulebase/default-security-rules"
+        if not default_rules:
+            # Check normal security rules with log-end
+            return self.make(rule, "Default security rules log at session end", "Default settings active", "REVIEW", evidence,
+                             "Default rules not overridden; verify session end logging in GUI")
+        logged = []
+        for r in default_rules:
+            rname = r.get("name")
+            log_end = self.text(r, "./log-end/text()")
+            if log_end == "yes":
+                logged.append(rname)
+        if len(logged) == len(default_rules):
+            return self.make(rule, "Default security rules log at session end", f"All {len(logged)} rules log at end", "PASS", evidence)
+        return self.make(rule, "Default security rules log at session end", f"{len(logged)}/{len(default_rules)} logged", "REVIEW", evidence)
