@@ -171,8 +171,8 @@ class CISScanner:
                          "PASS" if 1 <= mins <= 10 else "FAIL", path)
 
     def check_failed_attempts(self, rule):
-        val = self.text(self.device, "./deviceconfig/setting/management/failed-attempts/text()")
-        path = "devices/entry/deviceconfig/setting/management/failed-attempts"
+        val = self.text(self.device, "./deviceconfig/setting/management//failed-attempts/text()")
+        path = "devices/entry/deviceconfig/setting/management/admin-lockout/failed-attempts"
         if val is None:
             return self.make(rule, "1..5 attempts", None, "REVIEW", path,
                              "Lockout threshold not explicitly set")
@@ -184,8 +184,8 @@ class CISScanner:
                          "PASS" if 1 <= cnt <= 5 else "FAIL", path)
 
     def check_lockout_time(self, rule):
-        val = self.text(self.device, "./deviceconfig/setting/management/lockout-time/text()")
-        path = "devices/entry/deviceconfig/setting/management/lockout-time"
+        val = self.text(self.device, "./deviceconfig/setting/management//lockout-time/text()")
+        path = "devices/entry/deviceconfig/setting/management/admin-lockout/lockout-time"
         if val is None:
             return self.make(rule, ">= 15 minutes", None, "REVIEW", path,
                              "Lockout duration not explicitly set")
@@ -310,8 +310,8 @@ class CISScanner:
         path_has_target = any(bool(e.xpath(".//destination-ip/text()")) for e in paths)
         actual = {"link_enabled": link_enabled, "link_groups": len(links),
                   "path_enabled": path_enabled, "path_groups": len(paths)}
-        if (link_enabled == "yes" and link_has_interface or
-                path_enabled == "yes" and path_has_target):
+        if ((link_enabled in (None, "yes") and len(links) > 0 and link_has_interface) or
+                (path_enabled in (None, "yes") and len(paths) > 0 and path_has_target)):
             status, reason = "PASS", "Review whether monitored targets cover all critical links"
         elif link_enabled == "no" and path_enabled == "no":
             status, reason = "FAIL", "Both monitoring methods disabled"
