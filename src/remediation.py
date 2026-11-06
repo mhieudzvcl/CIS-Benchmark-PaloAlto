@@ -4,12 +4,15 @@ from lxml import etree
 from .panos_client import PanOSAPIError
 
 
-# Chi 4 control nho co whitelist; KHONG tu sua HA, interfaces, NAT, policies.
+# Bo sung cac control an toan cho phep tu dong khac phuc (Remediation)
 ALLOWED = {
+    "1.1.2": "Configure legal notice login banner",
     "1.2.3": "Disable HTTP and Telnet on management interface",
     "1.3.1": "Enable minimum password complexity",
     "1.3.2": "Set minimum password length to 12 (requires complexity enabled)",
     "1.4.1": "Set management idle timeout to 10 minutes",
+    "1.4.2": "Set failed login attempts lockout threshold to 3",
+    "1.4.3": "Set lockout time duration to 15 minutes",
 }
 
 
@@ -36,9 +39,18 @@ def prepare_change(control_id, config, before_status):
     if before_status == "ERROR":
         raise ValueError("Cannot remediate a scan ERROR")
     base = _device_xpath(config)
-    if control_id == "1.4.1":
+    if control_id == "1.1.2":
+        parent = base + "/deviceconfig/system"
+        elements = ["<login-banner>Authorized Access Only</login-banner>"]
+    elif control_id == "1.4.1":
         parent = base + "/deviceconfig/setting/management"
         elements = ["<idle-timeout>10</idle-timeout>"]
+    elif control_id == "1.4.2":
+        parent = base + "/deviceconfig/setting/management"
+        elements = ["<admin-lockout><failed-attempts>3</failed-attempts></admin-lockout>"]
+    elif control_id == "1.4.3":
+        parent = base + "/deviceconfig/setting/management"
+        elements = ["<admin-lockout><lockout-time>15</lockout-time></admin-lockout>"]
     elif control_id == "1.2.3":
         parent = base + "/deviceconfig/system/service"
         elements = ["<disable-http>yes</disable-http>",
