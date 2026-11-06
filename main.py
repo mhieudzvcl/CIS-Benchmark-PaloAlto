@@ -40,6 +40,8 @@ def cli_args():
     p.add_argument("--confirm-host", help="Must exactly match --host for writes")
     p.add_argument("--ack-ha", action="store_true",
                    help="Acknowledge change impact on HA pair and need to validate BOTH peers")
+    p.add_argument("--auto-approve", "--yes", action="store_true",
+                   help="Bypass interactive confirmation prompt (Zero-touch automated remediation)")
     return p.parse_args()
 
 
@@ -135,8 +137,8 @@ def main():
     if args.apply:
         if args.confirm_host != hosts[0] or not args.ack_ha:
             raise SystemExit("Write blocked: require --confirm-host <same IP> and --ack-ha")
-        if not sys.stdin.isatty():
-            raise SystemExit("Write blocked: interactive terminal required")
+        if not args.auto_approve and not sys.stdin.isatty():
+            raise SystemExit("Write blocked: interactive terminal required (or use --auto-approve)")
     if args.lab_insecure:
         import urllib3
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -188,11 +190,14 @@ def main():
                 continue
             if client is None:
                 raise RuntimeError("Live authenticated client required")
-            console.print(" [yellow]⚠ Verify HA synchronization, backup and maintenance window.[/yellow]")
-            confirm = input(f"Type 'APPLY {host} {args.remediate}' to modify firewall: ").strip().strip("'\"")
-            if confirm != f"APPLY {host} {args.remediate}":
-                console.print(" [yellow]Cancelled - no changes made.[/yellow]")
-                continue
+            if not args.auto_approve:
+                console.print(" [yellow]⚠ Verify HA synchronization, backup and maintenance window.[/yellow]")
+                confirm = input(f"Type 'APPLY {host} {args.remediate}' to modify firewall: ").strip().strip("'\"")
+                if confirm != f"APPLY {host} {args.remediate}":
+                    console.print(" [yellow]Cancelled - no changes made.[/yellow]")
+                    continue
+            else:
+                console.print(" [bold green]✔ Auto-approve active: bypassing interactive confirmation prompt[/bold green]")
             guard_candidate_clean(client, config)
             console.print(" [yellow]◆[/yellow] Candidate clean; staging allowlisted XML only...")
             job = apply_remediation(client, changes, args.username)
