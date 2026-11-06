@@ -586,9 +586,9 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 
 \noindent Chi tiết các phân vùng mạng con trong VPC-LTKB bao gồm:
 \begin{enumerate}
-    \item \textbf{Phân vùng mạng ngoài (SN-CIS-UNTRUST -- 10.0.1.0/24, Gateway 10.0.1.1):} Tiếp nhận lưu lượng từ Internet. Giao diện mạng Untrust của hai firewall được cấp phát IP lần l  ượt là \texttt{10.0.1.11} (PA-CIS-01) và \texttt{10.0.1.12} (PA-CIS-02). Đặc biệt, hai thiết bị chia sẻ chung địa chỉ IP ảo dự phòng \textbf{VIP Untrust: 10.0.1.100} (cấu hình theo cơ chế Pair Address trên CMC Cloud), đảm bảo khi xảy ra sự cố chuyển đổi dự phòng (failover), luồng dữ liệu bên ngoài vẫn được định tuyến liên tục đến nút Active mà không bị gián đoạn.
-    \item \textbf{Phân vùng quản trị cô lập (SN-CIS-MGMT -- 10.0.10.0/24, Gateway 10.0.10.1):} Dành riêng cho lưu lượng quản trị chuyên biệt (Out-of-band Management), kết nối cổng quản trị của PA-CIS-01 (\texttt{10.0.10.11}), PA-CIS-02 (\texttt{10.0.10.12}), máy chủ điều khiển \textbf{VM-LINUX-BASTION} (\texttt{10.0.10.20}) và máy trạm đồ họa \textbf{VM-WINDOW-BASTION} (\texttt{10.0.10.21}). Phân vùng này được cô lập tuyệt đối khỏi lưu lượng dữ liệu người dùng.
-    \item \textbf{Phân vùng nội bộ tin cậy (SN-CIS-TRUST -- 10.0.20.0/24, Gateway 10.0.20.1):} Đại diện cho mạng cục bộ (LAN) của tổ chức. Giao diện mạng Trust của hai firewall có IP là \texttt{10.0.20.11} và \texttt{10.0.20.12}, cùng gán địa chỉ IP ảo \textbf{VIP Trust: 10.0.20.100} (Pair Address) đóng vai trò Default Gateway cho toàn bộ máy trạm nội bộ. Máy chủ kiểm thử \textbf{VM-CLIENT-TEST} (\texttt{10.0.20.20}) được bố trí trong vùng này, trỏ gateway về VIP \texttt{10.0.20.100} để kiểm tra khả năng lọc gói, thực thi chính sách an ninh và bảo vệ vùng mạng (Zone Protection).
+    \item \textbf{Phân vùng mạng ngoài (SN-CIS-UNTRUST -- 10.0.1.0/24, Gateway 10.0.1.1):} Tiếp nhận lưu lượng từ Internet. Giao diện mạng Untrust của hai firewall được cấp phát IP lần lượt là \texttt{10.0.1.11} (PA-CIS-01) và \texttt{10.0.1.12} (PA-CIS-02). Đặc biệt, hai thiết bị chia sẻ chung địa chỉ IP ảo dự phòng \textbf{VIP Untrust: 10.0.1.100} (cấu hình theo cơ chế Pair Address trên CMC Cloud), đảm bảo khi xảy ra sự cố chuyển đổi dự phòng (failover), luồng dữ liệu bên ngoài vẫn được định tuyến liên tục đến nút Active mà không bị gián đoạn.
+    \item \textbf{Phân vùng quản trị cô lập (SN-CIS-MGMT -- 10.0.10.0/24, Gateway 10.0.10.1):} Dành riêng cho lưu lượng quản trị chuyên biệt (Out-of-band Management), kết nối trực tiếp đến cổng quản trị của cả hai tường lửa gồm PA-CIS-01 (\texttt{10.0.10.11}) và PA-CIS-02 (\texttt{10.0.10.12}). Cả hai máy trạm gồm máy chủ điều khiển \textbf{VM-LINUX-BASTION} (\texttt{10.0.10.20}) và máy trạm đồ họa \textbf{VM-WINDOW-BASTION} (\texttt{10.0.10.21}) đều có khả năng truy cập quản trị đồng thời đến cả hai thiết bị tường lửa thông qua giao thức HTTPS cổng 443 và giao diện lập trình PAN-OS XML API. Phân vùng này được cô lập an toàn khỏi lưu lượng dữ liệu người dùng.
+    \item \textbf{Phân vùng nội bộ tin cậy (SN-CIS-TRUST -- 10.0.20.0/24, Gateway 10.0.20.1):} Đại diện cho mạng cục bộ (LAN) của tổ chức. Giao diện mạng Trust của hai firewall có IP lần lượt là \texttt{10.0.20.11} (PA-CIS-01) và \texttt{10.0.20.12} (PA-CIS-02), cùng kết nối và chia sẻ địa chỉ IP ảo dự phòng \textbf{VIP Trust: 10.0.20.100} (cấu hình theo cơ chế Pair Address tương tự phân vùng Untrust) đóng vai trò Default Gateway cho toàn bộ máy trạm nội bộ. Máy chủ kiểm thử \textbf{VM-CLIENT-TEST} (\texttt{10.0.20.20}) được bố trí trong vùng này, trỏ Default Gateway về VIP \texttt{10.0.20.100} để kiểm tra khả năng lọc gói, thực thi chính sách an ninh và bảo vệ vùng mạng (Zone Protection).
     \item \textbf{Phân vùng đồng bộ dữ liệu HA2 (SN-CIS-HA2 -- 10.0.30.0/24, Gateway 10.0.30.1):} Dành riêng cho kênh truyền dữ liệu đồng bộ trạng thái phiên làm việc (Session Synchronization) giữa hai nút tường lửa qua giao diện \texttt{10.0.30.11} và \texttt{10.0.30.12}. Bên cạnh đó, kênh HA1 Control được cấu hình liên kết điều khiển trao đổi gói tin Heartbeat để giám sát tính sẵn sàng.
 \end{enumerate}
 
@@ -604,51 +604,63 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
     >=Stealth,
     cloud/.style={draw=UITBlue, fill=PaleBlue, ellipse, minimum height=1.1cm, minimum width=3.4cm, align=center},
     server/.style={draw=CISBlue, fill=white, rounded corners=2mm, minimum height=1.1cm, text width=5.6cm, align=center},
-    firewall/.style={draw=CISRed, fill=white, rounded corners=2mm, minimum height=1.4cm, text width=5.6cm, align=center, thick},
+    firewall/.style={draw=CISRed, fill=white, rounded corners=2mm, minimum height=1.45cm, text width=5.6cm, align=center, thick},
     vipbox/.style={draw=CISOrange, fill=yellow!15, rounded corners=2mm, minimum height=0.95cm, text width=7.4cm, align=center, thick},
-    mgmtbox/.style={draw=CISBlue, fill=CISLightBlue!60, rounded corners=2mm, minimum height=0.95cm, text width=7.4cm, align=center, thick},
+    mgmtbox/.style={draw=CISGreen, fill=CISLightBlue!60, rounded corners=2mm, minimum height=0.95cm, text width=7.4cm, align=center, thick},
     netbox/.style={draw=gray, dashed, inner sep=0.35cm, rounded corners=3mm}
 ]
 
-% Top: Internet
-\node[cloud] (internet) at (0, 7.8) {\textbf{Internet / CMC WAN}\\Gateway: 0.0.0.0/0};
+% Top: Internet (chi co Internet, khong co CMC WAN)
+\node[cloud] (internet) at (0, 8.8) {\textbf{Internet}\\Gateway: 0.0.0.0/0};
 
 % Subnet Untrust Box & VIP
-\node[vipbox, text width=8.0cm] (vip_untrust) at (0, 5.8) {\textbf{VIP Untrust (Pair Address): 10.0.1.100}\\[2pt]\scriptsize Subnet: SN-CIS-UNTRUST (10.0.1.0/24) -- Gateway: 10.0.1.1};
+\node[vipbox, text width=8.6cm] (vip_untrust) at (0, 6.8) {\textbf{VIP Untrust (Pair Address): 10.0.1.100}\\[2pt]\scriptsize Subnet: SN-CIS-UNTRUST (10.0.1.0/24) -- Gateway: 10.0.1.1};
 
-% Firewalls
-\node[firewall] (fw1) at (-4.8, 3.4) {\textbf{PA-CIS-01 (Active)}\\[2pt]\scriptsize PAN-OS 11.2.5 (4 vCPU / 12GB RAM)\\[2pt]\scriptsize Mgmt: \texttt{10.0.10.11} \quad Untrust: \texttt{10.0.1.11}\\[1pt]\scriptsize Trust: \texttt{10.0.20.11} \quad HA2: \texttt{10.0.30.11}};
+% Firewalls: PA-CIS-01 and PA-CIS-02
+\node[firewall] (fw1) at (-5.0, 4.2) {\textbf{PA-CIS-01 (Active)}\\[2pt]\scriptsize PAN-OS 11.2.5 (4 vCPU / 12GB RAM)\\[2pt]\scriptsize Mgmt: \texttt{10.0.10.11} \quad Untrust: \texttt{10.0.1.11}\\[1pt]\scriptsize Trust: \texttt{10.0.20.11} \quad HA2: \texttt{10.0.30.11}};
 
-\node[firewall] (fw2) at (4.8, 3.4) {\textbf{PA-CIS-02 (Passive)}\\[2pt]\scriptsize PAN-OS 11.2.5 (4 vCPU / 12GB RAM)\\[2pt]\scriptsize Mgmt: \texttt{10.0.10.12} \quad Untrust: \texttt{10.0.1.12}\\[1pt]\scriptsize Trust: \texttt{10.0.20.12} \quad HA2: \texttt{10.0.30.12}};
+\node[firewall] (fw2) at (5.0, 4.2) {\textbf{PA-CIS-02 (Passive)}\\[2pt]\scriptsize PAN-OS 11.2.5 (4 vCPU / 12GB RAM)\\[2pt]\scriptsize Mgmt: \texttt{10.0.10.12} \quad Untrust: \texttt{10.0.1.12}\\[1pt]\scriptsize Trust: \texttt{10.0.20.12} \quad HA2: \texttt{10.0.30.12}};
 
 % Connect Internet to Untrust VIP to FWs
 \draw[thick, draw=UITBlue, ->] (internet.south) -- (vip_untrust.north);
 \draw[thick, draw=UITBlue] (vip_untrust.south) -| (fw1.north);
 \draw[thick, draw=UITBlue] (vip_untrust.south) -| (fw2.north);
 
-% HA links (in the gap between firewalls)
+% HA links (in the middle gap between firewalls)
 \draw[thick, draw=red, dashed] ($(fw1.east)+(0,0.25)$) -- ($(fw2.west)+(0,0.25)$) node[midway, above=1pt, font=\scriptsize\bfseries, text=red] {HA1 Control (Peer Heartbeat)};
 \draw[thick, draw=red] ($(fw1.east)+(0,-0.25)$) -- ($(fw2.west)+(0,-0.25)$) node[midway, below=1pt, font=\scriptsize\bfseries, text=red] {HA2 Data (SN-CIS-HA2: 10.0.30.0/24)};
 
 % Management Subnet (Left column)
-\node[mgmtbox] (mgmt_header) at (-4.8, 1.2) {\textbf{SN-CIS-MGMT (10.0.10.0/24)}\\[2pt]\scriptsize Gateway: 10.0.10.1 -- Vùng quản trị cô lập};
+\node[mgmtbox] (mgmt_header) at (-5.0, 0.6) {\textbf{SN-CIS-MGMT (10.0.10.0/24)}\\[2pt]\scriptsize Gateway: 10.0.10.1 -- Vùng quản trị cô lập};
 
-\node[server] (linux_bastion) at (-4.8, -0.8) {\textbf{VM-LINUX-BASTION}\\[2pt]\scriptsize Ubuntu 24.04 (2 vCPU / 2GB RAM)\\[2pt]\scriptsize Python CIS Engine / Ansible Controller\\[2pt]\footnotesize IP: \texttt{10.0.10.20}};
+\node[server] (linux_bastion) at (-5.0, -1.2) {\textbf{VM-LINUX-BASTION}\\[2pt]\scriptsize Ubuntu 24.04 (2 vCPU / 2GB RAM)\\[2pt]\scriptsize Python CIS Engine / Ansible Controller\\[2pt]\footnotesize IP: \texttt{10.0.10.20}};
 
-\node[server] (win_bastion) at (-4.8, -2.8) {\textbf{VM-WINDOW-BASTION}\\[2pt]\scriptsize Windows 10 Pro (2 vCPU / 4GB RAM)\\[2pt]\scriptsize Trạm quản trị Web GUI / Evidence\\[2pt]\footnotesize IP: \texttt{10.0.10.21}};
+\node[server] (win_bastion) at (-5.0, -3.2) {\textbf{VM-WINDOW-BASTION}\\[2pt]\scriptsize Windows 10 Pro (2 vCPU / 4GB RAM)\\[2pt]\scriptsize Trạm quản trị Web GUI / Evidence\\[2pt]\footnotesize IP: \texttt{10.0.10.21}};
 
 % Trust Subnet (Right column)
-\node[vipbox] (vip_trust) at (4.8, 1.2) {\textbf{VIP Trust (Pair Address): 10.0.20.100}\\[2pt]\scriptsize Subnet: SN-CIS-TRUST (10.0.20.0/24) -- Gateway: 10.0.20.1};
+\node[vipbox] (vip_trust) at (5.0, 0.6) {\textbf{VIP Trust (Pair Address): 10.0.20.100}\\[2pt]\scriptsize Subnet: SN-CIS-TRUST (10.0.20.0/24) -- Gateway: 10.0.20.1};
 
-\node[server] (client_test) at (4.8, -1.8) {\textbf{VM-CLIENT-TEST}\\[2pt]\scriptsize Ubuntu 24.04 (1 vCPU / 1GB RAM)\\[2pt]\scriptsize Client kiểm thử chính sách Security\\[2pt]\footnotesize IP: \texttt{10.0.20.20} \quad (Default Gateway: \texttt{10.0.20.100})};
+\node[server] (client_test) at (5.0, -2.0) {\textbf{VM-CLIENT-TEST}\\[2pt]\scriptsize Ubuntu 24.04 (1 vCPU / 1GB RAM)\\[2pt]\scriptsize Client kiểm thử chính sách Security\\[2pt]\footnotesize IP: \texttt{10.0.20.20} \quad (Default Gateway: \texttt{10.0.20.100})};
 
-% Connections in Mgmt Subnet
-\draw[thick, draw=CISGreen, <->] (fw1.south) -- (mgmt_header.north) node[pos=0.35, left=2pt, font=\scriptsize, fill=white, inner sep=1pt] {HTTPS:443};
+% -------------------------------------------------------------
+% CONNECTIONS TO BOTH FIREWALLS:
+% 1. MANAGEMENT (Green) to BOTH firewalls:
+% Direct vertical link to PA-CIS-01 Mgmt port (10.0.10.11)
+\draw[thick, draw=CISGreen, <->] ($(mgmt_header.north)+(-1.4,0)$) -- ($(fw1.south)+(-1.4,0)$) node[midway, left=2pt, font=\scriptsize, fill=white, inner sep=1pt] {HTTPS:443};
+% Cross link to PA-CIS-02 Mgmt port (10.0.10.12)
+\draw[thick, draw=CISGreen, <->] ($(mgmt_header.north)+(1.2,0)$) -- ++(0, 1.8) -| ($(fw2.south)+(-1.4,0)$) node[pos=0.25, above=1pt, font=\scriptsize, fill=white, inner sep=1pt] {HTTPS:443};
+
+% 2. TRUST (Blue) to BOTH firewalls (VIP Trust nối 2 con firewall giống Untrust):
+% Direct vertical link to PA-CIS-02 Trust port (10.0.20.12)
+\draw[thick, draw=UITBlue] ($(vip_trust.north)+(1.4,0)$) -- ($(fw2.south)+(1.4,0)$);
+% Cross link to PA-CIS-01 Trust port (10.0.20.11)
+\draw[thick, draw=UITBlue] ($(vip_trust.north)+(-1.2,0)$) -- ++(0, 1.1) -| ($(fw1.south)+(1.4,0)$) node[pos=0.25, below=1pt, font=\scriptsize, fill=white, inner sep=1pt] {VIP Trust (10.0.20.100)};
+
+% Internal links in MGMT
 \draw[thick, draw=CISGreen] (mgmt_header.south) -- (linux_bastion.north);
 \draw[thick, draw=CISGreen] (linux_bastion.south) -- (win_bastion.north);
 
-% Connections in Trust Subnet
-\draw[thick, draw=UITBlue] (fw2.south) -- (vip_trust.north);
+% Internal link in Trust
 \draw[thick, draw=UITBlue, ->] (client_test.north) -- (vip_trust.south) node[midway, right=2pt, font=\scriptsize] {Default Route qua VIP};
 
 % Subnet boundaries
@@ -681,7 +693,7 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 \textcolor{white}{\textbf{Thành phần}} & \textcolor{white}{\textbf{Địa chỉ IP / CIDR}} & \textcolor{white}{\textbf{Phân vùng Subnet}} & \textcolor{white}{\textbf{Vai trò và Thông số kỹ thuật}} \\
 \hline
 VPC-LTKB & 10.0.0.0/16 & Toàn bộ VPC & VPC tổng thể triển khai lab trên hạ tầng CMC Cloud AZ1. \\ \hline
-SN-CIS-UNTRUST & 10.0.1.0/24 (GW: 10.0.1.1) & Vùng ngoài & Mạng con kết nối lưu lượng Internet / WAN từ bên ngoài vào firewall. \\ \hline
+SN-CIS-UNTRUST & 10.0.1.0/24 (GW: 10.0.1.1) & Vùng ngoài & Mạng con kết nối lưu lượng Internet từ bên ngoài vào firewall. \\ \hline
 VIP Untrust & 10.0.1.100 & SN-CIS-UNTRUST & IP ảo dự phòng (Pair Address) của cụm HA xử lý lưu lượng ngoài. \\ \hline
 SN-CIS-TRUST & 10.0.20.0/24 (GW: 10.0.20.1) & Vùng trong & Mạng con nội bộ tin cậy chứa các tài nguyên máy chủ và máy trạm. \\ \hline
 VIP Trust & 10.0.20.100 & SN-CIS-TRUST & IP ảo dự phòng (Pair Address) đóng vai trò Default Gateway cho vùng Trust. \\ \hline
@@ -689,8 +701,8 @@ SN-CIS-MGMT & 10.0.10.0/24 (GW: 10.0.10.1) & Vùng quản trị & Mạng con cô
 SN-CIS-HA2 & 10.0.30.0/24 (GW: 10.0.30.1) & Vùng HA & Mạng con chuyên dụng dành cho kênh truyền đồng bộ dữ liệu phiên HA2. \\ \hline
 PA-CIS-01 & Mgmt: 10.0.10.11\newline Untrust: 10.0.1.11\newline Trust: 10.0.20.11\newline HA2: 10.0.30.11 & Đa phân vùng & Tường lửa chính (HA Primary Active Node), PAN-OS 11.2.5 (4 vCPU / 12 GB RAM), xử lý toàn bộ lưu lượng định tuyến và chính sách an ninh. \\ \hline
 PA-CIS-02 & Mgmt: 10.0.10.12\newline Untrust: 10.0.1.12\newline Trust: 10.0.20.12\newline HA2: 10.0.30.12 & Đa phân vùng & Tường lửa dự phòng (HA Secondary Passive Node), PAN-OS 11.2.5 (4 vCPU / 12 GB RAM), duy trì đồng bộ phiên và cấu hình sẵn sàng thay thế tức thời. \\ \hline
-VM-LINUX-BASTION & 10.0.10.20 & SN-CIS-MGMT & Máy chủ Controller, Ubuntu 24.04 (2 vCPU / 2 GB RAM), thực thi Python CIS Scanner, kịch bản Ansible và lưu trữ nhật ký báo cáo. \\ \hline
-VM-WINDOW-BASTION & 10.0.10.21 & SN-CIS-MGMT & Máy trạm quản trị đồ họa, Windows 10 Pro (2 vCPU / 4 GB RAM), phục vụ đăng nhập Web GUI và đối chứng thủ công. \\ \hline
+VM-LINUX-BASTION & 10.0.10.20 & SN-CIS-MGMT & Máy chủ Controller, Ubuntu 24.04 (2 vCPU / 2 GB RAM), kết nối quản trị đến cả hai firewall qua HTTPS cổng 443 và XML API, thực thi Python CIS Scanner, kịch bản Ansible và lưu trữ nhật ký báo cáo. \\ \hline
+VM-WINDOW-BASTION & 10.0.10.21 & SN-CIS-MGMT & Máy trạm quản trị đồ họa, Windows 10 Pro (2 vCPU / 4 GB RAM), kết nối Web GUI quản trị đến cả hai firewall PA-CIS-01 và PA-CIS-02 phục vụ đối chứng thủ công. \\ \hline
 VM-CLIENT-TEST & 10.0.20.20 & SN-CIS-TRUST & Máy trạm kiểm thử nội bộ, Ubuntu 24.04 (1 vCPU / 1 GB RAM), trỏ Default Gateway về VIP \texttt{10.0.20.100} để kiểm tra an ninh mạng. \\ \hline
 HA1 Control Link & Kênh ảo điểm-điểm & Kênh dự phòng & Liên kết truyền gói tin Heartbeat và kiểm soát trạng thái High Availability. \\ \hline
 \end{tabular}
