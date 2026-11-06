@@ -288,43 +288,6 @@
 
 \pagenumbering{roman}
 
-% ============================================================
-% LỜI CẢM ƠN VÀ LỜI CAM ĐOAN
-% ============================================================
-\thispagestyle{uit-toc}
-\section*{Lời cảm ơn}
-\addcontentsline{toc}{section}{Lời cảm ơn}
-Nhóm sinh viên thực hiện đề tài xin gửi lời cảm ơn chân thành và sâu sắc nhất đến quý Thầy Cô Bộ môn Mạng máy tính và Truyền thông, Khoa Mạng máy tính và Truyền thông, Trường Đại học Công nghệ Thông tin, Đại học Quốc gia Thành phố Hồ Chí Minh, đã truyền đạt nền tảng kiến thức chuyên môn vững chắc và tạo điều kiện học tập thuận lợi nhất cho sinh viên.
-
-Đặc biệt, nhóm xin bày tỏ lòng biết ơn sâu sắc đến ThS. Trần Thị Dung và ThS. Văn Thiên Luân, hai giảng viên trực tiếp hướng dẫn môn học Lập trình kịch bản tự động hóa cho quản trị và bảo mật mạng (NT542.R11). Sự định hướng tận tình, những gợi ý kỹ thuật thực tế và các nhận xét sâu sát của quý Thầy Cô trong từng giai đoạn báo cáo đã giúp nhóm từng bước vượt qua các khó khăn kỹ thuật để hoàn thiện đồ án này một cách trọn vẹn.
-
-\vspace{0.5cm}
-\begin{flushright}
-\textit{Thành phố Hồ Chí Minh, năm 2026}\\
-\textbf{Nhóm sinh viên thực hiện}\\
-Huỳnh Minh Hiếu -- Nguyễn Phát Đạt
-\end{flushright}
-
-\clearpage
-
-\thispagestyle{uit-toc}
-\section*{Lời cam đoan}
-\addcontentsline{toc}{section}{Lời cam đoan}
-Nhóm sinh viên xin cam đoan rằng đồ án này là công trình nghiên cứu và thực nghiệm độc lập của nhóm dưới sự hướng dẫn chuyên môn của các giảng viên phụ trách môn học.
-
-Toàn bộ các thông số kỹ thuật, cấu hình, dữ liệu kiểm tra và hình ảnh minh chứng thực nghiệm trong báo cáo đều được thu thập thực tế từ môi trường lab triển khai trên hạ tầng CMC Cloud. Nhóm tự nghiên cứu và phát triển toàn bộ mã nguồn kiểm tra tự động Python và kịch bản điều phối Ansible, không sao chép từ bất kỳ công trình nào khác mà không có trích dẫn nguồn gốc rõ ràng.
-
-\vspace{0.5cm}
-\begin{flushright}
-\textbf{Đại diện nhóm sinh viên}\\
-Huỳnh Minh Hiếu
-\end{flushright}
-
-\clearpage
-
-% ============================================================
-% DANH MỤC TỪ VIẾT TẮT
-% ============================================================
 \thispagestyle{uit-toc}
 \section*{Danh mục từ viết tắt}
 \addcontentsline{toc}{section}{Danh mục từ viết tắt}
@@ -400,7 +363,7 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 \section{Giới thiệu về đề tài và Chuẩn CIS Benchmark}
 
 \subsection{Tóm tắt}
-\noindent Trong các hệ thống mạng doanh nghiệp hiện nay, tường lửa thế hệ mới (Next-Generation Firewall -- NGFW) của Palo Alto luôn là chốt chặn quan trọng nhất để phân chia vùng mạng, kiểm soát luồng dữ liệu và ngăn chặn các cuộc tấn công. Tuy nhiên, dù thiết bị có hiện đại đến đâu và mua đủ license đắt tiền, hệ thống vẫn có thể gặp rủi ro lớn nếu người quản trị cấu hình không đúng cách. Thực tế cho thấy rất nhiều sự cố an ninh bắt nguồn từ các sơ hở rất cơ bản, chẳng hạn như mở port quản trị ra ngoài Internet, dùng giao thức không mã hóa như HTTP hay Telnet, đặt mật khẩu đơn giản, không giới hạn thời gian tự ngắt phiên đăng nhập hoặc bỏ qua các thiết lập dự phòng đường truyền.
+\noindent Trong các hệ thống mạng doanh nghiệp hiện nay, tường lửa thế hệ mới (Next-Generation Firewall -- NGFW) của Palo Alto luôn là chốt chặn quan trọng nhất để phân chia vùng mạng, kiểm soát luồng dữ liệu và ngăn chặn các cuộc tấn công. Tuy nhiên, dù thiết bị có hiện đại đến đâu và mua đủ license đắt tiền, hệ thống vẫn có thể gặp rủi ro lớn nếu người quản trị cấu hình không đúng cách. Thực tế cho thấy rất nhiều sự cố an ninh bắt nguồn từ các sơ hở rất cơ bản, ví dụ như mở port quản trị ra ngoài Internet, dùng giao thức không mã hóa như HTTP hay Telnet, đặt mật khẩu đơn giản, không giới hạn thời gian tự ngắt phiên đăng nhập hoặc bỏ qua các thiết lập dự phòng đường truyền.
 
 \vspace{0.3cm}
 
@@ -408,9 +371,9 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 
 \vspace{0.3cm}
 
-\noindent Trong đồ án này, nhóm tập trung giải quyết bài toán kiểm tra và làm cứng cấu hình tường lửa bằng cách kết hợp song song cả hai phương pháp:
+\noindent Trong đồ án này, nhóm tập trung giải quyết bài toán kiểm tra và làm cứng cấu hình tường lửa bằng cách kết hợp song song cả hai phương pháp là:
 \begin{itemize}
-    \item \textbf{Đánh giá thủ công (Manual):} Nhóm trực tiếp đăng nhập vào giao diện Web GUI hoặc gõ lệnh trong CLI (Console/SSH) để rà soát từng mục theo khuyến nghị của CIS. Cách làm này giúp nhóm hiểu sâu từng tính năng của hệ điều hành PAN-OS và có được số liệu thực tế làm căn cứ đối chứng.
+    \item \textbf{Đánh giá thủ công (Manual):} Nhóm sẽ trực tiếp đăng nhập vào giao diện Web GUI hoặc gõ lệnh trong CLI (Console/SSH) để rà soát từng hạng mục cấu hình tiêu chuẩn theo khuyến nghị của CIS. Cách làm này giúp nhóm hiểu sâu từng tính năng của hệ điều hành PAN-OS và có được số liệu thực tế làm căn cứ đối chứng.
     \item \textbf{Đánh giá và khắc phục tự động (Automated):} Nhóm viết chương trình bằng Python để giao tiếp với tường lửa thông qua PAN-OS XML API trên nền kết nối bảo mật HTTPS cổng 443. Đồng thời, nhóm tích hợp thêm Ansible để điều phối, cho phép quét kiểm tra và tự động cấu hình hàng loạt trên nhiều thiết bị (Fleet Management) một cách đồng bộ và nhanh chóng.
 \end{itemize}
 
@@ -457,9 +420,11 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 \endgroup
 
 \subsection{Nội dung}
-Tài liệu CIS Palo Alto Firewall 11 Benchmark v1.2.0 được xây dựng dựa trên sự đồng thuận của cộng đồng chuyên gia an ninh mạng quốc tế. Cấu trúc tài liệu bao gồm các quy định pháp lý (Terms of Use), định nghĩa cấp độ bảo vệ (Profile Level 1 và Level 2), các khuyến nghị kỹ thuật chi tiết và phần phụ lục đối sánh.
+\noindent Tài liệu CIS Palo Alto Firewall 11 Benchmark v1.2.0 được xây dựng dựa trên sự đồng thuận của cộng đồng chuyên gia an ninh mạng quốc tế. Cấu trúc tài liệu bao gồm các quy định pháp lý (Terms of Use), định nghĩa cấp độ bảo vệ (Profile Level 1 và Level 2), các khuyến nghị kỹ thuật chi tiết và phần phụ lục đối sánh.
 
-Mỗi khuyến nghị trong tài liệu được chuẩn hóa thành các mục thông tin rõ ràng:
+\vspace{0.3cm}
+
+\noindent Mỗi khuyến nghị trong tài liệu được chuẩn hóa thành các mục thông tin rõ ràng như sau:
 \begin{itemize}
     \item \textbf{Tiêu đề và Mã số (Title \& Identifier):} Định danh vị trí của khuyến nghị trong cây phân cấp bảo mật.
     \item \textbf{Trạng thái đánh giá (Assessment Status):} Phân loại thành \textit{Automated} (có thể tự động hóa đánh giá logic qua máy tính) hoặc \textit{Manual} (yêu cầu con người thẩm định theo bối cảnh mạng).
@@ -468,7 +433,9 @@ Mỗi khuyến nghị trong tài liệu được chuẩn hóa thành các mục 
     \item \textbf{Quy trình kiểm tra và Khắc phục (Audit \& Remediation):} Chỉ rõ các bước xác minh trên giao diện Web GUI hoặc dòng lệnh CLI, cùng các bước thay đổi để đưa hệ thống về trạng thái an toàn.
 \end{itemize}
 
-Bảng~\ref{tab:full-benchmark-details} trình bày chi tiết toàn bộ 30 khuyến nghị cấu hình được nhóm lựa chọn triển khai trong đồ án, bao gồm mã số, tiêu đề, trạng thái đánh giá, cấp độ bảo vệ, nội dung yêu cầu và lý do bảo mật tương ứng.
+\vspace{0.3cm}
+
+\noindent Bảng~\ref{tab:full-benchmark-details} trình bày chi tiết toàn bộ 30 khuyến nghị cấu hình được nhóm lựa chọn triển khai trong đồ án, bao gồm mã số, tiêu đề, trạng thái đánh giá, cấp độ bảo vệ, nội dung yêu cầu và lý do bảo mật tương ứng.
 
 \begingroup
 \setlength{\tabcolsep}{3.5pt}
@@ -536,22 +503,20 @@ Bảng~\ref{tab:full-benchmark-details} trình bày chi tiết toàn bộ 30 khu
 \end{longtable}
 \endgroup
 
-% ============================================================
-% CHƯƠNG 2: PHƯƠNG PHÁP
-% ============================================================
+
 \section{Phương pháp}
 
 \subsection{Phương pháp Đánh giá Thủ công (Manual)}
 
 \subsubsection{Môi trường và Công cụ thực hiện}
-Đánh giá thủ công là phương pháp kiểm tra nền tảng giúp người thực hiện hiểu sâu cấu trúc từng bảng cấu hình trong hệ điều hành PAN-OS 11.2.5. Các công cụ sử dụng gồm:
+\noindent Đánh giá thủ công là phương pháp kiểm tra nền tảng giúp người thực hiện hiểu sâu cấu trúc từng bảng cấu hình trong hệ điều hành PAN-OS 11.2.5. Các công cụ sử dụng gồm:
 \begin{itemize}
     \item \textbf{Máy trạm Windows Bastion (10.0.10.21):} Sử dụng trình duyệt Google Chrome kết nối HTTPS đến cổng quản trị của PA-CIS-01 (\texttt{https://10.0.10.11}) và PA-CIS-02 (\texttt{https://10.0.10.12}).
     \item \textbf{Phiên dòng lệnh CLI qua SSH:} Kết nối từ máy trạm quản trị vào tường lửa bằng tài khoản \texttt{admin} để thực hiện các câu lệnh kiểm tra cấu hình dạng \texttt{show config running} hoặc lệnh truy vấn trạng thái thời gian thực \texttt{show high-availability state}.
 \end{itemize}
 
 \subsubsection{Quy trình thực hiện rà soát thủ công}
-Quy trình thực hiện gồm 4 bước kỹ thuật tuần tự:
+\noindent Quy trình thực hiện gồm 4 bước kỹ thuật tuần tự:
 \begin{enumerate}
     \item \textbf{Truy cập hệ thống:} Mở trình duyệt đăng nhập vào Web GUI của tường lửa hoặc mở terminal SSH.
     \item \textbf{Định vị tham số:} Căn cứ vào mô tả kỹ thuật của khuyến nghị, điều hướng đến đúng tab hoặc gõ đúng lệnh truy vấn trên thiết bị.
@@ -562,16 +527,15 @@ Quy trình thực hiện gồm 4 bước kỹ thuật tuần tự:
 \subsection{Phương pháp Đánh giá Tự động (Automation)}
 
 \subsubsection{Công cụ cốt lõi và Công nghệ sử dụng}
-Nhóm khẳng định rõ: \emph{Trên máy chủ Linux Bastion, hệ thống đánh giá tự động tuyệt đối KHÔNG sử dụng SSH để can thiệp cấu hình hoặc phân tích văn bản (CLI scraping).} Thay vào đó, nhóm chuẩn hóa toàn bộ việc tương tác thông qua **PAN-OS XML API trên nền kết nối bảo mật HTTPS cổng 443**.
+\noindent Trong kiến trúc điều khiển tại máy chủ Linux Bastion, hệ thống tương tác với cụm tường lửa Palo Alto hoàn toàn thông qua giao diện lập trình PAN-OS XML API trên nền kết nối bảo mật HTTPS cổng 443, thay vì sử dụng kết nối SSH để bóc tách văn bản dòng lệnh (CLI scraping). Nhóm quyết định lựa chọn này dựa trên các cơ sở kỹ thuật sau:
 
-Các lý do kỹ thuật nhóm không sử dụng SSH:
 \begin{itemize}
-    \item Kết quả dòng lệnh CLI trả về là văn bản thuần không có cấu trúc cố định, chứa các mã điều khiển định dạng terminal và phụ thuộc vào phiên bản hiển thị, khiến bộ phân tích dễ bị lỗi khi cập nhật firmware.
-    \item Chi phí mở phiên SSH và xử lý luồng văn bản rất tốn tài nguyên CPU, không đáp ứng được yêu cầu quét nhanh trên quy mô nhiều thiết bị.
-    \item Giao tiếp qua PAN-OS XML API cho phép nhận dữ liệu XML có cấu trúc cây rõ ràng, dễ dàng dùng XPath truy vấn chính xác từng trường thông số mà không bao giờ bị nhầm lẫn.
+    \item \textbf{Cấu trúc dữ liệu phân cấp chuẩn xác:} Phản hồi từ XML API trả về cấu trúc cây XML hoàn chỉnh, cho phép sử dụng biểu thức XPath để trích xuất chính xác từng trường thông số cấu hình mà không phụ thuộc vào định dạng hiển thị terminal hay các thay đổi giao diện qua từng phiên bản firmware.
+    \item \textbf{Hiệu năng xử lý và tính mở rộng:} Giao tiếp qua HTTPS Request có thời gian phản hồi nhanh (dưới 100ms mỗi truy vấn), không tốn chi phí duy trì phiên kết nối tương tác nặng nề như SSH, đáp ứng tốt yêu cầu quét kiểm tra đồng thời trên quy mô cụm nhiều thiết bị (Fleet).
+    \item \textbf{An toàn vận hành và giao dịch nguyên khối:} Cơ chế API sử dụng token xác thực (API Key) riêng biệt, cho phép thực thi các thao tác nạp cấu hình và Commit/Rollback an toàn theo nguyên tắc giao dịch nguyên khối (Atomic Transaction), tránh được rủi ro thao tác sai shell quản trị.
 \end{itemize}
 
-Hệ thống sử dụng các công nghệ nòng cốt sau:
+\noindent Hệ thống sử dụng các công nghệ sau:
 \begin{itemize}
     \item \textbf{Ngôn ngữ lập trình:} Python 3.12 với các thư viện:
     \begin{itemize}
@@ -584,7 +548,7 @@ Hệ thống sử dụng các công nghệ nòng cốt sau:
 \end{itemize}
 
 \subsubsection{Cấu trúc module hóa của phần mềm}
-Mã nguồn được tổ chức thành các tầng chức năng độc lập nhằm bảo đảm tính bảo mật và khả năng mở rộng:
+\noindent Mã nguồn được tổ chức thành các tầng chức năng độc lập nhằm bảo đảm tính bảo mật và khả năng mở rộng:
 \begin{itemize}
     \item \textbf{Tầng kết nối (Client Layer -- \texttt{src/panos\_client.py}):} Chịu trách nhiệm khởi tạo kết nối HTTPS an toàn, quản lý API Key, gửi yêu cầu trích xuất cấu hình và xử lý các lỗi mạng.
     \item \textbf{Tầng logic kiểm tra (Logic Layer -- \texttt{src/cis\_scanner.py}):} Nạp các biểu thức XPath và đối chiếu các giá trị cấu hình với ngưỡng an toàn được quy định trong CIS Benchmark.
@@ -593,7 +557,7 @@ Mã nguồn được tổ chức thành các tầng chức năng độc lập nh
 \end{itemize}
 
 \subsubsection{Hai cơ chế thu thập dữ liệu chuyên sâu}
-Hệ thống triển khai hai cơ chế thu thập dữ liệu tách biệt để đảm bảo tính toàn diện:
+\noindent Hệ thống triển khai hai cơ chế thu thập dữ liệu tách biệt để đảm bảo tính toàn diện:
 \begin{enumerate}
     \item \textbf{Thu thập Running Configuration (\texttt{type=config\&action=show}):} Lấy toàn bộ cây dữ liệu XML cấu hình tĩnh đang có hiệu lực hoạt động trên hệ thống (đã được Commit thành công). Nguồn dữ liệu này dùng để kiểm tra 27/30 tiêu chí về chính sách bảo vệ, thông số mật khẩu, dịch vụ mạng và quy tắc tường lửa.
     \item \textbf{Thu thập Trạng thái Vận hành Thời gian thực (\texttt{type=op\&cmd=...}):} Sử dụng các lệnh vận hành XML Op Commands để truy vấn trạng thái thực tế không có trong file cấu hình tĩnh. Điển hình là lệnh kiểm tra trạng thái cụm High Availability:
@@ -622,7 +586,7 @@ Hệ thống triển khai hai cơ chế thu thập dữ liệu tách biệt đ�
 
 \noindent Chi tiết các phân vùng mạng con trong VPC-LTKB bao gồm:
 \begin{enumerate}
-    \item \textbf{Phân vùng mạng ngoài (SN-CIS-UNTRUST -- 10.0.1.0/24, Gateway 10.0.1.1):} Tiếp nhận lưu lượng từ Internet hoặc CMC WAN. Giao diện mạng Untrust của hai firewall được cấp phát IP lần lượt là \texttt{10.0.1.11} (PA-CIS-01) và \texttt{10.0.1.12} (PA-CIS-02). Đặc biệt, hai thiết bị chia sẻ chung địa chỉ IP ảo dự phòng \textbf{VIP Untrust: 10.0.1.100} (cấu hình theo cơ chế Pair Address trên CMC Cloud), đảm bảo khi xảy ra sự cố chuyển đổi dự phòng (failover), luồng dữ liệu bên ngoài vẫn được định tuyến liên tục đến nút Active mà không bị gián đoạn.
+    \item \textbf{Phân vùng mạng ngoài (SN-CIS-UNTRUST -- 10.0.1.0/24, Gateway 10.0.1.1):} Tiếp nhận lưu lượng từ Internet. Giao diện mạng Untrust của hai firewall được cấp phát IP lần l  ượt là \texttt{10.0.1.11} (PA-CIS-01) và \texttt{10.0.1.12} (PA-CIS-02). Đặc biệt, hai thiết bị chia sẻ chung địa chỉ IP ảo dự phòng \textbf{VIP Untrust: 10.0.1.100} (cấu hình theo cơ chế Pair Address trên CMC Cloud), đảm bảo khi xảy ra sự cố chuyển đổi dự phòng (failover), luồng dữ liệu bên ngoài vẫn được định tuyến liên tục đến nút Active mà không bị gián đoạn.
     \item \textbf{Phân vùng quản trị cô lập (SN-CIS-MGMT -- 10.0.10.0/24, Gateway 10.0.10.1):} Dành riêng cho lưu lượng quản trị chuyên biệt (Out-of-band Management), kết nối cổng quản trị của PA-CIS-01 (\texttt{10.0.10.11}), PA-CIS-02 (\texttt{10.0.10.12}), máy chủ điều khiển \textbf{VM-LINUX-BASTION} (\texttt{10.0.10.20}) và máy trạm đồ họa \textbf{VM-WINDOW-BASTION} (\texttt{10.0.10.21}). Phân vùng này được cô lập tuyệt đối khỏi lưu lượng dữ liệu người dùng.
     \item \textbf{Phân vùng nội bộ tin cậy (SN-CIS-TRUST -- 10.0.20.0/24, Gateway 10.0.20.1):} Đại diện cho mạng cục bộ (LAN) của tổ chức. Giao diện mạng Trust của hai firewall có IP là \texttt{10.0.20.11} và \texttt{10.0.20.12}, cùng gán địa chỉ IP ảo \textbf{VIP Trust: 10.0.20.100} (Pair Address) đóng vai trò Default Gateway cho toàn bộ máy trạm nội bộ. Máy chủ kiểm thử \textbf{VM-CLIENT-TEST} (\texttt{10.0.20.20}) được bố trí trong vùng này, trỏ gateway về VIP \texttt{10.0.20.100} để kiểm tra khả năng lọc gói, thực thi chính sách an ninh và bảo vệ vùng mạng (Zone Protection).
     \item \textbf{Phân vùng đồng bộ dữ liệu HA2 (SN-CIS-HA2 -- 10.0.30.0/24, Gateway 10.0.30.1):} Dành riêng cho kênh truyền dữ liệu đồng bộ trạng thái phiên làm việc (Session Synchronization) giữa hai nút tường lửa qua giao diện \texttt{10.0.30.11} và \texttt{10.0.30.12}. Bên cạnh đó, kênh HA1 Control được cấu hình liên kết điều khiển trao đổi gói tin Heartbeat để giám sát tính sẵn sàng.
@@ -999,7 +963,7 @@ Bảng~\ref{tab:manual-checklist-summary} tổng hợp kết quả rà soát th�
 1.3.9 & Hệ thống lưu nhớ 24 mật khẩu gần nhất & $\boxtimes$ & $\square$ & History Count = 24 \\ \hline
 1.3.10 & Không tồn tại Password Profile riêng lẻ ghi đè & $\boxtimes$ & $\square$ & Bảng Profile để trống \\ \hline
 1.4.1 & Thời gian ngắt phiên rảnh rỗi không quá 10 phút & $\boxtimes$ & $\square$ & Idle Timeout = 10 min \\ \hline
-1.4.2 & Khóa tài khoản sau không quá 5 lần đăng nhập sai & $\boxtimes$ & $\square$ & Failed Attempts = 3 \\ \hline
+1.4.2 & Khóa tài khoản sau không quá 5 lần đăng nhập sai & $\boxtimes$ & $\square$ & Failed Attempts = 5 \\ \hline
 1.4.3 & Thời gian khóa tài khoản tối thiểu 15 phút & $\boxtimes$ & $\square$ & Lockout Time = 15 min \\ \hline
 1.5.1 & Tắt SNMP hoặc chỉ sử dụng SNMPv3 có mã hóa & $\boxtimes$ & $\square$ & SNMPv1/v2 đã vô hiệu \\ \hline
 1.6.1 & Bật xác thực danh tính máy chủ cập nhật chính hãng & $\boxtimes$ & $\square$ & Checkbox Verify bật \\ \hline
@@ -1128,9 +1092,7 @@ Khả năng tích hợp định kỳ & Khó duy trì thường xuyên & Dễ dà
     \item Mở rộng bộ phân tích cú pháp để hỗ trợ thêm các dòng tường lửa của các nhà sản xuất khác như Fortinet FortiGate và Check Point Quantum.
 \end{enumerate}
 
-% ============================================================
-% TÀI LIỆU THAM KHẢO CHUẨN IEEE
-% ============================================================
+
 \clearpage
 \section*{Tài liệu tham khảo}
 \addcontentsline{toc}{section}{Tài liệu tham khảo}
