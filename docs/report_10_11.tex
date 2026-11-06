@@ -16,7 +16,8 @@
 \usepackage{listings}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
-\usepackage{xurl}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-}
 \usepackage{setspace}
 \usepackage{caption}
 \usepackage{tocloft}
@@ -28,7 +29,9 @@
     arrows.meta,
     positioning,
     shapes.geometric,
-    calc
+    calc,
+    backgrounds,
+    fit
 }
 
 \definecolor{CISBlue}{HTML}{174A78}
@@ -360,27 +363,32 @@ Môi trường thử nghiệm thực tế của đề tài được triển khai
 
 \noindent Bảng~\ref{tab:scope} tóm tắt 6 nhóm nội dung với 30 khuyến nghị CIS được nhóm lựa chọn triển khai trong đồ án.
 
-\begin{table}[H]
-\centering\small
-\caption{Các nhóm nội dung CIS Benchmark được nhóm lựa chọn triển khai}
-\label{tab:scope}
-\renewcommand{\arraystretch}{1.45}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.2cm}X@{}}
+\begin{longtable}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
+\caption{Các nhóm nội dung CIS Benchmark được nhóm lựa chọn triển khai} \label{tab:scope} \\
 \toprule
 \rowcolor{CISBlue}
-\textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng Control}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
+\textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
 \midrule
+\endfirsthead
+\multicolumn{4}{c}{\small\textit{Bảng \ref{tab:scope} (tiếp theo)}} \\
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\small\textit{Còn tiếp ở trang sau}} \\
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
 1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\
 2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Bật yêu cầu độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng chữ hoa, chữ thường, chữ số, ký tự đặc biệt, thời hạn đổi mật khẩu, lưu lịch sử mật khẩu cũ và không để tồn tại các profile ghi đè chính sách chung. \\
 3 & Dịch vụ hệ thống và Ghi log (Services \& Logging) & 3 controls & Bật xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ NTP đồng bộ thời gian chính và phụ, cấu hình chuyển tiếp log tập trung về Syslog Server. \\
 4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Kiểm tra trạng thái đồng bộ giữa hai firewall Active và Passive, bật cơ chế giám sát đường truyền (Path Monitoring), để cổng Passive ở chế độ Auto và tắt tính năng giành quyền (Preemption). \\
 5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\
 6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm tra không cho phép mở cổng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
-\end{table}
+\end{longtable}
 
 \subsubsection{Nhóm khuyến nghị Manual}
 Theo tài liệu chuẩn của CIS, nhóm khuyến nghị Manual là những tiêu chí mà việc khẳng định trạng thái an toàn cần sự can thiệp của con người nhằm đối chiếu với chính sách an ninh nội bộ hoặc kiến trúc mạng thực tế. Một trường cấu hình tồn tại trong hệ thống chưa đủ để khẳng định là đạt, mà giá trị của trường đó phải tương thích hoàn toàn với bối cảnh vận hành.
@@ -467,17 +475,25 @@ Trong quá trình quản trị hệ điều hành PAN-OS, quản trị viên có
 
 Bảng~\ref{tab:gui-cli-comparison} tổng hợp phương thức thao tác cho toàn bộ các nhóm khuyến nghị tiêu biểu trong đề tài, thể hiện rõ những tiêu chí có thể kiểm tra qua GUI, qua CLI hoặc có thể áp dụng linh hoạt cả hai cách.
 
-\begin{table}[H]
-\centering\small
-\caption{Tổng hợp phương thức kiểm tra thủ công qua GUI và CLI}
-\label{tab:gui-cli-comparison}
-\renewcommand{\arraystretch}{1.45}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\centering\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.4cm}X@{}}
+\begin{longtable}{@{}>{\centering\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
+\caption{Tổng hợp phương thức kiểm tra thủ công qua GUI và CLI} \label{tab:gui-cli-comparison} \\
 \toprule
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mã CIS}} & \textcolor{white}{\textbf{Tên khuyến nghị}} & \textcolor{white}{\textbf{Phương thức}} & \textcolor{white}{\textbf{Thao tác thực hiện trên hệ thống}} \\
 \midrule
+\endfirsthead
+\multicolumn{4}{c}{\small\textit{Bảng \ref{tab:gui-cli-comparison} (tiếp theo)}} \\
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{Mã CIS}} & \textcolor{white}{\textbf{Tên khuyến nghị}} & \textcolor{white}{\textbf{Phương thức}} & \textcolor{white}{\textbf{Thao tác thực hiện trên hệ thống}} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\small\textit{Còn tiếp ở trang sau}} \\
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
 1.1.2 & Legal Notice Login Banner & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Banners.\\
  & & & CLI: \texttt{show config running | match login-banner} \\
 1.1.3 & Log on High DP Load & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Logging.\\
@@ -485,7 +501,7 @@ Bảng~\ref{tab:gui-cli-comparison} tổng hợp phương thức thao tác cho t
 1.2.1 & Permitted IP Management & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Interfaces} $\rightarrow$ Management.\\
  & & & CLI: \texttt{show config running | match permitted-ip} \\
 1.2.3 & Disable HTTP/Telnet Mgmt & Cả hai & GUI: Bỏ chọn ô HTTP và Telnet tại Management Interface.\\
- & & & CLI: \texttt{show config running | match "http\|telnet"} \\
+ & & & CLI: \texttt{show config running | match "http\textbar{}telnet"} \\
 1.3.1 & Password Complexity & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Password.\\
  & & & CLI: \texttt{show config running | match password-complexity} \\
 1.3.2 & Password Min Length $\geq 12$ & Cả hai & GUI: Đọc giá trị Minimum Length tại Password Complexity.\\
@@ -504,10 +520,7 @@ Bảng~\ref{tab:gui-cli-comparison} tổng hợp phương thức thao tác cho t
  & & & CLI: Cần duyệt cây cấu hình XML phức tạp \\
 7.3 & Block Malicious IP Top Rule & Web GUI & GUI: \textbf{Policies} $\rightarrow$ \textbf{Security}, kiểm tra thứ tự rule.\\
  & & & CLI: \texttt{show config running | match "rulebase security"} \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
-\end{table}
+\end{longtable}
 
 \subsubsection{Ví dụ chi tiết 1: CIS 1.2.1 -- Permitted IP Addresses}
 \noindent\textbf{Mục tiêu bảo mật:} Ngăn chặn hoàn toàn các truy cập trái phép đến cổng quản trị của firewall bằng cách chỉ cho phép các IP thuộc vùng quản trị tin cậy.
@@ -714,7 +727,7 @@ Hình~\ref{fig:auto-architecture} minh họa kiến trúc quy trình xử lý t�
 \end{figure}
 
 \subsubsection{Thiết kế Quy tắc và Trạng thái Kết quả}
-Các quy tắc kiểm tra được định nghĩa trong tệp tin `rules/cis_controls.yaml`. Cấu trúc quy tắc bao gồm mã định danh, tiêu đề, loại kiểm tra và các ngưỡng so sánh tương ứng. Mã nguồn~\ref{lst:rule-yaml} minh họa cấu trúc khai báo một số quy tắc điển hình.
+Các quy tắc kiểm tra được định nghĩa trong tệp tin \texttt{rules/cis\_controls.yaml}. Cấu trúc quy tắc bao gồm mã định danh, tiêu đề, loại kiểm tra và các ngưỡng so sánh tương ứng. Mã nguồn~\ref{lst:rule-yaml} minh họa cấu trúc khai báo một số quy tắc điển hình.
 
 \begin{lstlisting}[language={},caption={Cấu trúc khai báo quy tắc CIS trong tệp tin cis\_controls.yaml},label={lst:rule-yaml}]
 benchmark: 'CIS Palo Alto Firewall 11 Benchmark v1.2.0'
@@ -749,7 +762,7 @@ Hệ thống quy ước 5 trạng thái kết quả thống nhất:
 \end{itemize}
 
 \subsubsection{Mã nguồn minh họa kiểm tra tự động}
-Mã nguồn~\ref{lst:python-scanner} minh họa đoạn mã Python trong module `src/panos_client.py` và `src/cis_scanner.py` thực hiện thu thập Running Configuration và kiểm tra tiêu chí CIS 1.4.1 (Idle Timeout).
+Mã nguồn~\ref{lst:python-scanner} minh họa đoạn mã Python trong module \texttt{src/panos\_client.py} và \texttt{src/cis\_scanner.py} thực hiện thu thập Running Configuration và kiểm tra tiêu chí CIS 1.4.1 (Idle Timeout).
 
 \begin{lstlisting}[language=Python,caption={Mã nguồn Python tự động kiểm tra tiêu chí CIS 1.4.1},label={lst:python-scanner}]
 import os
@@ -792,7 +805,7 @@ def audit_idle_timeout(host, api_key):
 \subsubsection{Mô hình Điều phối Cụm thiết bị (Fleet Management)}
 Trong môi trường doanh nghiệp thực tế, hệ thống tường lửa thường gồm nhiều cụm thiết bị phân bố tại các trung tâm dữ liệu khác nhau. Việc thực thi thủ công kịch bản trên từng thiết bị đơn lẻ sẽ không giải quyết được bài toán quản trị quy mô lớn. Do đó, nhóm xây dựng giải pháp tự động hóa điều phối từ xa (Remote Automation) sử dụng Ansible trên nền tảng Linux Bastion.
 
-Mô hình hoạt động theo nguyên lý không cài đặt tác tử (Agentless): Ansible Controller kết nối thẳng đến các firewall thông qua các API endpoint HTTPS bảo mật. Thông tin về hạ tầng được quản lý tập trung trong tệp tin `ansible/inventory.yaml`:
+Mô hình hoạt động theo nguyên lý không cài đặt tác tử (Agentless): Ansible Controller kết nối thẳng đến các firewall thông qua các API endpoint HTTPS bảo mật. Thông tin về hạ tầng được quản lý tập trung trong tệp tin \texttt{ansible/inventory.yaml}:
 
 \begin{lstlisting}[language={},caption={Cấu hình Ansible Inventory quản lý cụm tường lửa Palo Alto}]
 all:
@@ -818,7 +831,7 @@ Nhóm phát triển 3 kịch bản Playbook phục vụ trọn vẹn vòng đờ
 \begin{enumerate}
     \item \textbf{\texttt{03\_verify\_connectivity.yaml}:} Kịch bản kiểm tra sẵn sàng kết nối. Gửi yêu cầu kiểm tra cổng HTTPS 443 và thực hiện khởi tạo API Key xác thực cho toàn bộ các firewall trong inventory.
     \item \textbf{\texttt{01\_fleet\_hardening.yaml}:} Kịch bản tự động khắc phục và làm cứng cấu hình hàng loạt. Sử dụng module \texttt{ansible.builtin.uri} với phương thức HTTP POST và định dạng \texttt{body\_format: form-urlencoded}. Thiết kế này giải quyết triệt để lỗi điều khiển ký tự (control characters) trong URL khi áp dụng các nội dung có khoảng trắng như biểu ngữ cảnh báo pháp lý (Login Banner). Kịch bản đồng thời áp dụng chính sách mật khẩu, thời gian ngắt phiên rảnh rỗi và cấu hình NTP cho toàn bộ cụm thiết bị trong một lần chạy duy nhất.
-    \item \textbf{\texttt{02\_fleet\_audit.yaml}:} Kịch bản điều phối công cụ Python Scanner quét song song toàn bộ fleet. Ansible kích hoạt script `main.py` trên từng node, tự động nạp mật khẩu quản trị qua biến môi trường hoặc tham số không tương tác, thu thập kết quả và tổng hợp báo cáo kiểm toán cho quản trị viên.
+    \item \textbf{\texttt{02\_fleet\_audit.yaml}:} Kịch bản điều phối công cụ Python Scanner quét song song toàn bộ fleet. Ansible kích hoạt script \texttt{main.py} trên từng node, tự động nạp mật khẩu quản trị qua biến môi trường hoặc tham số không tương tác, thu thập kết quả và tổng hợp báo cáo kiểm toán cho quản trị viên.
 \end{enumerate}
 
 % ============================================================
@@ -897,17 +910,25 @@ HA2 Link & 192.168.2.0/30 & Cáp ảo điểm-điểm & Kênh truyền dữ li�
 
 Nhóm thực hiện quy trình kiểm tra thủ công toàn bộ các khuyến nghị trên cụm tường lửa. Kết quả kiểm tra được tổng hợp chi tiết theo biểu mẫu chuẩn trong Bảng~\ref{tab:manual-results}.
 
-\begin{table}[H]
-\centering\footnotesize
-\caption{Bảng tổng hợp kết quả đánh giá thủ công trên cụm tường lửa Palo Alto}
-\label{tab:manual-results}
-\renewcommand{\arraystretch}{1.4}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\centering\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{1.8cm}X@{}}
+\begin{longtable}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{4.0cm}>{\centering\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{3.9cm}@{}}
+\caption{Bảng tổng hợp kết quả đánh giá thủ công trên cụm tường lửa Palo Alto} \label{tab:manual-results} \\
 \toprule
 \rowcolor{CISBlue}
-\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Nội dung kiểm tra}} & \textcolor{white}{\textbf{Kết quả thực tế quan sát}} & \textcolor{white}{\textbf{Đánh giá}} & \textcolor{white}{\textbf{Minh chứng}} \\
+\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Nội dung kiểm tra}} & \textcolor{white}{\textbf{Kết quả thực tế quan sát}} & \textcolor{white}{\textbf{Đánh giá}} & \textcolor{white}{\textbf{Minh chứng đối chứng}} \\
 \midrule
+\endfirsthead
+\multicolumn{5}{c}{\small\textit{Bảng \ref{tab:manual-results} (tiếp theo)}} \\
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Nội dung kiểm tra}} & \textcolor{white}{\textbf{Kết quả thực tế quan sát}} & \textcolor{white}{\textbf{Đánh giá}} & \textcolor{white}{\textbf{Minh chứng đối chứng}} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\small\textit{Còn tiếp ở trang sau}} \\
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
 1.1.2 & Legal Notice Login Banner & Có cấu hình thông báo pháp lý & \textcolor{CISGreen}{\textbf{Đạt}} & Banner hiển thị khi mở GUI \\
 1.1.3 & Log on High DP Load & Đã đánh giá bật ghi log tải cao & \textcolor{CISGreen}{\textbf{Đạt}} & Checkbox Logging bật \\
 1.2.1 & Permitted IP Management & Danh sách chỉ gồm 2 máy Bastion & \textcolor{CISGreen}{\textbf{Đạt}} & Đúng 10.0.10.20, 10.0.10.21 \\
@@ -938,10 +959,7 @@ Nhóm thực hiện quy trình kiểm tra thủ công toàn bộ các khuyến n
 7.2 & No ANY Service Untrust Rule & Không có luật chứa dịch vụ ANY & \textcolor{CISGreen}{\textbf{Đạt}} & Service chỉ định cổng cụ thể \\
 7.3 & Top Rule Blocking Threats & Luật chặn IP độc hại đứng đầu bảng & \textcolor{CISGreen}{\textbf{Đạt}} & Rule Drop Malicious ở Top 1 \\
 7.4 & Default Rules Logging & Bật ghi log cuối phiên cho rule mặc định & \textcolor{CISGreen}{\textbf{Đạt}} & Log at Session End bật \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
-\end{table}
+\end{longtable}
 
 \subsection{Triển khai Đánh giá Tự động hóa (Automated)}
 
@@ -1006,7 +1024,7 @@ CIS 7.4       Default security rules log at session end            PASS     Enab
 \evidence{images/automated_cis_1_4_1.png}{Kết quả thực thi tự động hóa quét tuân thủ CIS Benchmark trên thiết bị tường lửa}{fig:auto-results}
 
 \subsubsection{Điều phối quét tự động toàn bộ Fleet qua Ansible}
-Để tự động hóa trên quy mô nhiều thiết bị, Ansible Playbook `02_fleet_audit.yaml` được kích hoạt trên Linux Bastion. Playbook tự động duyệt qua toàn bộ danh sách firewall trong file inventory, thực thi engine kiểm tra Python và thu thập báo cáo độc lập cho từng thiết bị mà không cần bất kỳ sự can thiệp thủ công nào:
+Để tự động hóa trên quy mô nhiều thiết bị, Ansible Playbook \texttt{playbooks/02\_fleet\_audit.yaml} được kích hoạt trên Linux Bastion. Playbook tự động duyệt qua toàn bộ danh sách firewall trong file inventory, thực thi engine kiểm tra Python và thu thập báo cáo độc lập cho từng thiết bị mà không cần bất kỳ sự can thiệp thủ công nào:
 
 \begin{lstlisting}[language=bash,caption={Thực thi điều phối quét tự động toàn bộ Fleet qua Ansible}]
 (.venv) root@vm-linux-bastion:~/CIS-Benchmark-PaloAlto/ansible# ansible-playbook playbooks/02_fleet_audit.yaml

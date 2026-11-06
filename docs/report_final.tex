@@ -16,7 +16,8 @@
 \usepackage{listings}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
-\usepackage{xurl}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-}
 \usepackage{setspace}
 \usepackage{caption}
 \usepackage{tocloft}
@@ -28,7 +29,9 @@
     arrows.meta,
     positioning,
     shapes.geometric,
-    calc
+    calc,
+    backgrounds,
+    fit
 }
 
 \definecolor{CISBlue}{HTML}{174A78}
@@ -325,15 +328,24 @@ Huỳnh Minh Hiếu
 \section*{Danh mục từ viết tắt}
 \addcontentsline{toc}{section}{Danh mục từ viết tắt}
 
-\begin{table}[H]
-\centering\small
-\renewcommand{\arraystretch}{1.45}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\bfseries\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{4.2cm}X@{}}
+\begin{longtable}{@{}>{\bfseries\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{4.8cm}>{\raggedright\arraybackslash}p{8.0cm}@{}}
 \toprule
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Từ viết tắt}} & \textcolor{white}{\textbf{Thuật ngữ tiếng Anh}} & \textcolor{white}{\textbf{Ý nghĩa tiếng Việt}} \\
 \midrule
+\endfirsthead
+\multicolumn{3}{c}{\small\textit{Danh mục từ viết tắt (tiếp theo)}} \\
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{Từ viết tắt}} & \textcolor{white}{\textbf{Thuật ngữ tiếng Anh}} & \textcolor{white}{\textbf{Ý nghĩa tiếng Việt}} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\small\textit{Còn tiếp ở trang sau}} \\
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
 API & Application Programming Interface & Giao diện lập trình ứng dụng \\
 CIS & Center for Internet Security & Trung tâm an ninh Internet Hoa Kỳ \\
 CLI & Command Line Interface & Giao diện dòng lệnh điều khiển \\
@@ -349,10 +361,7 @@ SSH & Secure Shell & Giao thức phiên làm việc từ xa an toàn \\
 TLS & Transport Layer Security & Giao thức bảo mật tầng truyền vận \\
 XML & Extensible Markup Language & Ngôn ngữ đánh dấu mở rộng \\
 XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
-\end{table}
+\end{longtable}
 
 \clearpage
 
@@ -409,6 +418,37 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 
 \noindent\textbf{Kho mã nguồn của đề tài:} \href{https://github.com/mhieudzvcl/CIS-Benchmark-PaloAlto}{\texttt{github.com/mhieudzvcl/CIS-Benchmark-PaloAlto}}.
 
+\vspace{0.3cm}
+
+\noindent Bảng~\ref{tab:scope} tóm tắt 6 nhóm nội dung với 30 khuyến nghị CIS được nhóm lựa chọn triển khai trong đồ án.
+
+\begin{longtable}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
+\caption{Các nhóm nội dung CIS Benchmark được nhóm lựa chọn triển khai} \label{tab:scope} \\
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{\small\textit{Bảng \ref{tab:scope} (tiếp theo)}} \\
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\small\textit{Còn tiếp ở trang sau}} \\
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
+1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\
+2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Bật yêu cầu độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng chữ hoa, chữ thường, chữ số, ký tự đặc biệt, thời hạn đổi mật khẩu, lưu lịch sử mật khẩu cũ và không để tồn tại các profile ghi đè chính sách chung. \\
+3 & Dịch vụ hệ thống và Ghi log (Services \& Logging) & 3 controls & Bật xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ NTP đồng bộ thời gian chính và phụ, cấu hình chuyển tiếp log tập trung về Syslog Server. \\
+4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Kiểm tra trạng thái đồng bộ giữa hai firewall Active và Passive, bật cơ chế giám sát đường truyền (Path Monitoring), để cổng Passive ở chế độ Auto và tắt tính năng giành quyền (Preemption). \\
+5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\
+6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm tra không cho phép mở cổng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\
+\end{longtable}
+
 \subsection{Nội dung Benchmark}
 Tài liệu CIS Palo Alto Firewall 11 Benchmark v1.2.0 được xây dựng dựa trên sự đồng thuận của cộng đồng chuyên gia an ninh mạng quốc tế. Cấu trúc tài liệu bao gồm các quy định pháp lý (Terms of Use), định nghĩa cấp độ bảo vệ (Profile Level 1 và Level 2), các khuyến nghị kỹ thuật chi tiết và phần phụ lục đối sánh.
 
@@ -423,14 +463,14 @@ Mỗi khuyến nghị trong tài liệu được chuẩn hóa thành các mục 
 
 Bảng~\ref{tab:full-benchmark-details} trình bày chi tiết toàn bộ 30 khuyến nghị cấu hình được nhóm lựa chọn triển khai trong đồ án, bao gồm mã số, tiêu đề, trạng thái đánh giá, cấp độ bảo vệ, nội dung yêu cầu và lý do bảo mật tương ứng.
 
-\begin{longtable}{@{}>{\centering\arraybackslash}p{1.1cm}>{\raggedright\arraybackslash}p{3.1cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{4.2cm}X@{}}
+\begin{longtable}{@{}>{\centering\arraybackslash}p{1.1cm}>{\raggedright\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{1.7cm}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{3.8cm}@{}}
 \caption{Danh mục chi tiết 30 khuyến nghị CIS Benchmark được nhóm lựa chọn triển khai} \label{tab:full-benchmark-details} \\
 \toprule
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị}} & \textcolor{white}{\textbf{Trạng thái}} & \textcolor{white}{\textbf{Cấp độ}} & \textcolor{white}{\textbf{Nội dung cấu hình}} & \textcolor{white}{\textbf{Lý do bảo mật}} \\
 \midrule
 \endfirsthead
-\multicolumn{6}{c}{\small\textit{Tiếp theo trang trước}} \\
+\multicolumn{6}{c}{\small\textit{Bảng \ref{tab:full-benchmark-details} (tiếp theo)}} \\
 \toprule
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị}} & \textcolor{white}{\textbf{Trạng thái}} & \textcolor{white}{\textbf{Cấp độ}} & \textcolor{white}{\textbf{Nội dung cấu hình}} & \textcolor{white}{\textbf{Lý do bảo mật}} \\
@@ -872,19 +912,25 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \subsubsection{Phụ lục Bảng tổng kết Checklist kết quả Manual}
 Bảng~\ref{tab:manual-checklist-summary} tổng hợp kết quả rà soát thủ công toàn bộ 30 khuyến nghị trên cụm tường lửa thực nghiệm tại lab CMC Cloud.
 
-\begin{table}[H]
-\centering\small
-\caption{Bảng tổng kết checklist kết quả rà soát thủ công trên cụm tường lửa}
-\label{tab:manual-checklist-summary}
-\renewcommand{\arraystretch}{1.35}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{6.8cm}>{\centering\arraybackslash}p{1.4cm}>{\centering\arraybackslash}p{1.6cm}X@{}}
+\begin{longtable}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{6.8cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{3.8cm}@{}}
+\caption{Bảng tổng kết checklist kết quả rà soát thủ công trên cụm tường lửa} \label{tab:manual-checklist-summary} \\
 \toprule
 \rowcolor{CISBlue}
-\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \multicolumn{2}{c}{\textcolor{white}{\textbf{Thiết lập đúng}}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
-\rowcolor{CISBlue}
-\textcolor{white}{} & \textcolor{white}{} & \textcolor{white}{\textbf{Có}} & \textcolor{white}{\textbf{Không}} & \textcolor{white}{} \\
+\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \textcolor{white}{\textbf{Đạt}} & \textcolor{white}{\textbf{K.Đạt}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
 \midrule
+\endfirsthead
+\multicolumn{5}{c}{\small\textit{Bảng \ref{tab:manual-checklist-summary} (tiếp theo)}} \\
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \textcolor{white}{\textbf{Đạt}} & \textcolor{white}{\textbf{K.Đạt}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\small\textit{Còn tiếp ở trang sau}} \\
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
 1.1.2 & Cấu hình biểu ngữ cảnh báo pháp lý (Login Banner) & $\boxtimes$ & $\square$ & Đã cấu hình trên GUI \\
 1.1.3 & Bật ghi log khi tải Data Plane cao & $\boxtimes$ & $\square$ & Checkbox Logging đã bật \\
 1.2.1 & Cấu hình Permitted IP Addresses cho Management & $\boxtimes$ & $\square$ & Đúng 2 IP Bastion \\
@@ -915,10 +961,7 @@ Bảng~\ref{tab:manual-checklist-summary} tổng hợp kết quả rà soát th�
 7.2 & Không cho phép mở cổng ANY từ vùng Untrust & $\boxtimes$ & $\square$ & Chỉ mở port chỉ định \\
 7.3 & Đặt luật chặn IP độc hại ở đầu danh sách Rulebase & $\boxtimes$ & $\square$ & Rule Drop đặt ở Top 1 \\
 7.4 & Bật ghi log cuối phiên cho các luật mặc định & $\boxtimes$ & $\square$ & Log Session End bật \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
-\end{table}
+\end{longtable}
 
 \subsection{Triển khai Automation}
 
@@ -927,22 +970,22 @@ Trên máy chủ điều khiển Linux Bastion (\texttt{10.0.10.20}), môi trư�
 
 \begin{lstlisting}[language=bash,caption={Cấu trúc cây thư mục mã nguồn hệ thống tự động hóa}]
 CIS-Benchmark-PaloAlto/
-├── main.py                  # Entry point dieu khien toan bo tien trinh
-├── rules/
-│   └── cis_controls.yaml    # Dinh nghia 30 quy tac kiem tra CIS
-├── src/
-│   ├── panos_client.py      # Module ket noi HTTPS va goi PAN-OS XML API
-│   ├── cis_scanner.py       # Engine phan tich XPath va cham diem tuan thu
-│   ├── remediation.py       # Module tu dong khac phuc va rollback an toan
-│   └── report_generator.py  # Module ket xuat bao cao JSON va HTML Dashboard
-├── ansible/
-│   ├── ansible.cfg          # Cau hinh Ansible toi uu cho Network Automation
-│   ├── inventory.yaml       # Quan ly danh sach cum firewall
-│   └── playbooks/
-│       ├── 01_fleet_hardening.yaml     # Lam cung cau hinh hang loat
-│       ├── 02_fleet_audit.yaml         # Dieu phoi quet song song toan fleet
-│       └── 03_verify_connectivity.yaml # Kiem tra ket noi va tao API key
-└── reports/                 # Thu muc luu tru ket qua kiem toan JSON va HTML
+|-- main.py                  # Entry point dieu khien toan bo tien trinh
+|-- rules/
+|   `-- cis_controls.yaml    # Dinh nghia 30 quy tac kiem tra CIS
+|-- src/
+|   |-- panos_client.py      # Module ket noi HTTPS va goi PAN-OS XML API
+|   |-- cis_scanner.py       # Engine phan tich XPath va cham diem tuan thu
+|   |-- remediation.py       # Module tu dong khac phuc va rollback an toan
+|   `-- report_generator.py  # Module ket xuat bao cao JSON va HTML Dashboard
+|-- ansible/
+|   |-- ansible.cfg          # Cau hinh Ansible toi uu cho Network Automation
+|   |-- inventory.yaml       # Quan ly danh sach cum firewall
+|   `-- playbooks/
+|       |-- 01_fleet_hardening.yaml     # Lam cung cau hinh hang loat
+|       |-- 02_fleet_audit.yaml         # Dieu phoi quet song song toan fleet
+|       `-- 03_verify_connectivity.yaml # Kiem tra ket noi va tao API key
+`-- reports/                 # Thu muc luu tru ket qua kiem toan JSON va HTML
 \end{lstlisting}
 
 \subsubsection{Thiết lập Inventory và Quản lý bí mật an toàn}

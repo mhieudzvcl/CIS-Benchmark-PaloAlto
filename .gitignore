@@ -40,3 +40,12 @@ evidence/*
 # Temporary files
 *.log
 *.bak
+*.aux
+*.toc
+*.lof
+*.lot
+*.lol
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
