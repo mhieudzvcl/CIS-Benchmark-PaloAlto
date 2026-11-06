@@ -31,3 +31,4 @@
           Evaluated: {{ evaluated_ratio }} controls
           Compliance Score: {{ compliance_score }}
           Report JSON/HTML generated in {{ project_root }}/reports/
+

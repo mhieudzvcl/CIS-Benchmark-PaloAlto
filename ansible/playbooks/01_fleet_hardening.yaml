@@ -15,7 +15,7 @@
 
     - name: Store API Key
       ansible.builtin.set_fact:
-        api_key: "{{ keygen_out.content | regex_search('<key>([^<]+)</key>', '\\1') | first }}"
+        api_key: "{{ keygen_out.content | regex_search('<key>([^<]+)</key>') | regex_replace('<key>|</key>', '') }}"
 
     - name: 2. Enforce CIS 1.1.2 - Configure Legal Notice Login Banner
       ansible.builtin.uri:
@@ -69,7 +69,7 @@
 
     - name: Extract Commit Job ID
       ansible.builtin.set_fact:
-        commit_job_id: "{{ commit_trigger.content | regex_search('<job>([0-9]+)</job>', '\\1') | first | default('') }}"
+        commit_job_id: "{{ (commit_trigger.content | regex_search('<job>[0-9]+</job>') | regex_replace('<job>|</job>', '')) | default('', true) }}"
 
     - name: 9. Poll Commit Progress Until Completed
       ansible.builtin.uri:
@@ -88,3 +88,4 @@
         msg: >-
           Firewall {{ inventory_hostname }} ({{ ansible_host }}) successfully hardened to CIS Benchmark standard.
           Commit Job: {{ commit_job_id }} finished with status FIN / OK.
+

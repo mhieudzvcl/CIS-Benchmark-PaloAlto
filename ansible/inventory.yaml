@@ -17,3 +17,4 @@ all:
   vars:
     ansible_python_interpreter: /root/CIS-Benchmark-PaloAlto/.venv/bin/python
     project_root: /root/CIS-Benchmark-PaloAlto
+

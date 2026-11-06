@@ -22,7 +22,7 @@
 
     - name: Extract API Key
       ansible.builtin.set_fact:
-        panos_api_key: "{{ keygen_response.content | regex_search('<key>([^<]+)</key>', '\\1') | first }}"
+        panos_api_key: "{{ keygen_response.content | regex_search('<key>([^<]+)</key>') | regex_replace('<key>|</key>', '') }}"
 
     - name: Query System Info
       ansible.builtin.uri:
@@ -34,12 +34,13 @@
 
     - name: Parse Hostname and Model
       ansible.builtin.set_fact:
-        panos_hostname: "{{ sysinfo_response.content | regex_search('<hostname>([^<]+)</hostname>', '\\1') | first | default('Unknown') }}"
-        panos_version: "{{ sysinfo_response.content | regex_search('<sw-version>([^<]+)</sw-version>', '\\1') | first | default('Unknown') }}"
-        panos_model: "{{ sysinfo_response.content | regex_search('<model>([^<]+)</model>', '\\1') | first | default('PA-VM') }}"
+        panos_hostname: "{{ (sysinfo_response.content | regex_search('<hostname>[^<]+</hostname>') | regex_replace('<hostname>|</hostname>', '')) | default('Unknown', true) }}"
+        panos_version: "{{ (sysinfo_response.content | regex_search('<sw-version>[^<]+</sw-version>') | regex_replace('<sw-version>|</sw-version>', '')) | default('Unknown', true) }}"
+        panos_model: "{{ (sysinfo_response.content | regex_search('<model>[^<]+</model>') | regex_replace('<model>|</model>', '')) | default('PA-VM', true) }}"
 
     - name: Display Connection Status
       ansible.builtin.debug:
         msg: >-
           Connected to {{ inventory_hostname }} ({{ ansible_host }}) successfully.
           Hostname: {{ panos_hostname }}, Model: {{ panos_model }}, PAN-OS: {{ panos_version }}
+

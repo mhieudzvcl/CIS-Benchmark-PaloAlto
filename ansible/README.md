@@ -76,3 +76,4 @@ ansible-playbook playbooks/02_fleet_audit.yaml
 
 * Chứng minh sự kết hợp hoàn hảo giữa lập trình kịch bản Python nâng cao và công cụ quản trị cấu hình tiêu chuẩn công nghiệp Ansible.
 * Đáp ứng trọn vẹn yêu cầu quản trị hạ tầng mạng quy mô lớn (Enterprise Scale), sẵn sàng mở rộng từ 2 thiết bị lab lên hàng trăm thiết bị trong thực tế chỉ bằng việc khai báo thêm IP vào tệp `inventory.yaml`.
+
