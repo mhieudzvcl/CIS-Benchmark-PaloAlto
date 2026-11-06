@@ -1,0 +1,19 @@
+all:
+  children:
+    paloalto_firewalls:
+      hosts:
+        PA-CIS-01:
+          ansible_host: 10.0.10.11
+          node_role: active
+        PA-CIS-02:
+          ansible_host: 10.0.10.12
+          node_role: passive
+      vars:
+        panos_username: admin
+        panos_password: "{{ vault_panos_password | default('Ansiblelab@123') }}"
+        audit_username: cis-auditor
+        audit_password: "{{ vault_audit_password | default('Ansiblelab@123') }}"
+        panos_verify_tls: false
+  vars:
+    ansible_python_interpreter: /root/CIS-Benchmark-PaloAlto/.venv/bin/python
+    project_root: /root/CIS-Benchmark-PaloAlto

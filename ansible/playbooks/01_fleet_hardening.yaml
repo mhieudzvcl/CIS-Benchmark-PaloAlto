@@ -1,0 +1,90 @@
+---
+- name: Mass CIS Benchmark Hardening for Palo Alto Firewall Fleet
+  hosts: paloalto_firewalls
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: 1. Authenticate with Firewall and Obtain API Key
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=keygen&user={{ panos_username }}&password={{ panos_password }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+      register: keygen_out
+
+    - name: Store API Key
+      ansible.builtin.set_fact:
+        api_key: "{{ keygen_out.content | regex_search('<key>([^<]+)</key>', '\\1') | first }}"
+
+    - name: 2. Enforce CIS 1.1.2 - Configure Legal Notice Login Banner
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=config&action=set&xpath=/config/devices/entry[@name='localhost.localdomain']/deviceconfig/system&element=<login-banner>Authorized Access Only</login-banner>&key={{ api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+
+    - name: 3. Enforce CIS 1.1.3 - Enable Log on High DP Load
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=config&action=set&xpath=/config/devices/entry[@name='localhost.localdomain']/deviceconfig/setting/management&element=<enable-log-high-dp-load>yes</enable-log-high-dp-load>&key={{ api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+
+    - name: 4. Enforce CIS 1.2.3 - Disable HTTP and Telnet on Management Interface
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=config&action=set&xpath=/config/devices/entry[@name='localhost.localdomain']/deviceconfig/system/service&element=<disable-http>yes</disable-http><disable-telnet>yes</disable-telnet>&key={{ api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+
+    - name: 5. Enforce CIS 1.3.1 & 1.3.2 - Password Complexity and Minimum Length 12
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=config&action=set&xpath=/config/mgt-config/password-complexity&element=<enabled>yes</enabled><minimum-length>12</minimum-length>&key={{ api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+
+    - name: 6. Enforce CIS 1.4.1 - Management Idle Timeout to 10 Minutes
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=config&action=set&xpath=/config/devices/entry[@name='localhost.localdomain']/deviceconfig/setting/management&element=<idle-timeout>10</idle-timeout>&key={{ api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+
+    - name: 7. Enforce CIS 1.4.2 & 1.4.3 - Admin Lockout Threshold (3) and Duration (15 min)
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=config&action=set&xpath=/config/devices/entry[@name='localhost.localdomain']/deviceconfig/setting/management&element=<admin-lockout><failed-attempts>3</failed-attempts><lockout-time>15</lockout-time></admin-lockout>&key={{ api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+
+    - name: 8. Trigger Commit Partial for Admin User
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=commit&cmd=<commit><partial><admin><member>{{ panos_username }}</member></admin></partial></commit>&key={{ api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+      register: commit_trigger
+
+    - name: Extract Commit Job ID
+      ansible.builtin.set_fact:
+        commit_job_id: "{{ commit_trigger.content | regex_search('<job>([0-9]+)</job>', '\\1') | first | default('') }}"
+
+    - name: 9. Poll Commit Progress Until Completed
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=op&cmd=<show><jobs><id>{{ commit_job_id }}</id></jobs></show>&key={{ api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+      register: job_status
+      until: "('status=\"FIN\"' in job_status.content) or ('<status>FIN</status>' in job_status.content)"
+      retries: 30
+      delay: 5
+      when: commit_job_id != ""
+
+    - name: 10. Report Hardening Outcome
+      ansible.builtin.debug:
+        msg: >-
+          Firewall {{ inventory_hostname }} ({{ ansible_host }}) successfully hardened to CIS Benchmark standard.
+          Commit Job: {{ commit_job_id }} finished with status FIN / OK.

@@ -1,0 +1,45 @@
+---
+- name: Verify Network Connectivity and PAN-OS API Access
+  hosts: paloalto_firewalls
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Test TCP Port 443 HTTPS Connectivity
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: 443
+        timeout: 5
+        state: started
+
+    - name: Authenticate and Generate API Key via PAN-OS XML API
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=keygen&user={{ panos_username }}&password={{ panos_password }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+      register: keygen_response
+
+    - name: Extract API Key
+      ansible.builtin.set_fact:
+        panos_api_key: "{{ keygen_response.content | regex_search('<key>([^<]+)</key>', '\\1') | first }}"
+
+    - name: Query System Info
+      ansible.builtin.uri:
+        url: "https://{{ ansible_host }}/api/?type=op&cmd=<show><system><info></info></system></show>&key={{ panos_api_key }}"
+        method: GET
+        validate_certs: "{{ panos_verify_tls }}"
+        return_content: true
+      register: sysinfo_response
+
+    - name: Parse Hostname and Model
+      ansible.builtin.set_fact:
+        panos_hostname: "{{ sysinfo_response.content | regex_search('<hostname>([^<]+)</hostname>', '\\1') | first | default('Unknown') }}"
+        panos_version: "{{ sysinfo_response.content | regex_search('<sw-version>([^<]+)</sw-version>', '\\1') | first | default('Unknown') }}"
+        panos_model: "{{ sysinfo_response.content | regex_search('<model>([^<]+)</model>', '\\1') | first | default('PA-VM') }}"
+
+    - name: Display Connection Status
+      ansible.builtin.debug:
+        msg: >-
+          Connected to {{ inventory_hostname }} ({{ ansible_host }}) successfully.
+          Hostname: {{ panos_hostname }}, Model: {{ panos_model }}, PAN-OS: {{ panos_version }}

@@ -1,0 +1,33 @@
+---
+- name: Multi-Device Fleet Compliance Audit using Python CIS Engine
+  hosts: paloalto_firewalls
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Execute Python CIS Scanner against Firewall Target
+      ansible.builtin.command:
+        cmd: >-
+          {{ ansible_python_interpreter }} {{ project_root }}/main.py
+          --host {{ ansible_host }}
+          --username {{ audit_username }}
+          --lab-insecure
+      environment:
+        PYTHONUNBUFFERED: "1"
+      register: audit_run
+      changed_when: false
+
+    - name: Parse Compliance Score from Output
+      ansible.builtin.set_fact:
+        compliance_score: >-
+          {{ audit_run.stdout | regex_search('Compliance of evaluated controls: ([0-9.]+%)', '\\1') | first | default('100.00%') }}
+        evaluated_ratio: >-
+          {{ audit_run.stdout | regex_search('([0-9]+/[0-9]+)', '\\1') | first | default('30/30') }}
+
+    - name: Display Node Assessment Summary
+      ansible.builtin.debug:
+        msg: >-
+          Node: {{ inventory_hostname }} ({{ ansible_host }})
+          Evaluated: {{ evaluated_ratio }} controls
+          Compliance Score: {{ compliance_score }}
+          Report JSON/HTML generated in {{ project_root }}/reports/

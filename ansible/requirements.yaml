@@ -1,0 +1,7 @@
+---
+# Ansible Collections required for Palo Alto Networks Automation
+collections:
+  - name: paloaltonetworks.panos
+    version: ">=2.19.0"
+  - name: ansible.posix
+  - name: community.general
