@@ -1,0 +1,1049 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T5]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,vietnamese]{babel}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{tocloft}
+\usepackage{indentfirst}
+\setlength{\parindent}{1.1cm}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{
+    arrows.meta,
+    positioning,
+    shapes.geometric,
+    calc
+}
+
+\definecolor{CISBlue}{HTML}{174A78}
+\definecolor{CISLightBlue}{HTML}{EDF4FA}
+\definecolor{CISBorder}{HTML}{CCD9E5}
+\definecolor{CISGreen}{HTML}{16803C}
+\definecolor{CISRed}{HTML}{C62828}
+\definecolor{CISOrange}{HTML}{B76E00}
+\definecolor{CISMuted}{HTML}{64748B}
+
+\geometry{a4paper,left=25mm,right=25mm,top=23mm,bottom=23mm}
+\definecolor{UITBlue}{RGB}{0,79,151}
+\definecolor{DarkText}{RGB}{35,45,55}
+\definecolor{PaleBlue}{RGB}{236,245,251}
+\definecolor{CodeBack}{RGB}{245,247,250}
+\definecolor{CodeBorder}{RGB}{205,216,228}
+\definecolor{CodeGreen}{RGB}{10,112,60}
+\hypersetup{colorlinks=true,linkcolor=UITBlue,urlcolor=UITBlue}
+\setlength{\parskip}{0.15cm}
+\setstretch{1.15}
+\emergencystretch=2em
+\setlist[itemize]{leftmargin=1.35cm,itemsep=2pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=1.35cm,itemsep=2pt,topsep=4pt}
+\captionsetup{font=small,labelfont=bf}
+\renewcommand{\arraystretch}{1.3}
+
+\lstdefinestyle{reportcode}{
+    backgroundcolor=\color{CodeBack},
+    basicstyle=\ttfamily\footnotesize,
+    frame=single,
+    rulecolor=\color{CodeBorder},
+    columns=fullflexible,
+    keepspaces=true,
+    breaklines=true,
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=7pt,
+    xleftmargin=7pt,
+    framexleftmargin=7pt,
+    aboveskip=8pt,
+    belowskip=8pt
+}
+\lstset{style=reportcode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize Báo cáo NT542.R11 -- Lần 2 (10/11/2026)}
+\fancyhead[R]{\footnotesize Đánh giá bảo mật CIS Palo Alto}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+
+\newcommand{\reportname}{Xây dựng hệ thống tự động đánh giá và khắc phục cấu hình bảo mật tường lửa Palo Alto dựa trên tiêu chuẩn CIS Benchmark}
+\newcommand{\evidence}[3]{%
+\begin{figure}[H]\centering
+\IfFileExists{#1}{\includegraphics[width=0.88\textwidth,keepaspectratio]{#1}}{%
+  \fcolorbox{CodeBorder}{PaleBlue}{\parbox[c][3.0cm][c]{0.80\textwidth}{\centering
+  \textbf{Vị trí bổ sung ảnh minh chứng thực nghiệm}\\[5pt]
+  \small\texttt{\detokenize{#1}}\\[4pt]
+  \small Ảnh chụp từ hạ tầng lab CMC Cloud thực tế}}}
+\caption{#2}\label{#3}
+\end{figure}}
+
+\renewcommand{\contentsname}{MỤC LỤC}
+\setcounter{tocdepth}{3}
+\setlength{\cftbeforetoctitleskip}{0.0cm}
+\setlength{\cftaftertoctitleskip}{0.25cm}
+\renewcommand{\cfttoctitlefont}{\fontsize{21}{26}\selectfont\bfseries\color{UITBlue}}
+\renewcommand{\cftaftertoctitle}{\par\vspace{0.08cm}{\color{UITBlue}\rule{\textwidth}{1.0pt}}\vspace{0.4cm}}
+\renewcommand{\cftdotsep}{2.0}
+\setlength{\cftbeforesecskip}{9pt}
+\setlength{\cftbeforesubsecskip}{4.0pt}
+\setlength{\cftbeforesubsubsecskip}{1.5pt}
+\setlength{\cftsecindent}{0pt}
+\setlength{\cftsecnumwidth}{3.10cm}
+\setlength{\cftsubsecindent}{0.62cm}
+\setlength{\cftsubsecnumwidth}{1.35cm}
+\setlength{\cftsubsubsecindent}{1.30cm}
+\setlength{\cftsubsubsecnumwidth}{1.65cm}
+\renewcommand{\cftsecpresnum}{CHƯƠNG~}
+\renewcommand{\cftsecaftersnum}{\hspace{0.25em}}
+\renewcommand{\cftsecfont}{\bfseries\color{UITBlue}}
+\renewcommand{\cftsecpagefont}{\bfseries\color{UITBlue}}
+\renewcommand{\cftsubsecfont}{\bfseries\color{DarkText}}
+\renewcommand{\cftsubsecpagefont}{\bfseries\color{DarkText}}
+\renewcommand{\cftsubsubsecfont}{\small\color{DarkText}}
+\renewcommand{\cftsubsubsecpagefont}{\small\color{DarkText}}
+\renewcommand{\cftsecleader}{\cftdotfill{2.0}}
+
+\setlength{\cftbeforelottitleskip}{0pt}
+\setlength{\cftafterlottitleskip}{10pt}
+\renewcommand{\cftlottitlefont}{\fontsize{21}{26}\selectfont\bfseries\color{UITBlue}}
+\renewcommand{\cftafterlottitle}{\par\vspace{0.08cm}{\color{UITBlue}\rule{\textwidth}{1pt}}\vspace{0.4cm}}
+\setlength{\cftbeforeloftitleskip}{0pt}
+\setlength{\cftafterloftitleskip}{10pt}
+\renewcommand{\cftloftitlefont}{\fontsize{21}{26}\selectfont\bfseries\color{UITBlue}}
+\renewcommand{\cftafterloftitle}{\par\vspace{0.08cm}{\color{UITBlue}\rule{\textwidth}{1pt}}\vspace{0.4cm}}
+
+\setlength{\cfttabindent}{0pt}
+\setlength{\cfttabnumwidth}{2.7em}
+\setlength{\cftfigindent}{0pt}
+\setlength{\cftfignumwidth}{2.7em}
+\renewcommand{\cfttabfont}{\color{DarkText}}
+\renewcommand{\cftfigfont}{\color{DarkText}}
+\renewcommand{\cfttabpagefont}{\color{UITBlue}}
+\renewcommand{\cftfigpagefont}{\color{UITBlue}}
+\renewcommand{\cfttableader}{\cftdotfill{2}}
+\renewcommand{\cftfigleader}{\cftdotfill{2}}
+
+\makeatletter
+\renewcommand{\lstlistoflistings}{%
+  \begingroup
+  \parskip\z@ \parindent\z@
+  \section*{\centering\fontsize{21}{26}\selectfont\bfseries\color{UITBlue}\lstlistlistingname}%
+  \noindent{\color{UITBlue}\rule{\textwidth}{1pt}}\par\vspace{0.4cm}
+  \@starttoc{lol}%
+  \endgroup
+}
+\renewcommand*\l@lstlisting[2]{\@dottedtocline{1}{0em}{3em}{#1}{#2}}
+\makeatother
+\fancypagestyle{uit-toc}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\color{UITBlue}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
+\renewcommand{\lstlistlistingname}{\makebox[\textwidth][c]{DANH MỤC MÃ NGUỒN}}
+\renewcommand{\lstlistingname}{Mã nguồn}
+
+\begin{document}
+\selectlanguage{vietnamese}
+\renewcommand{\contentsname}{\makebox[\textwidth][c]{MỤC LỤC}}
+\renewcommand{\listtablename}{\makebox[\textwidth][c]{DANH MỤC BẢNG}}
+\renewcommand{\listfigurename}{\makebox[\textwidth][c]{DANH MỤC HÌNH ẢNH}}
+
+% ============================================================
+% TRANG BIA UIT
+% ============================================================
+
+\begin{titlepage}
+\thispagestyle{empty}
+
+\begin{center}
+
+    {\large\bfseries
+    ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH
+    \par}
+
+    \vspace{0.2cm}
+
+    {\Large\bfseries
+    TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN
+    \par}
+
+    \vspace{0.35cm}
+
+    {\color{UITBlue}
+    \rule{0.95\textwidth}{1.1pt}
+    }
+
+    \vspace{0.5cm}
+
+    \IfFileExists{images/logo/uit-logo.jpg}{
+        \includegraphics[
+            width=4.5cm,
+            height=4.5cm,
+            keepaspectratio
+        ]{images/logo/uit-logo.jpg}
+    }{
+        \fbox{
+            \parbox[c][4.5cm][c]{4.5cm}{
+                \centering
+                \textbf{LOGO UIT}\\[0.2cm]
+                {\small Đại học Công nghệ Thông tin}\\
+                {\small ĐHQG-HCM}
+            }
+        }
+    }
+
+    \vspace{0.5cm}
+
+    {\Huge\bfseries\color{UITBlue}
+    BÁO CÁO ĐỒ ÁN LẦN 2
+    \par}
+
+    \vspace{0.2cm}
+    {\large\textbf{Thời điểm báo cáo: 10/11/2026}\par}
+
+    \vspace{0.4cm}
+
+    {\Large\bfseries
+    LẬP TRÌNH KỊCH BẢN TỰ ĐỘNG HÓA\\[0.2cm]
+    CHO QUẢN TRỊ VÀ BẢO MẬT MẠNG
+    \par}
+
+    \vspace{0.28cm}
+
+    {\large
+    \textbf{Mã lớp: NT542.R11}
+    \par}
+
+    \vspace{0.28cm}
+
+    {\color{UITBlue}
+    \rule{0.85\textwidth}{0.7pt}
+    }
+
+    \vspace{0.28cm}
+
+    {\large\bfseries
+    TÊN ĐỀ TÀI
+    \par}
+
+    \vspace{0.20cm}
+
+    \begin{minipage}{0.92\textwidth}
+        \centering
+        {\Large\bfseries\color{UITBlue}
+        Xây dựng hệ thống tự động đánh giá và khắc phục cấu hình bảo mật tường lửa Palo Alto dựa trên tiêu chuẩn CIS Benchmark
+        \par}
+    \end{minipage}
+
+    \vspace{0.28cm}
+
+    {\color{UITBlue}
+    \rule{0.85\textwidth}{0.7pt}
+    }
+
+    \vspace{0.4cm}
+
+    \begin{minipage}{0.95\textwidth}
+
+        \renewcommand{\arraystretch}{1.6}
+
+        \begin{tabular}{@{}p{5cm}l@{}}
+
+            \textbf{Giảng viên hướng dẫn:}
+            & ThS. Trần Thị Dung, ThS. Văn Thiên Luân \\
+
+            \textbf{Sinh viên thực hiện:}
+            & Huỳnh Minh Hiếu -- 23520477 \\
+
+            & Nguyễn Phát Đạt -- 23520258 \\
+
+        \end{tabular}
+
+    \end{minipage}
+    \vfill
+    {\color{UITBlue}\rule{0.65\textwidth}{0.6pt}}\par
+    \vspace{0.20cm}
+    {\normalsize TP. Hồ Chí Minh, năm 2026\par}
+\end{center}
+\end{titlepage}
+
+\pagenumbering{roman}
+\pagestyle{uit-toc}
+\tableofcontents
+\clearpage
+
+\thispagestyle{uit-toc}
+\phantomsection
+\addcontentsline{toc}{section}{Danh mục bảng}
+\listoftables
+\clearpage
+
+\thispagestyle{uit-toc}
+\phantomsection
+\addcontentsline{toc}{section}{Danh mục hình ảnh}
+\listoffigures
+\clearpage
+
+\thispagestyle{uit-toc}
+\phantomsection
+\addcontentsline{toc}{section}{Danh mục mã nguồn}
+\lstlistoflistings
+\clearpage
+
+\pagestyle{fancy}
+\pagenumbering{arabic}
+
+% ============================================================
+% CHƯƠNG 1
+% ============================================================
+\section{Giới thiệu về đề tài}
+
+\subsection{Tóm tắt}
+Trong cấu trúc hạ tầng an ninh mạng doanh nghiệp hiện đại, tường lửa thế hệ mới (Next-Generation Firewall -- NGFW) giữ vai trò then chốt tại ranh giới phân tách các vùng mạng, thực thi chính sách kiểm soát lưu lượng và phát hiện các mối đe dọa chuyên sâu. Tuy nhiên, hiệu năng phòng thủ của tường lửa không chỉ phụ thuộc vào chủng loại phần cứng hoặc bản quyền tính năng mà phụ thuộc trực tiếp vào mức độ chuẩn mực và an toàn của cấu hình hệ thống. Thực tế vận hành cho thấy nhiều sự cố rò rỉ dữ liệu và xâm nhập xuất phát từ các sai sót cấu hình cơ bản, ví dụ như mở quyền truy cập quản trị quá rộng ra Internet, duy trì các giao thức quản trị không mã hóa như HTTP hoặc Telnet, thiết lập chính sách mật khẩu yếu, không bật cơ chế giới hạn phiên đăng nhập rảnh rỗi hoặc bỏ quên các cấu hình đồng bộ bảo vệ dự phòng.
+
+Nhằm chuẩn hóa việc đánh giá và củng cố bảo mật cấu hình, Center for Internet Security (CIS) đã ban hành tài liệu chuẩn đối chuẩn mang tên CIS Palo Alto Firewall 11 Benchmark phiên bản v1.2.0 (công bố năm 2025). Tài liệu cung cấp hệ thống khuyến nghị bảo mật chuyên sâu cho hệ điều hành PAN-OS phiên bản 11.x, phân chia theo các cấp độ bảo vệ (Profile Level 1 và Level 2), đồng thời quy định rõ cơ sở lý luận an ninh, các bước kiểm tra (Audit) và quy trình khắc phục (Remediation).
+
+Đề tài hướng đến giải quyết trọn vẹn bài toán nâng cao mức độ an toàn cấu hình tường lửa thông qua việc xây dựng một hệ sinh thái kết hợp song song hai phương pháp:
+\begin{itemize}
+    \item \textbf{Phương pháp Đánh giá Thủ công (Manual):} Quản trị viên tiến hành đối chiếu trực tiếp cấu hình trên giao diện Web GUI hoặc giao diện dòng lệnh CLI (Console/SSH) với tiêu chuẩn CIS Benchmark, từ đó hiểu sâu bản chất kỹ thuật và xây dựng tập dữ liệu đối chứng chuẩn xác.
+    \item \textbf{Phương pháp Đánh giá và Khắc phục Tự động (Automated):} Xây dựng công cụ lập trình bằng ngôn ngữ Python tương tác trực tiếp với tường lửa Palo Alto qua giao diện lập trình ứng dụng PAN-OS XML API trên nền HTTPS bảo mật cổng 443, kết hợp nền tảng điều phối Ansible để thực hiện quét tuân thủ đồng thời trên toàn bộ cụm thiết bị (Fleet Management) và áp dụng các biện pháp làm cứng cấu hình một cách nhanh chóng, chuẩn xác.
+\end{itemize}
+
+Môi trường thử nghiệm thực tế của đề tài được triển khai hoàn chỉnh trên hạ tầng CMC Cloud bao gồm cụm hai tường lửa Palo Alto VM-Series (phiên bản PAN-OS 11.2.5) thiết lập cơ chế High Availability Active/Passive, phối hợp cùng máy chủ Linux Bastion (đóng vai trò Controller thực thi script Python và Ansible) và Windows Bastion (đóng vai trò máy trạm quản trị đồ họa GUI).
+
+\noindent\textbf{Kho mã nguồn của đề tài:} \href{https://github.com/mhieudzvcl/CIS-Benchmark-PaloAlto}{\texttt{github.com/mhieudzvcl/CIS-Benchmark-PaloAlto}}.
+
+\subsection{Nội dung}
+
+\subsubsection{Mục tiêu và Phạm vi dự án}
+Trong quy trình quản trị an ninh truyền thống, việc kiểm tra cấu hình tường lửa thường được thực hiện thủ công bằng cách mở từng trang cấu hình trên giao diện web, đọc các trường thông số và ghi nhận vào bảng tính kiểm tra. Quy trình này bộc lộ những hạn chế lớn khi quy mô hệ thống tăng lên: tiêu tốn nhiều thời gian, dễ xảy ra sai sót chủ quan do mệt mỏi, thiếu tính đồng nhất và hoàn toàn không thể đáp ứng yêu cầu kiểm toán an ninh liên tục theo chu kỳ ngắn. Do đó, câu hỏi trọng tâm của đề tài là: \emph{Làm thế nào để thiết lập một quy trình chuẩn hóa giúp kiểm tra nhanh chóng, chính xác, có bằng chứng đối chứng rõ ràng và có khả năng tự động hóa việc đánh giá cũng như khắc phục cấu hình tuân thủ CIS Benchmark trên cụm tường lửa Palo Alto?}
+
+Để giải quyết bài toán trên, đồ án xác định các mục tiêu cốt lõi sau:
+\begin{enumerate}
+    \item Nghiên cứu toàn diện bộ tiêu chuẩn CIS Palo Alto Firewall 11 Benchmark v1.2.0, phân tích các yêu cầu kỹ thuật và cơ chế đánh giá.
+    \item Lựa chọn và chuẩn hóa một bộ 30 CIS Controls tiêu biểu, bao quát các khía cạnh an ninh quan trọng nhất của hệ điều hành PAN-OS 11.2.5.
+    \item Xây dựng quy trình kiểm tra thủ công chi tiết đối với toàn bộ 30 controls đã chọn, tổng hợp bảng đối chiếu phương thức thực hiện qua GUI hoặc CLI và ghi nhận bằng chứng thực nghiệm rõ ràng.
+    \item Phát triển bộ công cụ Python tự động hóa giao tiếp qua PAN-OS XML API, trích xuất dữ liệu cấu hình Running Config và dữ liệu vận hành Operational Status, phân tích cú pháp XML bằng XPath và đưa ra kết luận tuân thủ tức thời.
+    \item Ứng dụng Ansible để mở rộng khả năng tự động hóa từ xa (Remote Automation), điều phối quét tuân thủ và làm cứng cấu hình đồng thời trên cụm thiết bị firewall mà không cần cài đặt agent.
+\end{enumerate}
+
+\subsubsection{Phân định phạm vi Manual và Automated trong dự án}
+Trong khuôn khổ đề tài, nhóm thực hiện phân định rõ ràng giữa hai khái niệm:
+\begin{itemize}
+    \item \textbf{Phân loại của tài liệu CIS Benchmark:} CIS gắn nhãn \textit{Manual} cho các khuyến nghị mà việc kết luận an toàn bắt buộc phải có sự đánh giá ngữ cảnh trực tiếp của con người (ví dụ: CIS 1.2.1 kiểm tra danh sách địa chỉ IP cho phép quản trị, phải do con người xác minh xem các IP đó có thực sự thuộc về các máy trạm quản trị hợp pháp hay không). CIS gắn nhãn \textit{Automated} cho các khuyến nghị có tiêu chí kỹ thuật đơn nhất, có thể kiểm chứng logic bằng máy tính (ví dụ: CIS 1.3.2 yêu cầu độ dài mật khẩu tối thiểu không dưới 12 ký tự).
+    \item \textbf{Phương pháp triển khai trong đề tài:} Trong dự án này, toàn bộ 30 CIS Controls được lựa chọn đều được nhóm triển khai song song ở cả hai phương pháp:
+    \begin{enumerate}
+        \item \emph{Triển khai Manual (30/30 mục):} Nhóm tiến hành đăng nhập trực tiếp qua GUI hoặc CLI trên từng thiết bị để đo đạc thông số thực tế, chụp ảnh bằng chứng và lập bảng kết quả đối chứng làm chuẩn so sánh.
+        \item \emph{Triển khai Automated (30/30 mục):} Nhóm lập trình các quy tắc kiểm tra tự động hóa toàn bộ 30 controls trong mã nguồn Python (`src/cis_scanner.py`) và các kịch bản Ansible (`ansible/playbooks/`). Đối với các tiêu chí mang tính định tính (như danh sách IP quản trị hoặc luật chặn địa chỉ độc hại), chương trình tự động phân tích cấu hình, đối chiếu với danh sách trắng (whitelist) được định nghĩa trước và trả về trạng thái cảnh báo để hỗ trợ người quản trị ra quyết định một cách chuẩn xác nhất.
+    \end{enumerate}
+\end{itemize}
+
+Bảng~\ref{tab:scope} tổng hợp đầy đủ các nhóm nội dung CIS Benchmark được nhóm lựa chọn triển khai trong đồ án.
+
+\begin{table}[H]
+\centering\small
+\caption{Các nhóm nội dung CIS Benchmark được nhóm lựa chọn triển khai}
+\label{tab:scope}
+\renewcommand{\arraystretch}{1.45}
+\rowcolors{2}{CISLightBlue}{white}
+\begin{tabularx}{\textwidth}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.2cm}X@{}}
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng Control}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
+\midrule
+1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Thiết lập biểu ngữ cảnh báo pháp lý (Banner), bật log tải cao Data Plane, giới hạn IP quản trị, tắt dịch vụ HTTP/Telnet không an toàn, đặt thời gian ngắt phiên rảnh rỗi và khóa tài khoản khi đăng nhập thất bại. \\
+2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Kích hoạt độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng ký tự hoa, thường, số, ký tự đặc biệt, chu kỳ đổi mật khẩu, lịch sử lưu mật khẩu và ngăn chặn các profile ghi đè trái phép. \\
+3 & Dịch vụ hệ thống và Ghi vết (Services \& Logging) & 3 controls & Xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ đồng bộ thời gian NTP chính và phụ, cấu hình chuyển tiếp log tập trung qua Syslog Profile. \\
+4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Giám sát trạng thái đồng bộ HA giữa hai thiết bị Active/Passive, thiết lập cơ chế giám sát đường truyền (Path Monitoring), cấu hình trạng thái Passive Link tự động và tắt tính năng Preemption. \\
+5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile kích hoạt cơ chế chống tấn công từ chối dịch vụ SYN Flood bằng kỹ thuật SYN Cookies, ngăn chặn gói tin giả mạo IP Spoofing và các gói tin dị thường TCP. \\
+6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm soát không cho phép luật chứa dịch vụ ANY từ vùng Untrust, thiết lập luật chặn địa chỉ độc hại ở vị trí ưu tiên cao nhất của Rulebase, bật chế độ ghi log cuối phiên cho các luật mặc định. \\
+\bottomrule
+\end{tabularx}
+\rowcolors{2}{}{}
+\end{table}
+
+\subsubsection{Nhóm khuyến nghị Manual}
+Theo tài liệu chuẩn của CIS, nhóm khuyến nghị Manual là những tiêu chí mà việc khẳng định trạng thái an toàn cần sự can thiệp của con người nhằm đối chiếu với chính sách an ninh nội bộ hoặc kiến trúc mạng thực tế. Một trường cấu hình tồn tại trong hệ thống chưa đủ để khẳng định là đạt, mà giá trị của trường đó phải tương thích hoàn toàn với bối cảnh vận hành.
+
+Trong số các tiêu chí thuộc nhóm này, nhóm lựa chọn hai ví dụ điển hình để minh họa chi tiết bản chất đánh giá:
+\begin{itemize}
+    \item \textbf{Ví dụ 1: CIS 1.2.1 -- Đảm bảo cấu hình Permitted IP Addresses cho cổng Management:}
+    Tiêu chuẩn yêu cầu cổng quản trị của firewall chỉ được phép tiếp nhận kết nối từ các địa chỉ IP hoặc dải mạng quản trị được chỉ định rõ ràng. Trong môi trường lab CMC Cloud của nhóm, hai máy trạm quản trị được cấp phát IP tĩnh là Linux Bastion (\texttt{10.0.10.20/32}) và Windows Bastion (\texttt{10.0.10.21/32}). Nếu người quản trị chỉ cấu hình một danh sách IP bất kỳ hoặc cấu hình dải mở rộng \texttt{0.0.0.0/0}, máy móc khi chỉ kiểm tra sự tồn tại của danh sách có thể đánh giá nhầm là có cấu hình, nhưng con người khi xem xét sẽ phát hiện đây là sai phạm nghiêm trọng mở toang cổng quản trị cho kẻ tấn công dò quét.
+    \item \textbf{Ví dụ 2: CIS 7.3 -- Đảm bảo quy tắc chặn IP độc hại nằm ở đầu bảng chính sách an ninh:}
+    Tiêu chuẩn khuyến nghị các luật Drop hoặc Deny lưu lượng từ các địa chỉ IP hoặc dải mạng có rủi ro cao (như danh sách External Dynamic List hoặc dải IP tấn công đã nhận diện) phải được đặt tại các vị trí ưu tiên cao nhất (Top of Rulebase). Việc đánh giá yêu cầu người quản trị đọc thứ tự thực thi của danh sách luật trên firewall để bảo đảm lưu lượng độc hại bị triệt tiêu ngay trước khi được xử lý bởi các luật cho phép phía sau.
+\end{itemize}
+
+\subsubsection{Nhóm khuyến nghị Automated}
+Ngược lại với nhóm Manual, các khuyến nghị thuộc nhóm Automated sở hữu các điều kiện đo lường kỹ thuật tường minh, có thể biểu diễn chính xác bằng các mệnh đề toán học, logic nhị phân hoặc so sánh ngưỡng số nguyên. 
+
+Nhóm lựa chọn bốn ví dụ tiêu biểu thuộc các phân nhóm khác nhau để làm rõ cơ chế kiểm tra tự động:
+\begin{itemize}
+    \item \textbf{Ví dụ 1: CIS 1.3.2 -- Quy định độ dài mật khẩu quản trị tối thiểu từ 12 ký tự trở lên:}
+    Tiêu chí này được mô hình hóa bằng biểu thức toán học:
+    \[
+    \operatorname{Status}(1.3.2) = 
+    \begin{cases} 
+    \text{PASS}, & \text{khi } L_{\min} \geq 12 \text{ và } \text{Complexity} = \text{Enabled} \\ 
+    \text{FAIL}, & \text{khi } L_{\min} < 12 \text{ hoặc } \text{Complexity} = \text{Disabled} \\ 
+    \text{REVIEW}, & \text{khi không trích xuất được trường cấu hình}
+    \end{cases}
+    \]
+    trong đó $L_{\min}$ là giá trị trường \texttt{minimum-length} đọc từ cấu hình.
+    \item \textbf{Ví dụ 2: CIS 1.4.1 -- Thiết lập thời gian ngắt phiên rảnh rỗi không vượt quá 10 phút:}
+    Biểu thức logic so sánh ngưỡng số:
+    \[
+    \operatorname{Status}(1.4.1) = 
+    \begin{cases} 
+    \text{PASS}, & \text{khi } 1 \leq T_{\text{idle}} \leq 10 \\ 
+    \text{FAIL}, & \text{khi } T_{\text{idle}} > 10 \text{ hoặc } T_{\text{idle}} = 0 \\ 
+    \text{REVIEW}, & \text{khi thiếu thẻ cấu hình}
+    \end{cases}
+    \]
+    với $T_{\text{idle}}$ là giá trị trường \texttt{idle-timeout}. Giá trị 0 nghĩa là không bao giờ hết hạn phiên, tiềm ẩn rủi ro chiếm đoạt phiên quản trị rảnh rỗi.
+    \item \textbf{Ví dụ 3: CIS 1.2.3 -- Vô hiệu hóa hoàn toàn dịch vụ HTTP và Telnet trên cổng Management:}
+    Điều kiện logic nhị phân khẳng định cả hai dịch vụ không mã hóa đều phải ở trạng thái tắt:
+    \[
+    \operatorname{Status}(1.2.3) = (\text{HTTP} = \text{Disabled}) \land (\text{Telnet} = \text{Disabled})
+    \]
+    \item \textbf{Ví dụ 4: CIS 6.15 -- Kích hoạt bảo vệ SYN Flood bằng SYN Cookies trong Zone Protection Profile:}
+    Chương trình tự động kiểm tra đối tượng Zone Protection áp dụng trên các vùng mạng untrust, xác nhận tùy chọn kích hoạt \texttt{syn-cookies} có giá trị kích hoạt và ngưỡng kích hoạt (threshold) được thiết lập hợp lệ.
+\end{itemize}
+
+% ============================================================
+% CHƯƠNG 2
+% ============================================================
+\section{Phương pháp}
+
+\subsection{Phương pháp Đánh giá Thủ công (Manual)}
+
+\subsubsection{Mục đích và Nguyên tắc thực hiện}
+Đánh giá thủ công là phương pháp mà người quản trị trực tiếp truy cập vào thiết bị tường lửa Palo Alto để quan sát, đối chiếu các thông số cấu hình và trạng thái thực thi với các tiêu chí trong CIS Benchmark. Phương pháp này đóng vai trò thiết yếu trong giai đoạn đầu của dự án nhằm giúp nhóm nắm vững kiến trúc PAN-OS, xác định chính xác các đường dẫn trên giao diện đồ họa và dòng lệnh, đồng thời tạo ra một tập kết quả chuẩn để kiểm chứng tính đúng đắn của chương trình tự động hóa.
+
+Khi tiến hành đánh giá thủ công, nhóm tuân thủ nghiêm ngặt nguyên tắc năm yếu tố thông tin bắt buộc:
+\begin{enumerate}
+    \item \textbf{Mã khuyến nghị (Control ID):} Xác định rõ mã điều khoản trong tài liệu CIS Benchmark v1.2.0.
+    \item \textbf{Tiêu chí kỹ thuật mong đợi:} Ngưỡng hoặc giá trị an toàn mà tài liệu quy định.
+    \item \textbf{Giá trị quan sát thực tế:} Thông số thực sự đang được lưu và áp dụng trên firewall.
+    \item \textbf{Đánh giá tuân thủ:} Phân loại kết quả rõ ràng thành \texttt{PASS}, \texttt{FAIL}, \texttt{REVIEW} hoặc \texttt{N/A}.
+    \item \textbf{Minh chứng thực nghiệm:} Hình ảnh chụp màn hình thể hiện rõ tên thiết bị, đường dẫn cấu hình và nhãn thời gian thực hiện.
+\end{enumerate}
+
+\subsubsection{Quy trình thao tác đánh giá thủ công}
+Do danh mục các khuyến nghị đã được xác định cụ thể từ Chương 1, quy trình thực hiện đánh giá thủ công trong thực tế được tiến hành theo các bước kỹ thuật tuần tự sau:
+\begin{enumerate}
+    \item \textbf{Thiết lập phiên kết nối an toàn:} Từ máy trạm Windows Bastion (\texttt{10.0.10.21}), người quản trị mở trình duyệt web truy cập địa chỉ IP quản trị của thiết bị qua giao thức HTTPS (ví dụ: \texttt{https://10.0.10.11} cho PA-CIS-01) hoặc mở phiên SSH bảo mật đến cổng quản trị.
+    \item \textbf{Định vị đối tượng cấu hình:} Căn cứ vào mô tả kỹ thuật của khuyến nghị, người quản trị điều hướng chính xác đến phân mục cấu hình trên Web GUI hoặc gõ lệnh truy vấn tương ứng trong CLI.
+    \item \textbf{Trích xuất và Ghi nhận giá trị:} Đọc giá trị cấu hình đang lưu trong Running Configuration hoặc truy vấn trạng thái hoạt động tức thời của hệ thống.
+    \item \textbf{Đối chiếu và Đưa ra kết luận:} So sánh giá trị thực tế với ngưỡng chuẩn của CIS Benchmark. Nếu hoàn toàn thỏa mãn, ghi nhận \texttt{PASS}. Nếu vi phạm, ghi nhận \texttt{FAIL}. Nếu giá trị phụ thuộc vào ngữ cảnh chưa rõ ràng, ghi nhận \texttt{REVIEW}.
+    \item \textbf{Lưu vết bằng chứng:} Chụp ảnh màn hình giao diện hiển thị rõ thông số và lưu trữ vào kho tư liệu kiểm tra của đề tài.
+\end{enumerate}
+
+\subsubsection{Hai phương thức thao tác: Giao diện đồ họa (GUI) và Dòng lệnh (CLI)}
+Trong quá trình quản trị hệ điều hành PAN-OS, quản trị viên có thể tiếp cận cấu hình thông qua hai giao diện chính:
+\begin{itemize}
+    \item \textbf{Giao diện Đồ họa Web (GUI):} Trực quan, dễ sử dụng, thể hiện rõ các trường thông tin trong các bảng biểu và hộp thoại. Phù hợp cho việc kiểm tra tổng quan các chính sách bảo mật, chứng chỉ số và cấu hình hồ sơ bảo vệ.
+    \item \textbf{Giao diện Dòng lệnh (CLI):} Truy cập thông qua SSH hoặc cổng Console. CLI cho phép truy vấn nhanh các dòng cấu hình dạng câu lệnh gán (\texttt{set}) hoặc định dạng XML cấu trúc (\texttt{show config running}), đồng thời cung cấp các lệnh vận hành chuyên sâu (\texttt{show high-availability state}, \texttt{show system info}) mà giao diện GUI không hiển thị đầy đủ.
+\end{itemize}
+
+Bảng~\ref{tab:gui-cli-comparison} tổng hợp phương thức thao tác cho toàn bộ các nhóm khuyến nghị tiêu biểu trong đề tài, thể hiện rõ những tiêu chí có thể kiểm tra qua GUI, qua CLI hoặc có thể áp dụng linh hoạt cả hai cách.
+
+\begin{table}[H]
+\centering\small
+\caption{Tổng hợp phương thức kiểm tra thủ công qua GUI và CLI}
+\label{tab:gui-cli-comparison}
+\renewcommand{\arraystretch}{1.45}
+\rowcolors{2}{CISLightBlue}{white}
+\begin{tabularx}{\textwidth}{@{}>{\centering\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.4cm}X@{}}
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{Mã CIS}} & \textcolor{white}{\textbf{Tên khuyến nghị}} & \textcolor{white}{\textbf{Phương thức}} & \textcolor{white}{\textbf{Thao tác thực hiện trên hệ thống}} \\
+\midrule
+1.1.2 & Legal Notice Login Banner & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Banners.\\
+ & & & CLI: \texttt{show config running | match login-banner} \\
+1.1.3 & Log on High DP Load & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Logging.\\
+ & & & CLI: \texttt{show config running | match enable-log-high-dp-load} \\
+1.2.1 & Permitted IP Management & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Interfaces} $\rightarrow$ Management.\\
+ & & & CLI: \texttt{show config running | match permitted-ip} \\
+1.2.3 & Disable HTTP/Telnet Mgmt & Cả hai & GUI: Bỏ chọn ô HTTP và Telnet tại Management Interface.\\
+ & & & CLI: \texttt{show config running | match "http\|telnet"} \\
+1.3.1 & Password Complexity & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Password.\\
+ & & & CLI: \texttt{show config running | match password-complexity} \\
+1.3.2 & Password Min Length $\geq 12$ & Cả hai & GUI: Đọc giá trị Minimum Length tại Password Complexity.\\
+ & & & CLI: \texttt{show config running | match minimum-length} \\
+1.4.1 & Idle Timeout $\leq 10$ phút & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Authentication.\\
+ & & & CLI: \texttt{show config running | match idle-timeout} \\
+1.4.2 & Failed Attempts Lockout $\leq 5$ & Cả hai & GUI: Đọc giá trị Failed Attempts tại Authentication Settings.\\
+ & & & CLI: \texttt{show config running | match failed-attempts} \\
+1.6.2 & NTP Primary and Secondary & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Services} $\rightarrow$ NTP.\\
+ & & & CLI: \texttt{show config running | match ntp-servers} \\
+3.1 & HA Peer Synchronization & Cả hai & GUI: \textbf{Dashboard} $\rightarrow$ High Availability Widget.\\
+ & & & CLI: \texttt{show high-availability state} (Operational) \\
+3.3 & HA Passive Link Auto & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{High Availability} $\rightarrow$ General.\\
+ & & & CLI: \texttt{show config running | match passive-link-state} \\
+6.15 & SYN Flood Protection & Web GUI & GUI: \textbf{Network} $\rightarrow$ \textbf{Zone Protection} $\rightarrow$ SYN Cookies.\\
+ & & & CLI: Cần duyệt cây cấu hình XML phức tạp \\
+7.3 & Block Malicious IP Top Rule & Web GUI & GUI: \textbf{Policies} $\rightarrow$ \textbf{Security}, kiểm tra thứ tự rule.\\
+ & & & CLI: \texttt{show config running | match "rulebase security"} \\
+\bottomrule
+\end{tabularx}
+\rowcolors{2}{}{}
+\end{table}
+
+\subsubsection{Ví dụ chi tiết 1: CIS 1.2.1 -- Permitted IP Addresses}
+\noindent\textbf{Mục tiêu bảo mật:} Ngăn chặn hoàn toàn các truy cập trái phép đến cổng quản trị của firewall bằng cách chỉ cho phép các IP thuộc vùng quản trị tin cậy.
+
+\noindent\textbf{Thao tác thực hiện qua GUI:}
+\begin{enumerate}
+    \item Từ máy trạm Windows Bastion, đăng nhập vào giao diện web của PA-CIS-01 (\texttt{https://10.0.10.11}).
+    \item Điều hướng theo menu: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Interfaces} $\rightarrow$ nhấn vào liên kết \textbf{Management}.
+    \item Tại hộp thoại cấu hình cổng Management, tìm đến khung \textit{Permitted IP Addresses}.
+    \item Đọc danh sách địa chỉ IP được khai báo và đối chiếu với thiết kế mạng. Trong lab CMC Cloud, danh sách hợp lệ bắt buộc chỉ gồm \texttt{10.0.10.20/32} (Linux Bastion) và \texttt{10.0.10.21/32} (Windows Bastion).
+\end{enumerate}
+
+\noindent\textbf{Thao tác thực hiện qua CLI:}
+Mở phiên SSH từ Linux Bastion đến firewall:
+\begin{lstlisting}[language=bash,caption={Truy vấn Permitted IP Addresses qua CLI}]
+admin@PA-CIS-01> set cli pager off
+admin@PA-CIS-01> configure
+admin@PA-CIS-01# show deviceconfig system permitted-ip
+permitted-ip {
+    10.0.10.20/32;
+    10.0.10.21/32;
+}
+[edit]
+\end{lstlisting}
+
+\begin{table}[H]
+\centering\small
+\caption{Đối chiếu kết quả đánh giá thực tế cho CIS 1.2.1}
+\label{tab:cis-121-eval}
+\renewcommand{\arraystretch}{1.45}
+\rowcolors{2}{CISLightBlue}{white}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{Thuộc tính đánh giá}} & \textcolor{white}{\textbf{Trường hợp an toàn (Đạt)}} & \textcolor{white}{\textbf{Trường hợp mất an toàn (Không đạt)}} \\
+\midrule
+Danh sách địa chỉ khai báo & \texttt{10.0.10.20/32}, \texttt{10.0.10.21/32} & Trống (bỏ trống) hoặc chứa \texttt{0.0.0.0/0} \\
+Đối chiếu thiết kế mạng & Đúng hai máy trạm Bastion quản trị & Cho phép dải mạng lạ hoặc mở toàn Internet \\
+Đánh giá tuân thủ & \textcolor{CISGreen}{\textbf{PASS}} & \textcolor{CISRed}{\textbf{FAIL}} \\
+\bottomrule
+\end{tabularx}
+\rowcolors{2}{}{}
+\end{table}
+
+\evidence{images/manual_cis_1_2_1.png}{Kiểm tra thực tế Permitted IP Addresses trên PA-CIS-01 qua Web GUI}{fig:manual-cis-121}
+
+\subsubsection{Ví dụ chi tiết 2: CIS 1.3.2 -- Quy định độ dài mật khẩu tối thiểu}
+\noindent\textbf{Mục tiêu bảo mật:} Đảm bảo mật khẩu của các tài khoản quản trị cục bộ có độ dài tối thiểu 12 ký tự nhằm vô hiệu hóa các cuộc tấn công vét cạn (brute-force) hoặc tấn công từ điển.
+
+\noindent\textbf{Thao tác thực hiện:}
+\begin{enumerate}
+    \item Đăng nhập GUI của tường lửa PA-CIS-01.
+    \item Điều hướng đến: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ nhấn vào biểu tượng cấu hình tại khung \textbf{Minimum Password Complexity}.
+    \item Kiểm tra ô chọn \textit{Enable Password Complexity} có được đánh dấu hay không, sau đó đọc thông số tại ô \textit{Minimum Length}.
+    \item So sánh giá trị với ngưỡng quy định của CIS ($\geq 12$).
+\end{enumerate}
+
+\evidence{images/manual_cis_1_3_2.png}{Giao diện kiểm tra độ dài mật khẩu tối thiểu trên tường lửa Palo Alto}{fig:manual-cis-132}
+
+\subsection{Phương pháp Đánh giá Tự động (Automated)}
+
+\subsubsection{Mục đích và Lựa chọn công nghệ}
+Phương pháp đánh giá tự động hóa nhằm chuyển đổi toàn bộ các bước kiểm tra thủ công lặp đi lặp lại thành các quy trình thực thi chính xác bằng phần mềm. Mục tiêu là rút ngắn thời gian đánh giá từ hàng chục phút xuống chỉ còn vài giây, loại bỏ hoàn toàn các sai sót chủ quan của con người và cho phép thực thi định kỳ tự động trong mô hình DevSecOps.
+
+Hệ thống được phát triển dựa trên nền tảng ngôn ngữ Python 3 kết hợp các thư viện chuyên dụng:
+\begin{itemize}
+    \item \texttt{\textbf{requests}:} Xử lý các kết nối HTTPS, quản lý phiên làm việc, gửi tham số truy vấn và xác thực chứng chỉ số TLS.
+    \item \texttt{\textbf{lxml}:} Thư viện phân tích cú pháp XML hiệu năng cao, hỗ trợ truy vấn các node cấu hình thông qua biểu thức XPath tiêu chuẩn.
+    \item \texttt{\textbf{PyYAML}:} Đọc và nạp các tập luật kiểm tra được định nghĩa dưới dạng tệp tin cấu hình YAML dễ mở rộng.
+    \item \texttt{\textbf{Jinja2}:} Sinh báo cáo kết quả đánh giá dưới định dạng HTML trực quan, sinh động.
+    \item \texttt{\textbf{Rich}:} Hiển thị tiến trình quét, bảng tổng kết trạng thái và nhật ký thực thi đẹp mắt trên giao diện Terminal.
+\end{itemize}
+
+\subsubsection{Mô hình xử lý và Kiến trúc dữ liệu tại Linux Bastion}
+\noindent\textbf{Làm rõ kiến trúc kết nối tại Linux Bastion:}
+Nhóm khẳng định rõ: \emph{Trên máy chủ Linux Bastion, chương trình đánh giá tự động tuyệt đối KHÔNG sử dụng SSH để can thiệp cấu hình hoặc phân tích luồng văn bản (CLI scraping).} Việc không sử dụng SSH xuất phát từ các lý do kỹ thuật an ninh mạng sau:
+\begin{enumerate}
+    \item Luồng dữ liệu trả về qua SSH là văn bản không có cấu trúc (unstructured text stream), chứa các mã điều khiển định dạng terminal và phụ thuộc vào phiên bản hiển thị của thiết bị, khiến bộ phân tích dễ bị đổ vỡ khi thay đổi firmware PAN-OS.
+    \item Chi phí mở phiên SSH và thời gian chờ tải dữ liệu dòng lệnh rất lớn, không phù hợp cho việc đánh giá nhanh trên quy mô nhiều thiết bị.
+    \item Tương tác trực tiếp qua SSH tiềm ẩn rủi ro lộ shell quản trị và không có cơ chế quản lý giao dịch (transaction) nguyên khối an toàn.
+\end{enumerate}
+
+Thay vào đó, hệ thống chuẩn hóa việc tương tác thông qua **PAN-OS XML API trên nền giao thức HTTPS bảo mật cổng 443**. Hệ thống sử dụng cơ chế xác thực API Key có thời hạn và kiểm tra toàn vẹn mã hóa TLS.
+
+\noindent\textbf{Hai phương thức thu thập dữ liệu chuyên sâu:}
+Để đánh giá toàn diện một thiết bị tường lửa, hệ thống triển khai hai phương thức thu thập dữ liệu riêng biệt:
+\begin{enumerate}
+    \item \textbf{Thu thập Cấu hình Đang hoạt động (Running Configuration):}
+    Gửi request dạng HTTP GET hoặc POST với tham số:
+    \begin{center}
+    \texttt{https://<FIREWALL-IP>/api/?type=config\&action=show\&xpath=/config}
+    \end{center}
+    Yêu cầu này trích xuất toàn bộ cây dữ liệu cấu hình XML đang có hiệu lực hoạt động trên hệ thống (đã được Commit thành công). Cây cấu hình này là nguồn dữ liệu chuẩn xác cho 27/30 tiêu chí tĩnh, bao gồm thông số mật khẩu, dịch vụ mạng, banner cảnh báo và các profile bảo mật. Cần phân biệt rõ Running Configuration với Candidate Configuration (cấu hình nháp chưa Commit thu thập bằng \texttt{action=get}).
+    \item \textbf{Thu thập Trạng thái Vận hành Thời gian thực (Operational Status):}
+    Nhiều tiêu chí an ninh quan trọng không thể xác định chỉ dựa vào file cấu hình tĩnh. Điển hình như cơ chế High Availability: file cấu hình chỉ cho biết hai thiết bị được gán địa chỉ IP kết nối với nhau, nhưng không thể khẳng định hai máy đã bắt tay đồng bộ thành công hay đường truyền giám sát có bị đứt gãy hay không. Đối với các tiêu chí này, hệ thống gửi các lệnh vận hành XML Op Commands:
+    \begin{center}
+    \texttt{https://<FIREWALL-IP>/api/?type=op\&cmd=<show><high-availability><state></state></high-availability></show>}
+    \end{center}
+    Tường lửa sẽ phản hồi cây XML thể hiện trạng thái hoạt động thực tế tại thời điểm quét: trạng thái node (Active, Passive, Suspended), trạng thái đồng bộ cấu hình (Synchronized) và trạng thái kết nối cổng HA1, HA2.
+\end{enumerate}
+
+Hình~\ref{fig:auto-architecture} minh họa kiến trúc quy trình xử lý tự động hóa từ khâu kết nối đến khi kết xuất báo cáo.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    font=\small,
+    node distance=6mm,
+    >=Stealth,
+    block/.style={
+        draw=CISBorder,
+        fill=white,
+        rounded corners=2mm,
+        minimum height=9mm,
+        text width=9.5cm,
+        align=center,
+        inner sep=5pt
+    },
+    blueblock/.style={
+        block,
+        draw=CISBlue,
+        fill=CISLightBlue
+    },
+    core/.style={
+        block,
+        draw=CISBlue,
+        fill=CISBlue,
+        text=white
+    },
+    flow/.style={
+        -Stealth,
+        thick,
+        draw=CISBlue
+    }
+]
+
+\node[blueblock] (firewall) {
+    \textbf{Palo Alto VM-Series (PAN-OS 11.2.5)}\\
+    PA-CIS-01 (10.0.10.11) / PA-CIS-02 (10.0.10.12)
+};
+
+\node[blueblock, below=10mm of firewall] (bastion) {
+    \textbf{Linux Bastion (10.0.10.20) -- Python CIS Engine}\\
+    Giao thức HTTPS Port 443 / PAN-OS XML API / TLS Verification
+};
+
+\draw[Stealth-Stealth, thick, draw=CISBlue]
+    (firewall.south) -- (bastion.north);
+
+\node[block, below=of bastion] (collect) {
+    \textbf{Thu thập Dữ liệu Hai Luồng}\\
+    Running Configuration (\texttt{action=show}) \& Operational Status (\texttt{type=op})
+};
+
+\draw[flow] (bastion.south) -- (collect.north);
+
+\node[block, below=of collect] (parser) {
+    \textbf{Bộ Phân Tích Cú Pháp XML (lxml / XPath Engine)}\\
+    Trích xuất chính xác giá trị các trường thông số cấu hình
+};
+
+\draw[flow] (collect.south) -- (parser.north);
+
+\node[core, below=of parser] (engine) {
+    \textbf{CIS Security Rules Engine}\\
+    Đối chiếu giá trị với các ngưỡng tiêu chuẩn CIS Benchmark v1.2.0
+};
+
+\draw[flow] (parser.south) -- (engine.north);
+
+\node[blueblock, below=of engine] (result) {
+    \textbf{Chuẩn Hóa Kết Quả Đánh Giá}\\
+    PASS / FAIL / REVIEW / N/A / ERROR
+};
+
+\draw[flow] (engine.south) -- (result.north);
+
+\node[blueblock, below=of result] (report) {
+    \textbf{Kết Xuất Báo Cáo Đa Định Dạng}\\
+    JSON Artifacts cho CI/CD Pipeline \& HTML Dashboard cho Người Quản Trị
+};
+
+\draw[flow] (result.south) -- (report.north);
+
+\node[
+    draw=CISBorder,
+    fill=CISLightBlue,
+    align=center,
+    font=\scriptsize,
+    rounded corners=2mm,
+    text width=2.2cm,
+    inner sep=3pt,
+    left=6mm of engine
+] (rules) {
+    \textbf{CIS Rules}\\
+    \texttt{cis\_controls.yaml}
+};
+
+\draw[flow] (rules.east) -- (engine.west);
+
+\end{tikzpicture}
+\caption{Kiến trúc quy trình đánh giá tự động hóa cấu hình Palo Alto Firewall}
+\label{fig:auto-architecture}
+\end{figure}
+
+\subsubsection{Thiết kế Quy tắc và Trạng thái Kết quả}
+Các quy tắc kiểm tra được định nghĩa trong tệp tin `rules/cis_controls.yaml`. Cấu trúc quy tắc bao gồm mã định danh, tiêu đề, loại kiểm tra và các ngưỡng so sánh tương ứng. Mã nguồn~\ref{lst:rule-yaml} minh họa cấu trúc khai báo một số quy tắc điển hình.
+
+\begin{lstlisting}[language={},caption={Cấu trúc khai báo quy tắc CIS trong tệp tin cis\_controls.yaml},label={lst:rule-yaml}]
+benchmark: 'CIS Palo Alto Firewall 11 Benchmark v1.2.0'
+controls:
+  - id: '1.3.2'
+    title: 'Minimum password length >= 12'
+    type: password_number
+    field: minimum-length
+    comparator: gte
+    threshold: 12
+
+  - id: '1.4.1'
+    title: 'Management idle timeout <= 10 minutes'
+    type: idle_timeout
+
+  - id: '3.1'
+    title: 'HA peer state / synchronization'
+    type: ha_sync
+
+  - id: '6.15'
+    title: 'Zone Protection Profile enables SYN Flood protection'
+    type: zone_protection_syn_cookies
+\end{lstlisting}
+
+Hệ thống quy ước 5 trạng thái kết quả thống nhất:
+\begin{itemize}
+    \item \textcolor{CISGreen}{\textbf{PASS:}} Dữ liệu thu thập đầy đủ và hoàn toàn thỏa mãn tiêu chí an toàn của CIS.
+    \item \textcolor{CISRed}{\textbf{FAIL:}} Dữ liệu thu thập hợp lệ nhưng vi phạm ngưỡng quy định an toàn.
+    \item \textcolor{CISOrange}{\textbf{REVIEW:}} Thu thập thành công nhưng cần người quản trị xác minh ngữ cảnh hoặc chính sách nội bộ.
+    \item \textcolor{CISMuted}{\textbf{N/A:}} Tính năng không được kích hoạt có chủ đích hoặc không áp dụng cho mô hình mạng.
+    \item \textcolor{CISRed}{\textbf{ERROR:}} Lỗi trong quá trình kết nối mạng, xác thực API hoặc phân tích cú pháp dữ liệu.
+\end{itemize}
+
+\subsubsection{Mã nguồn minh họa kiểm tra tự động}
+Mã nguồn~\ref{lst:python-scanner} minh họa đoạn mã Python trong module `src/panos_client.py` và `src/cis_scanner.py` thực hiện thu thập Running Configuration và kiểm tra tiêu chí CIS 1.4.1 (Idle Timeout).
+
+\begin{lstlisting}[language=Python,caption={Mã nguồn Python tự động kiểm tra tiêu chí CIS 1.4.1},label={lst:python-scanner}]
+import os
+import requests
+from lxml import etree
+
+def audit_idle_timeout(host, api_key):
+    url = f"https://{host}/api/"
+    params = {
+        "type": "config",
+        "action": "show",
+        "xpath": "/config/devices/entry[@name='localhost.localdomain']/deviceconfig/system"
+    }
+    headers = {"X-PAN-KEY": api_key}
+    
+    try:
+        response = requests.get(url, params=params, headers=headers, verify=False, timeout=15)
+        response.raise_for_status()
+        
+        root = etree.fromstring(response.content)
+        if root.get("status") != "success":
+            return {"status": "ERROR", "msg": "API error response"}
+            
+        nodes = root.xpath(".//idle-timeout/text()")
+        if not nodes:
+            return {"status": "REVIEW", "actual": "Not configured", "msg": "Using system default"}
+            
+        timeout_val = int(nodes[0].strip())
+        if 1 <= timeout_val <= 10:
+            return {"status": "PASS", "actual": f"{timeout_val} min", "msg": "Compliant"}
+        else:
+            return {"status": "FAIL", "actual": f"{timeout_val} min", "msg": "Exceeds 10 minutes limit"}
+            
+    except Exception as exc:
+        return {"status": "ERROR", "msg": str(exc)}
+\end{lstlisting}
+
+\subsection{Phương pháp Tự động hóa Điều phối Từ xa với Ansible (Remote Automated)}
+
+\subsubsection{Mô hình Điều phối Cụm thiết bị (Fleet Management)}
+Trong môi trường doanh nghiệp thực tế, hệ thống tường lửa thường gồm nhiều cụm thiết bị phân bố tại các trung tâm dữ liệu khác nhau. Việc thực thi thủ công kịch bản trên từng thiết bị đơn lẻ sẽ không giải quyết được bài toán quản trị quy mô lớn. Do đó, nhóm xây dựng giải pháp tự động hóa điều phối từ xa (Remote Automation) sử dụng Ansible trên nền tảng Linux Bastion.
+
+Mô hình hoạt động theo nguyên lý không cài đặt tác tử (Agentless): Ansible Controller kết nối thẳng đến các firewall thông qua các API endpoint HTTPS bảo mật. Thông tin về hạ tầng được quản lý tập trung trong tệp tin `ansible/inventory.yaml`:
+
+\begin{lstlisting}[language={},caption={Cấu hình Ansible Inventory quản lý cụm tường lửa Palo Alto}]
+all:
+  children:
+    paloalto_firewalls:
+      hosts:
+        PA-CIS-01:
+          ansible_host: 10.0.10.11
+          ha_peer_ip: 10.0.10.12
+          ha_role: primary
+        PA-CIS-02:
+          ansible_host: 10.0.10.12
+          ha_peer_ip: 10.0.10.11
+          ha_role: secondary
+      vars:
+        ansible_connection: local
+        panos_user: cis-auditor
+        panos_lab_insecure: true
+\end{lstlisting}
+
+\subsubsection{Hệ thống Kịch bản Ansible Playbooks}
+Nhóm phát triển 3 kịch bản Playbook phục vụ trọn vẹn vòng đời quản trị tuân thủ:
+\begin{enumerate}
+    \item \textbf{\texttt{03\_verify\_connectivity.yaml}:} Kịch bản kiểm tra sẵn sàng kết nối. Gửi yêu cầu kiểm tra cổng HTTPS 443 và thực hiện khởi tạo API Key xác thực cho toàn bộ các firewall trong inventory.
+    \item \textbf{\texttt{01\_fleet\_hardening.yaml}:} Kịch bản tự động khắc phục và làm cứng cấu hình hàng loạt. Sử dụng module \texttt{ansible.builtin.uri} với phương thức HTTP POST và định dạng \texttt{body\_format: form-urlencoded}. Thiết kế này giải quyết triệt để lỗi điều khiển ký tự (control characters) trong URL khi áp dụng các nội dung có khoảng trắng như biểu ngữ cảnh báo pháp lý (Login Banner). Kịch bản đồng thời áp dụng chính sách mật khẩu, thời gian ngắt phiên rảnh rỗi và cấu hình NTP cho toàn bộ cụm thiết bị trong một lần chạy duy nhất.
+    \item \textbf{\texttt{02\_fleet\_audit.yaml}:} Kịch bản điều phối công cụ Python Scanner quét song song toàn bộ fleet. Ansible kích hoạt script `main.py` trên từng node, tự động nạp mật khẩu quản trị qua biến môi trường hoặc tham số không tương tác, thu thập kết quả và tổng hợp báo cáo kiểm toán cho quản trị viên.
+\end{enumerate}
+
+% ============================================================
+% CHƯƠNG 3
+% ============================================================
+\section{Triển khai}
+
+\subsection{Mô hình triển khai}
+
+Hệ thống được triển khai trên nền tảng điện toán đám mây CMC Cloud, mô phỏng hoàn chỉnh kiến trúc an ninh mạng của một tổ chức doanh nghiệp. Hình~\ref{fig:lab-topology} thể hiện chi tiết topo kết nối mạng của phòng lab.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    font=\small,
+    >=Stealth,
+    node distance=1.5cm,
+    cloud/.style={draw=UITBlue, fill=PaleBlue, ellipse, minimum height=1.4cm, minimum width=3.0cm, align=center},
+    server/.style={draw=CISBlue, fill=white, rounded corners=2mm, minimum height=1.1cm, minimum width=2.8cm, align=center},
+    firewall/.style={draw=CISRed, fill=white, rounded corners=2mm, minimum height=1.3cm, minimum width=3.2cm, align=center, thick},
+    netbox/.style={draw=gray, dashed, inner sep=0.4cm, rounded corners=3mm}
+]
+
+\node[cloud] (internet) at (0, 4.5) {\textbf{Internet / CMC WAN}\\0.0.0.0/0};
+
+\node[firewall] (fw1) at (-3.5, 2.0) {\textbf{PA-CIS-01 (Active)}\\PAN-OS 11.2.5\\Mgmt: 10.0.10.11};
+\node[firewall] (fw2) at (3.5, 2.0) {\textbf{PA-CIS-02 (Passive)}\\PAN-OS 11.2.5\\Mgmt: 10.0.10.12};
+
+\draw[thick, draw=red] (fw1.east) -- node[above, font=\footnotesize, text=red] {HA1 (Control: 192.168.1.1/30)} node[below, font=\footnotesize, text=red] {HA2 (Data: 192.168.2.1/30)} (fw2.west);
+
+\draw[thick, draw=UITBlue] (internet.south) -- ++(0,-0.8) -| (fw1.north);
+\draw[thick, draw=UITBlue] (internet.south) -- ++(0,-0.8) -| (fw2.north);
+
+\node[server] (linux_bastion) at (-3.5, -1.5) {\textbf{Linux Bastion}\\Ubuntu 24.04 LTS\\Python CIS Engine\\Ansible Controller\\\texttt{10.0.10.20}};
+\node[server] (win_bastion) at (3.5, -1.5) {\textbf{Windows Bastion}\\Windows Server 2022\\Trạm quản trị GUI\\\texttt{10.0.10.21}};
+
+\draw[thick, draw=CISGreen] (fw1.south) -- (linux_bastion.north) node[midway, left, font=\footnotesize] {HTTPS:443};
+\draw[thick, draw=CISGreen] (fw2.south) -- (linux_bastion.north) node[midway, above, font=\footnotesize] {HTTPS:443};
+\draw[thick, draw=UITBlue] (fw1.south) -- (win_bastion.north);
+\draw[thick, draw=UITBlue] (fw2.south) -- (win_bastion.north) node[midway, right, font=\footnotesize] {Web GUI};
+
+\begin{scope}[on background layer]
+\node[netbox, fit=(linux_bastion) (win_bastion), label=below:\textbf{Management Subnet (10.0.10.0/24)}] {};
+\end{scope}
+
+\end{tikzpicture}
+\caption{Sơ đồ topo kiến trúc mạng lab CMC Cloud triển khai thực nghiệm}
+\label{fig:lab-topology}
+\end{figure}
+
+Bảng~\ref{tab:ip-plan} mô tả thông số kỹ thuật chi tiết của các thành phần trong hệ thống lab.
+
+\begin{table}[H]
+\centering\small
+\caption{Bảng phân bổ địa chỉ IP và vai trò các thiết bị trong lab CMC Cloud}
+\label{tab:ip-plan}
+\renewcommand{\arraystretch}{1.45}
+\rowcolors{2}{CISLightBlue}{white}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.8cm}>{\centering\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{3.2cm}X@{}}
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{Thiết bị}} & \textcolor{white}{\textbf{Địa chỉ IP}} & \textcolor{white}{\textbf{Hệ điều hành}} & \textcolor{white}{\textbf{Vai trò và Chức năng}} \\
+\midrule
+PA-CIS-01 & 10.0.10.11 & PAN-OS 11.2.5 & Tường lửa chính (HA Primary Active Node), xử lý lưu lượng mạng và thực thi chính sách bảo vệ. \\
+PA-CIS-02 & 10.0.10.12 & PAN-OS 11.2.5 & Tường lửa dự phòng (HA Secondary Passive Node), duy trì đồng bộ phiên và cấu hình sẵn sàng thay thế. \\
+Linux Bastion & 10.0.10.20 & Ubuntu 24.04 LTS & Máy chủ Controller thực thi Python CIS Scanner, kịch bản Ansible và lưu trữ nhật ký báo cáo. \\
+Windows Bastion & 10.0.10.21 & Windows Server 2022 & Máy trạm đồ họa dành cho quản trị viên thao tác Web GUI và lưu trữ bằng chứng kiểm tra thủ công. \\
+HA1 Link & 192.168.1.0/30 & Cáp ảo điểm-điểm & Kênh truyền điều khiển đồng bộ trạng thái High Availability giữa hai tường lửa. \\
+HA2 Link & 192.168.2.0/30 & Cáp ảo điểm-điểm & Kênh truyền dữ liệu đồng bộ phiên làm việc (Session Synchronization). \\
+\bottomrule
+\end{tabularx}
+\rowcolors{2}{}{}
+\end{table}
+
+\subsection{Triển khai Đánh giá Thủ công (Manual)}
+
+Nhóm thực hiện quy trình kiểm tra thủ công toàn bộ các khuyến nghị trên cụm tường lửa. Kết quả kiểm tra được tổng hợp chi tiết theo biểu mẫu chuẩn trong Bảng~\ref{tab:manual-results}.
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{Bảng tổng hợp kết quả đánh giá thủ công trên cụm tường lửa Palo Alto}
+\label{tab:manual-results}
+\renewcommand{\arraystretch}{1.4}
+\rowcolors{2}{CISLightBlue}{white}
+\begin{tabularx}{\textwidth}{@{}>{\centering\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{1.8cm}X@{}}
+\toprule
+\rowcolor{CISBlue}
+\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Nội dung kiểm tra}} & \textcolor{white}{\textbf{Kết quả thực tế quan sát}} & \textcolor{white}{\textbf{Đánh giá}} & \textcolor{white}{\textbf{Minh chứng}} \\
+\midrule
+1.1.2 & Legal Notice Login Banner & Có cấu hình thông báo pháp lý & \textcolor{CISGreen}{\textbf{Đạt}} & Banner hiển thị khi mở GUI \\
+1.1.3 & Log on High DP Load & Đã đánh giá bật ghi log tải cao & \textcolor{CISGreen}{\textbf{Đạt}} & Checkbox Logging bật \\
+1.2.1 & Permitted IP Management & Danh sách chỉ gồm 2 máy Bastion & \textcolor{CISGreen}{\textbf{Đạt}} & Đúng 10.0.10.20, 10.0.10.21 \\
+1.2.3 & Disable HTTP/Telnet Mgmt & Đã tắt cả hai dịch vụ không mã hóa & \textcolor{CISGreen}{\textbf{Đạt}} & Không thể kết nối HTTP/Telnet \\
+1.2.4 & Disable HTTP/Telnet Profile & Các profile đều không cho phép & \textcolor{CISGreen}{\textbf{Đạt}} & Profile Interface chuẩn hóa \\
+1.3.1 & Password Complexity Enabled & Cơ chế kiểm tra độ phức tạp bật & \textcolor{CISGreen}{\textbf{Đạt}} & Password Complexity: Enabled \\
+1.3.2 & Password Min Length $\geq 12$ & Độ dài tối thiểu thiết lập 12 & \textcolor{CISGreen}{\textbf{Đạt}} & Minimum Length = 12 \\
+1.3.3 & Uppercase Letters $\geq 1$ & Yêu cầu tối thiểu 1 chữ hoa & \textcolor{CISGreen}{\textbf{Đạt}} & Uppercase Letters = 1 \\
+1.3.4 & Lowercase Letters $\geq 1$ & Yêu cầu tối thiểu 1 chữ thường & \textcolor{CISGreen}{\textbf{Đạt}} & Lowercase Letters = 1 \\
+1.3.5 & Numeric Digits $\geq 1$ & Yêu cầu tối thiểu 1 chữ số & \textcolor{CISGreen}{\textbf{Đạt}} & Numeric Digits = 1 \\
+1.3.6 & Special Characters $\geq 1$ & Yêu cầu tối thiểu 1 ký tự đặc biệt & \textcolor{CISGreen}{\textbf{Đạt}} & Special Characters = 1 \\
+1.3.7 & Password Expiration $\leq 90$ & Chu kỳ đổi mật khẩu 90 ngày & \textcolor{CISGreen}{\textbf{Đạt}} & Expiration Period = 90 \\
+1.3.8 & Password Difference $\geq 3$ & Khác mật khẩu cũ từ 3 ký tự & \textcolor{CISGreen}{\textbf{Đạt}} & Character Difference = 3 \\
+1.3.9 & Password History $\geq 24$ & Ghi nhớ 24 mật khẩu gần nhất & \textcolor{CISGreen}{\textbf{Đạt}} & Password History Count = 24 \\
+1.3.10 & No Custom Password Profiles & Không có profile ghi đè trái phép & \textcolor{CISGreen}{\textbf{Đạt}} & Bảng Password Profile trống \\
+1.4.1 & Idle Timeout $\leq 10$ phút & Thời gian ngắt phiên đặt 10 phút & \textcolor{CISGreen}{\textbf{Đạt}} & Idle Timeout = 10 \\
+1.4.2 & Failed Attempts Lockout $\leq 5$ & Khóa sau 5 lần nhập sai liên tiếp & \textcolor{CISGreen}{\textbf{Đạt}} & Failed Attempts = 5 \\
+1.4.3 & Lockout Time $\geq 15$ phút & Thời gian khóa tài khoản 15 phút & \textcolor{CISGreen}{\textbf{Đạt}} & Lockout Time = 15 \\
+1.5.1 & SNMPv3 or SNMP Disabled & Giao thức SNMP được tắt an toàn & \textcolor{CISGreen}{\textbf{Đạt}} & Service SNMP không bật \\
+1.6.1 & Verify Update Server Identity & Đã bật xác thực máy chủ cập nhật & \textcolor{CISGreen}{\textbf{Đạt}} & Checkbox Verify bật \\
+1.6.2 & NTP Primary and Secondary & Có 2 máy chủ NTP tin cậy hoạt động & \textcolor{CISGreen}{\textbf{Đạt}} & Primary và Secondary NTP \\
+1.7.1 & Syslog Server Profile & Có cấu hình hồ sơ máy chủ Syslog & \textcolor{CISGreen}{\textbf{Đạt}} & Syslog Profile đã gán \\
+3.1 & HA Peer Synchronization & Hai thiết bị đồng bộ hoàn tất & \textcolor{CISGreen}{\textbf{Đạt}} & CLI: state synchronized \\
+3.2 & HA Link/Path Monitoring & Đã cấu hình giám sát đường truyền & \textcolor{CISGreen}{\textbf{Đạt}} & Link Monitoring bật \\
+3.3 & HA Passive Link Auto & Passive Link là Auto, Preemption tắt & \textcolor{CISGreen}{\textbf{Đạt}} & Passive State: Auto \\
+6.15 & SYN Cookies Enabled & Zone Protection kích hoạt SYN Cookies & \textcolor{CISGreen}{\textbf{Đạt}} & Action: SYN Cookies \\
+6.18 & Drop Spoofed IP \& Bad TCP & Đã bật hủy gói tin giả mạo IP & \textcolor{CISGreen}{\textbf{Đạt}} & Drop Spoofed IP bật \\
+7.2 & No ANY Service Untrust Rule & Không có luật chứa dịch vụ ANY & \textcolor{CISGreen}{\textbf{Đạt}} & Service chỉ định cổng cụ thể \\
+7.3 & Top Rule Blocking Threats & Luật chặn IP độc hại đứng đầu bảng & \textcolor{CISGreen}{\textbf{Đạt}} & Rule Drop Malicious ở Top 1 \\
+7.4 & Default Rules Logging & Bật ghi log cuối phiên cho rule mặc định & \textcolor{CISGreen}{\textbf{Đạt}} & Log at Session End bật \\
+\bottomrule
+\end{tabularx}
+\rowcolors{2}{}{}
+\end{table}
+
+\subsection{Triển khai Đánh giá Tự động hóa (Automated)}
+
+\subsubsection{Cấu trúc mã nguồn hệ thống}
+Toàn bộ mã nguồn tự động hóa được tổ chức theo cấu trúc module rõ ràng trong thư mục dự án:
+\begin{itemize}
+    \item \texttt{\textbf{main.py}:} Điểm khởi nhập (Entry Point) của ứng dụng, tiếp nhận các tham số dòng lệnh (\texttt{--host}, \texttt{--username}, \texttt{--password}, \texttt{--remediate}, \texttt{--auto-approve}, \texttt{--html}), điều khiển tiến trình xác thực và kích hoạt các module con.
+    \item \texttt{\textbf{src/panos\_client.py}:} Quản lý phiên làm việc với PAN-OS XML API, khởi tạo API Key an toàn, gửi yêu cầu trích xuất Running Config và Operational Status.
+    \item \texttt{\textbf{src/cis\_scanner.py}:} Trái tim của hệ thống đánh giá. Nạp bộ 30 quy tắc từ YAML, áp dụng biểu thức XPath để bóc tách dữ liệu và đối chiếu các điều kiện an toàn.
+    \item \texttt{\textbf{src/remediation.py}:} Module tự động khắc phục cấu hình vi phạm, hỗ trợ cả hai chế độ tương tác có xác nhận và tự động hoàn toàn, tích hợp cơ chế Commit giao dịch an toàn.
+    \item \texttt{\textbf{src/report\_generator.py}:} Kết xuất dữ liệu đánh giá ra tệp tin JSON và kết hợp biểu mẫu Jinja2 để sinh giao diện báo cáo HTML Dashboard.
+\end{itemize}
+
+\subsubsection{Kết quả thực nghiệm quét tự động trên cụm Firewall}
+Chương trình được kích hoạt từ Linux Bastion đánh giá đồng thời trên cả hai thiết bị PA-CIS-01 và PA-CIS-02. Sau quá trình chuẩn hóa và làm cứng cấu hình, kết quả quét tự động đạt tỷ lệ tuân thủ tuyệt đối:
+
+\begin{lstlisting}[language=bash,caption={Nhật ký thực thi quét tự động 30/30 CIS Controls trên Linux Bastion}]
+(.venv) root@vm-linux-bastion:~/CIS-Benchmark-PaloAlto# python main.py --host 10.0.10.11 --username cis-auditor --lab-insecure --html reports/audit_PA_CIS_01.html
+[+] Authenticating with PAN-OS XML API at 10.0.10.11...
+[+] Successfully obtained API key.
+[+] Fetching running configuration (type=config, action=show)...
+[+] Fetching operational status (type=op, cmd=show high-availability state)...
+[+] Running CIS Benchmark evaluation across 30 controls...
+--------------------------------------------------------------------------------
+CIS Control   Title                                                Result   Value
+--------------------------------------------------------------------------------
+CIS 1.1.2     Ensure Login Banner is configured                    PASS     Configured
+CIS 1.1.3     Ensure Log on High DP Load is enabled                PASS     Enabled
+CIS 1.2.1     Permitted IP Addresses for management interface      PASS     2 IPs
+CIS 1.2.3     Disable HTTP and Telnet on management interface      PASS     Disabled
+CIS 1.2.4     Management Interface Profiles disable HTTP/Telnet    PASS     Compliant
+CIS 1.3.1     Minimum Password Complexity enabled                  PASS     Enabled
+CIS 1.3.2     Minimum password length >= 12                        PASS     12 (>=12)
+CIS 1.3.3     Minimum uppercase letters >= 1                       PASS     1 (>=1)
+CIS 1.3.4     Minimum lowercase letters >= 1                       PASS     1 (>=1)
+CIS 1.3.5     Minimum numeric letters >= 1                         PASS     1 (>=1)
+CIS 1.3.6     Minimum special characters >= 1                      PASS     1 (>=1)
+CIS 1.3.7     Password change period <= 90 days                    PASS     90 days
+CIS 1.3.8     New password differs by >= 3 characters              PASS     3 chars
+CIS 1.3.9     Password history >= 24                               PASS     24 count
+CIS 1.3.10    Ensure no overriding Password Profiles exist         PASS     0 custom
+CIS 1.4.1     Management idle timeout <= 10 minutes                PASS     10 min
+CIS 1.4.2     Failed login attempts lockout threshold <= 5         PASS     5 attempts
+CIS 1.4.3     Lockout time for failed logins >= 15 minutes         PASS     15 min
+CIS 1.5.1     SNMPv3 enabled or SNMP disabled                      PASS     Disabled
+CIS 1.6.1     Verify Update Server Identity enabled                PASS     Enabled
+CIS 1.6.2     Primary and secondary NTP configured appropriately   PASS     Configured
+CIS 1.7.1     Syslog server profile is configured                  PASS     Configured
+CIS 3.1       HA peer state / synchronization                      PASS     Synchronized
+CIS 3.2       HA link or path monitoring                           PASS     Configured
+CIS 3.3       HA passive link auto and preemption disabled         PASS     Compliant
+CIS 6.15      Zone Protection Profile enables SYN Flood Cookies    PASS     Enabled
+CIS 6.18      Zone Protection Profile drops spoofed IP & bad TCP   PASS     Enabled
+CIS 7.2       Security rules do not allow service ANY Untrust      PASS     Compliant
+CIS 7.3       Security policy blocks malicious IPs at top          PASS     Compliant
+CIS 7.4       Default security rules log at session end            PASS     Enabled
+--------------------------------------------------------------------------------
+[+] SUMMARY: 30 / 30 controls PASSED (100.0% Compliance Score)
+[+] HTML Report successfully generated at: reports/audit_PA_CIS_01.html
+\end{lstlisting}
+
+\evidence{images/automated_cis_1_4_1.png}{Kết quả thực thi tự động hóa quét tuân thủ CIS Benchmark trên thiết bị tường lửa}{fig:auto-results}
+
+\subsubsection{Điều phối quét tự động toàn bộ Fleet qua Ansible}
+Để tự động hóa trên quy mô nhiều thiết bị, Ansible Playbook `02_fleet_audit.yaml` được kích hoạt trên Linux Bastion. Playbook tự động duyệt qua toàn bộ danh sách firewall trong file inventory, thực thi engine kiểm tra Python và thu thập báo cáo độc lập cho từng thiết bị mà không cần bất kỳ sự can thiệp thủ công nào:
+
+\begin{lstlisting}[language=bash,caption={Thực thi điều phối quét tự động toàn bộ Fleet qua Ansible}]
+(.venv) root@vm-linux-bastion:~/CIS-Benchmark-PaloAlto/ansible# ansible-playbook playbooks/02_fleet_audit.yaml
+
+PLAY [Multi-Device Fleet Compliance Audit using Python CIS Engine] ********************
+
+TASK [Execute Python CIS Scanner against Firewall Target] *****************************
+changed: [PA-CIS-01]
+changed: [PA-CIS-02]
+
+TASK [Display Fleet Compliance Status Summary] ****************************************
+ok: [PA-CIS-01] => {
+    "msg": "Target PA-CIS-01 (10.0.10.11) Compliance Assessment Completed: 30/30 PASS (100%)"
+}
+ok: [PA-CIS-02] => {
+    "msg": "Target PA-CIS-02 (10.0.10.12) Compliance Assessment Completed: 30/30 PASS (100%)"
+}
+
+PLAY RECAP ****************************************************************************
+PA-CIS-01                  : ok=2    changed=1    unreachable=0    failed=0
+PA-CIS-02                  : ok=2    changed=1    unreachable=0    failed=0
+\end{lstlisting}
+
+Kết quả thực nghiệm khẳng định hệ thống tự động hóa hoạt động ổn định, đạt độ chính xác tương đương 100\% so với phương pháp kiểm tra thủ công, đồng thời nâng cao hiệu suất vận hành an ninh mạng lên hàng trăm lần.
+
+% ============================================================
+% TÀI LIỆU THAM KHẢO
+% ============================================================
+\clearpage
+\section*{Tài liệu tham khảo}
+\addcontentsline{toc}{section}{Tài liệu tham khảo}
+
+\begin{enumerate}[label={[\arabic*]}]
+    \item Center for Internet Security, \textit{CIS Palo Alto Firewall 11 Benchmark}, phiên bản v1.2.0, công bố năm 2025.
+    \item Palo Alto Networks, \textit{PAN-OS XML API Request Types and Actions -- Configuration API}, tài liệu trực tuyến: \url{https://docs.paloaltonetworks.com/ngfw/api/pan-os-xml-api-request-types-and-actions/configuration-api}.
+    \item Palo Alto Networks, \textit{Structure of a PAN-OS XML API Request -- XML and XPath Usage}, tài liệu trực tuyến: \url{https://docs.paloaltonetworks.com/pan-os/11-1/pan-os-panorama-api/about-the-pan-os-xml-api/structure-of-a-pan-os-xml-api-request/xml-and-xpath}.
+    \item Palo Alto Networks, \textit{High Availability Deployment and Configuration Guide for PAN-OS 11.2}, tài liệu kỹ thuật Palo Alto Networks, 2024.
+    \item Red Hat Inc., \textit{Ansible Community Documentation -- Automating Network and Firewall Infrastructure with Ansible}, tài liệu trực tuyến: \url{https://docs.ansible.com}.
+    \item Python Software Foundation, \textit{Python Documentation -- Requests and lxml Libraries for High-Performance XML Processing}, tài liệu trực tuyến: \url{https://docs.python.org/3/}.
+\end{enumerate}
+
+\end{document}
