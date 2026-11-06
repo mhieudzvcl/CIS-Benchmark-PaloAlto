@@ -20,10 +20,10 @@ def status_map(config=None, ha=None):
     return {r["id"]: r for r in rows}
 
 
-def test_24_controls():
+def test_30_controls():
     rows = status_map()
-    assert len(rows) == 24
-    for cid in ("1.2.3", "1.3.1", "1.3.2", "1.3.3", "1.3.4", "1.3.5", "1.3.6", "1.3.7", "1.3.8", "1.3.9", "1.4.1", "3.2"):
+    assert len(rows) == 30
+    for cid in ("1.1.3", "1.2.3", "1.3.1", "1.3.2", "1.3.3", "1.3.4", "1.3.5", "1.3.6", "1.3.7", "1.3.8", "1.3.9", "1.3.10", "1.4.1", "3.2", "3.3", "6.15", "6.18", "7.3"):
         assert rows[cid]["status"] == "PASS", cid
     assert rows["3.1"]["status"] == "REVIEW"     # no HA operational evidence
 
@@ -94,7 +94,7 @@ def test_safe_report_files(tmp_path):
     a, b = save(report, tmp_path)
     assert a.exists() and b.exists()
     assert "CIS Palo Alto Auditor" in b.read_text()
-    assert report["summary"]["total"] == 24
+    assert report["summary"]["total"] == 30
 
 
 def test_candidate_guard_design():

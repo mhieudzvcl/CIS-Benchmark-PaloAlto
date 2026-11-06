@@ -355,3 +355,122 @@ class CISScanner:
         if len(logged) == len(default_rules):
             return self.make(rule, "Default security rules log at session end", f"All {len(logged)} rules log at end", "PASS", evidence)
         return self.make(rule, "Default security rules log at session end", f"{len(logged)}/{len(default_rules)} logged", "REVIEW", evidence)
+
+    def check_log_high_dp_load(self, rule):
+        val = self.text(self.device, "./deviceconfig/setting/logging/log-high-dp-load/text()")
+        if val is None:
+            val = self.text(self.device, ".//log-high-dp-load/text()")
+        evidence = "devices/entry/deviceconfig/setting/logging/log-high-dp-load"
+        if val == "yes":
+            return self.make(rule, "Enabled (yes)", "yes", "PASS", evidence,
+                             "Log on high DP load is active")
+        return self.make(rule, "Enabled (yes)", val if val is not None else "Not configured",
+                         "FAIL", evidence, "High DP load logging not enabled")
+
+    def check_no_custom_password_profiles(self, rule):
+        profiles = self.config.xpath(".//mgt-config/password-profile/entry")
+        evidence = "mgt-config/password-profile"
+        if not profiles:
+            return self.make(rule, "No custom password profiles", "None (0 profiles)", "PASS", evidence,
+                             "All admin accounts strictly adhere to global complexity policy")
+        names = [p.get("name") or "unnamed" for p in profiles]
+        return self.make(rule, "No custom password profiles", f"{len(names)} profiles ({', '.join(names)})",
+                         "FAIL", evidence, "Overriding password profiles allow bypassing global password standards")
+
+    def check_ha_passive_link_and_preemption(self, rule):
+        ha = self.device.find("./deviceconfig/high-availability")
+        evidence = "devices/entry/deviceconfig/high-availability/group"
+        if ha is None:
+            return self.make(rule, "Passive link auto and preemption disabled", "HA not configured",
+                             "FAIL", evidence, "High Availability group not configured")
+        preemptive = self.text(ha, ".//election-option/preemptive/text()")
+        passive_link = self.text(ha, ".//passive-link-state/text()")
+        actual = f"passive_link: {passive_link or 'not set'}, preemptive: {preemptive or 'no'}"
+        is_preemptive_ok = preemptive in (None, "no")
+        is_link_ok = passive_link in ("auto", "shutdown")
+        if is_preemptive_ok and is_link_ok:
+            return self.make(rule, "Passive link auto (or shutdown) and preemption disabled (no)",
+                             actual, "PASS", evidence, "HA failover settings properly configured to prevent flapping")
+        if not is_preemptive_ok:
+            return self.make(rule, "Passive link auto and preemption disabled", actual,
+                             "FAIL", evidence, "Preemption is enabled; risk of HA failover thrashing")
+        return self.make(rule, "Passive link auto and preemption disabled", actual,
+                         "REVIEW", evidence, "Verify passive link state in GUI")
+
+    def check_zone_protection_syn_cookies(self, rule):
+        profiles = self.config.xpath(".//network/profiles/zone-protection-profile/entry")
+        evidence = "network/profiles/zone-protection-profile"
+        if not profiles:
+            return self.make(rule, "Zone Protection Profile with SYN Cookies enabled",
+                             "None", "FAIL", evidence, "No Zone Protection Profile configured")
+        valid_profiles = []
+        for p in profiles:
+            pname = p.get("name")
+            syn_enabled = self.text(p, ".//flood/tcp-syn/enable/text()")
+            action_tag = p.xpath(".//flood/tcp-syn/action/*")
+            action_name = action_tag[0].tag if action_tag else ""
+            if syn_enabled == "yes" and ("syn-cookies" in action_name or "syn-cookie" in action_name):
+                valid_profiles.append(pname)
+            elif syn_enabled == "yes":
+                action_text = self.text(p, ".//flood/tcp-syn/action/text()")
+                if action_text and "cookie" in action_text.lower():
+                    valid_profiles.append(pname)
+        if valid_profiles:
+            assigned_zones = self.config.xpath(".//zone/entry[network/zone-protection-profile]/@name")
+            status_desc = f"Profiles: {', '.join(valid_profiles)}"
+            if assigned_zones:
+                status_desc += f" (applied to: {', '.join(assigned_zones)})"
+            return self.make(rule, "SYN Flood protection using SYN Cookies enabled",
+                             status_desc, "PASS", evidence, "SYN Cookie flood defense active")
+        return self.make(rule, "SYN Flood protection using SYN Cookies enabled",
+                         "Not configured with SYN Cookies", "FAIL", evidence,
+                         "Zone Protection Profile does not have SYN Cookies enabled")
+
+    def check_zone_protection_packet_drop(self, rule):
+        profiles = self.config.xpath(".//network/profiles/zone-protection-profile/entry")
+        evidence = "network/profiles/zone-protection-profile/packet-based-attack-protection"
+        if not profiles:
+            return self.make(rule, "Drop spoofed IP and mismatched TCP segments enabled",
+                             "None", "FAIL", evidence, "No Zone Protection Profile configured")
+        active = []
+        for p in profiles:
+            pname = p.get("name")
+            spoof = self.text(p, ".//drop-spoofed-ip-address/text()") or self.text(p, ".//drop-spoofed-ip/text()")
+            tcp_drop = (self.text(p, ".//drop-mismatched-overlapping-tcp-segment/text()") or
+                        self.text(p, ".//reject-non-syn-tcp/text()"))
+            if spoof == "yes" or tcp_drop == "yes":
+                features = []
+                if spoof == "yes":
+                    features.append("drop-spoofed-ip")
+                if tcp_drop == "yes":
+                    features.append("tcp-drop")
+                active.append(f"{pname} [{'+'.join(features)}]")
+        if active:
+            return self.make(rule, "Drop spoofed IP and mismatched TCP segments enabled",
+                             ", ".join(active), "PASS", evidence, "Packet anomaly drop protections active")
+        return self.make(rule, "Drop spoofed IP and mismatched TCP segments enabled",
+                         "Not configured", "FAIL", evidence, "Spoofed IP or TCP drop protection disabled")
+
+    def check_security_policy_block_malicious(self, rule):
+        rules = self.config.xpath(".//vsys/entry/rulebase/security/rules/entry")
+        evidence = "vsys/entry/rulebase/security/rules"
+        if not rules:
+            return self.make(rule, "Top rule blocks malicious / threat traffic",
+                             "No security rules", "FAIL", evidence, "No security rules defined")
+        first_rule = rules[0]
+        first_name = first_rule.get("name")
+        first_action = (self.text(first_rule, "./action/text()") or "").lower()
+        if first_action in ("deny", "drop", "reset-client", "reset-server", "reset-both"):
+            return self.make(rule, "Top rule blocks malicious / threat traffic",
+                             f"Rule '{first_name}' (action: {first_action})", "PASS", evidence,
+                             "Top security policy immediately drops/denies untrusted threat traffic")
+        for idx, r in enumerate(rules[:3]):
+            action = (self.text(r, "./action/text()") or "").lower()
+            rname = (r.get("name") or "").lower()
+            if action in ("deny", "drop") and any(k in rname for k in ("malicious", "threat", "block", "deny", "edl")):
+                return self.make(rule, "Top rule blocks malicious / threat traffic",
+                                 f"Rule #{idx+1} '{r.get('name')}' (action: {action})", "PASS", evidence,
+                                 "Threat blocking policy placed at priority top of rulebase")
+        return self.make(rule, "Top rule blocks malicious / threat traffic",
+                         f"Top rule '{first_name}' action is {first_action or 'allow'}", "FAIL", evidence,
+                         "Top rule does not drop/deny threat traffic; place threat/EDL block rule at the top")

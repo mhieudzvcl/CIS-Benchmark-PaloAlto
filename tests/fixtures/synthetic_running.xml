@@ -19,14 +19,33 @@
       <ntp-servers><primary-ntp-server><ntp-server-address>ntp1.example.test</ntp-server-address></primary-ntp-server><secondary-ntp-server><ntp-server-address>ntp2.example.test</ntp-server-address></secondary-ntp-server></ntp-servers>
       <update-server-identity-check>yes</update-server-identity-check>
     </system>
-    <setting><management>
-      <idle-timeout>10</idle-timeout>
-      <failed-attempts>3</failed-attempts>
-      <lockout-time>30</lockout-time>
-    </management></setting>
-    <high-availability><group><state-synchronization><enabled>yes</enabled></state-synchronization>
-    <configuration-synchronization><enabled>yes</enabled></configuration-synchronization>
-    <monitoring><link-monitoring><enabled>yes</enabled><link-group><entry name="critical"><interface><member>ethernet1/1</member></interface></entry></link-group></link-monitoring>
-    </monitoring></group></high-availability>
+    <setting>
+      <logging><log-high-dp-load>yes</log-high-dp-load></logging>
+      <management>
+        <idle-timeout>10</idle-timeout>
+        <failed-attempts>3</failed-attempts>
+        <lockout-time>30</lockout-time>
+      </management>
+    </setting>
+    <high-availability><group>
+      <election-option><preemptive>no</preemptive></election-option>
+      <state-synchronization><enabled>yes</enabled><passive-link-state>auto</passive-link-state></state-synchronization>
+      <configuration-synchronization><enabled>yes</enabled></configuration-synchronization>
+      <monitoring><link-monitoring><enabled>yes</enabled><link-group><entry name="critical"><interface><member>ethernet1/1</member></interface></entry></link-group></link-monitoring>
+      </monitoring>
+    </group></high-availability>
+    <network><profiles><zone-protection-profile><entry name="ZP-Untrust-Protection">
+      <flood><tcp-syn><enable>yes</enable><action><syn-cookies/></action></tcp-syn></flood>
+      <packet-based-attack-protection>
+        <ip-drop><drop-spoofed-ip-address>yes</drop-spoofed-ip-address></ip-drop>
+        <tcp-drop><drop-mismatched-overlapping-tcp-segment>yes</drop-mismatched-overlapping-tcp-segment></tcp-drop>
+      </packet-based-attack-protection>
+    </entry></zone-protection-profile></profiles></network>
+    <vsys><entry name="vsys1">
+      <zone><entry name="untrust"><network><zone-protection-profile>ZP-Untrust-Protection</zone-protection-profile></network></entry></zone>
+      <rulebase><security><rules>
+        <entry name="Block-Malicious-Threats"><action>deny</action><from><member>untrust</member></from><to><member>any</member></to><source><member>any</member></source><destination><member>any</member></destination><service><member>any</member></service></entry>
+      </rules></rulebase>
+    </entry></vsys>
   </deviceconfig></entry></devices>
 </config>

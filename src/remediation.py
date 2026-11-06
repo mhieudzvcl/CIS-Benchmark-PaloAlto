@@ -7,6 +7,7 @@ from .panos_client import PanOSAPIError
 # Bo sung cac control an toan cho phep tu dong khac phuc (Remediation)
 ALLOWED = {
     "1.1.2": "Configure legal notice login banner",
+    "1.1.3": "Enable log on high DP load",
     "1.2.3": "Disable HTTP and Telnet on management interface",
     "1.3.1": "Enable minimum password complexity",
     "1.3.2": "Set minimum password length to 12 (requires complexity enabled)",
@@ -42,6 +43,9 @@ def prepare_change(control_id, config, before_status):
     if control_id == "1.1.2":
         parent = base + "/deviceconfig/system"
         elements = ["<login-banner>Authorized Access Only</login-banner>"]
+    elif control_id == "1.1.3":
+        parent = base + "/deviceconfig/setting/logging"
+        elements = ["<log-high-dp-load>yes</log-high-dp-load>"]
     elif control_id == "1.4.1":
         parent = base + "/deviceconfig/setting/management"
         elements = ["<idle-timeout>10</idle-timeout>"]
