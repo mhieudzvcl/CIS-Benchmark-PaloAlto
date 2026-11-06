@@ -26,8 +26,13 @@
 
     - name: Query System Info
       ansible.builtin.uri:
-        url: "https://{{ ansible_host }}/api/?type=op&cmd=<show><system><info></info></system></show>&key={{ panos_api_key }}"
-        method: GET
+        url: "https://{{ ansible_host }}/api/"
+        method: POST
+        body_format: form-urlencoded
+        body:
+          type: op
+          cmd: "<show><system><info></info></system></show>"
+          key: "{{ panos_api_key }}"
         validate_certs: "{{ panos_verify_tls }}"
         return_content: true
       register: sysinfo_response
