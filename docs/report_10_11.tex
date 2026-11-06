@@ -334,29 +334,31 @@ Môi trường thử nghiệm thực tế của đề tài được triển khai
 \subsection{Nội dung}
 
 \subsubsection{Mục tiêu và Phạm vi dự án}
-Trong quy trình quản trị an ninh truyền thống, việc kiểm tra cấu hình tường lửa thường được thực hiện thủ công bằng cách mở từng trang cấu hình trên giao diện web, đọc các trường thông số và ghi nhận vào bảng tính kiểm tra. Quy trình này bộc lộ những hạn chế lớn khi quy mô hệ thống tăng lên: tiêu tốn nhiều thời gian, dễ xảy ra sai sót chủ quan do mệt mỏi, thiếu tính đồng nhất và hoàn toàn không thể đáp ứng yêu cầu kiểm toán an ninh liên tục theo chu kỳ ngắn. Do đó, câu hỏi trọng tâm của đề tài là: \emph{Làm thế nào để thiết lập một quy trình chuẩn hóa giúp kiểm tra nhanh chóng, chính xác, có bằng chứng đối chứng rõ ràng và có khả năng tự động hóa việc đánh giá cũng như khắc phục cấu hình tuân thủ CIS Benchmark trên cụm tường lửa Palo Alto?}
+\noindent Trước đây khi chưa có công cụ hỗ trợ, người quản trị thường phải mở từng trang giao diện web của firewall, nhìn từng thông số rồi ghi chép lại vào file Excel. Cách làm này rất tốn thời gian, dễ nhìn nhầm khi phải rà soát quá nhiều mục và gần như không thể thực hiện định kỳ thường xuyên khi số lượng firewall tăng lên. Từ thực tế đó, nhóm đặt ra mục tiêu cho đồ án: \emph{Làm sao để xây dựng một quy trình kiểm tra vừa nhanh, vừa chính xác, có đầy đủ bằng chứng đối chứng và có thể tự động đánh giá cũng như khắc phục cấu hình theo chuẩn CIS Benchmark trên các tường lửa Palo Alto?}
 
-Để giải quyết bài toán trên, đồ án xác định các mục tiêu cốt lõi sau:
+\vspace{0.3cm}
+
+\noindent Để trả lời câu hỏi trên, nhóm đề ra 5 mục tiêu cụ thể:
 \begin{enumerate}
-    \item Nghiên cứu toàn diện bộ tiêu chuẩn CIS Palo Alto Firewall 11 Benchmark v1.2.0, phân tích các yêu cầu kỹ thuật và cơ chế đánh giá.
-    \item Lựa chọn và chuẩn hóa một bộ 30 CIS Controls tiêu biểu, bao quát các khía cạnh an ninh quan trọng nhất của hệ điều hành PAN-OS 11.2.5.
-    \item Xây dựng quy trình kiểm tra thủ công chi tiết đối với toàn bộ 30 controls đã chọn, tổng hợp bảng đối chiếu phương thức thực hiện qua GUI hoặc CLI và ghi nhận bằng chứng thực nghiệm rõ ràng.
-    \item Phát triển bộ công cụ Python tự động hóa giao tiếp qua PAN-OS XML API, trích xuất dữ liệu cấu hình Running Config và dữ liệu vận hành Operational Status, phân tích cú pháp XML bằng XPath và đưa ra kết luận tuân thủ tức thời.
-    \item Ứng dụng Ansible để mở rộng khả năng tự động hóa từ xa (Remote Automation), điều phối quét tuân thủ và làm cứng cấu hình đồng thời trên cụm thiết bị firewall mà không cần cài đặt agent.
+    \item Tìm hiểu kỹ tài liệu CIS Palo Alto Firewall 11 Benchmark v1.2.0, nắm rõ cách thức kiểm tra và các bước khắc phục cho từng khuyến nghị.
+    \item Chọn ra một tập gồm 30 CIS Controls tiêu biểu, bám sát các tính năng quan trọng và hay dùng nhất trên hệ điều hành PAN-OS 11.2.5.
+    \item Xây dựng quy trình kiểm tra thủ công qua cả giao diện Web GUI và dòng lệnh CLI, có bảng ghi nhận kết quả và hình ảnh chụp màn hình thực tế làm căn cứ đối chứng.
+    \item Lập trình công cụ bằng Python kết nối qua PAN-OS XML API, đọc dữ liệu cấu hình đang chạy (Running Config) cùng trạng thái vận hành thời gian thực (Operational Status) để tự động đánh giá kết quả.
+    \item Ứng dụng Ansible để quản lý và điều phối từ xa, cho phép quét kiểm tra và tự động cấu hình bảo mật đồng thời trên toàn bộ các firewall trong hệ thống mà không cần cài thêm phần mềm lên thiết bị.
 \end{enumerate}
 
 \subsubsection{Phân định phạm vi Manual và Automated trong dự án}
-Trong khuôn khổ đề tài, nhóm thực hiện phân định rõ ràng giữa hai khái niệm:
+\noindent Để tránh nhầm lẫn trong quá trình đọc báo cáo, nhóm làm rõ sự khác biệt giữa hai góc nhìn:
 \begin{itemize}
-    \item \textbf{Phân loại của tài liệu CIS Benchmark:} CIS gắn nhãn \textit{Manual} cho các khuyến nghị mà việc kết luận an toàn bắt buộc phải có sự đánh giá ngữ cảnh trực tiếp của con người (ví dụ: CIS 1.2.1 kiểm tra danh sách địa chỉ IP cho phép quản trị, phải do con người xác minh xem các IP đó có thực sự thuộc về các máy trạm quản trị hợp pháp hay không). CIS gắn nhãn \textit{Automated} cho các khuyến nghị có tiêu chí kỹ thuật đơn nhất, có thể kiểm chứng logic bằng máy tính (ví dụ: CIS 1.3.2 yêu cầu độ dài mật khẩu tối thiểu không dưới 12 ký tự).
-    \item \textbf{Phương pháp triển khai trong đề tài:} Trong dự án này, toàn bộ 30 CIS Controls được lựa chọn đều được nhóm triển khai song song ở cả hai phương pháp:
+    \item \textbf{Theo phân loại gốc của CIS Benchmark:} CIS xếp một mục là \textit{Manual} khi việc kết luận an toàn bắt buộc phải có người quản trị xem xét theo ngữ cảnh thực tế của mạng. Ví dụ như mục CIS 1.2.1 về danh sách IP quản trị, máy móc chỉ biết là có khai báo IP hay không, còn việc các IP đó có đúng là máy của người quản trị được cấp phép hay không thì phải do con người kiểm tra lại. Ngược lại, CIS xếp là \textit{Automated} cho những mục có ngưỡng số rõ ràng hoặc điều kiện bật tắt cụ thể mà máy tính có thể tự so sánh được, ví dụ như mục CIS 1.3.2 yêu cầu mật khẩu phải dài từ 12 ký tự trở lên.
+    \item \textbf{Theo cách triển khai của nhóm trong đồ án:} Nhóm áp dụng cả hai phương pháp cho toàn bộ 30 CIS Controls đã chọn:
     \begin{enumerate}
-        \item \emph{Triển khai Manual (30/30 mục):} Nhóm tiến hành đăng nhập trực tiếp qua GUI hoặc CLI trên từng thiết bị để đo đạc thông số thực tế, chụp ảnh bằng chứng và lập bảng kết quả đối chứng làm chuẩn so sánh.
-        \item \emph{Triển khai Automated (30/30 mục):} Nhóm lập trình các quy tắc kiểm tra tự động hóa toàn bộ 30 controls trong mã nguồn Python (`src/cis_scanner.py`) và các kịch bản Ansible (`ansible/playbooks/`). Đối với các tiêu chí mang tính định tính (như danh sách IP quản trị hoặc luật chặn địa chỉ độc hại), chương trình tự động phân tích cấu hình, đối chiếu với danh sách trắng (whitelist) được định nghĩa trước và trả về trạng thái cảnh báo để hỗ trợ người quản trị ra quyết định một cách chuẩn xác nhất.
+        \item \emph{Kiểm tra thủ công (Manual 30/30 mục):} Nhóm tự đăng nhập vào Web GUI hoặc CLI của từng firewall, tìm đến đúng trang cấu hình, ghi nhận giá trị và chụp ảnh lại để làm bộ dữ liệu chuẩn đối chứng.
+        \item \emph{Kiểm tra tự động (Automated 30/30 mục):} Nhóm viết code Python trong \texttt{src/cis\_scanner.py} và các kịch bản Ansible trong thư mục \texttt{ansible/playbooks/} để tự động kiểm tra cả 30 mục. Đối với những mục mà CIS đánh dấu là Manual, chương trình của nhóm vẫn tự động trích xuất dữ liệu ra, đem đối chiếu với danh sách cho phép (whitelist) đã cấu hình trước và đưa ra cảnh báo để người quản trị đưa ra quyết định nhanh hơn rất nhiều.
     \end{enumerate}
 \end{itemize}
 
-Bảng~\ref{tab:scope} tổng hợp đầy đủ các nhóm nội dung CIS Benchmark được nhóm lựa chọn triển khai trong đồ án.
+\noindent Bảng~\ref{tab:scope} tóm tắt 6 nhóm nội dung với 30 khuyến nghị CIS được nhóm lựa chọn triển khai trong đồ án.
 
 \begin{table}[H]
 \centering\small
@@ -369,12 +371,12 @@ Bảng~\ref{tab:scope} tổng hợp đầy đủ các nhóm nội dung CIS Bench
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng Control}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
 \midrule
-1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Thiết lập biểu ngữ cảnh báo pháp lý (Banner), bật log tải cao Data Plane, giới hạn IP quản trị, tắt dịch vụ HTTP/Telnet không an toàn, đặt thời gian ngắt phiên rảnh rỗi và khóa tài khoản khi đăng nhập thất bại. \\
-2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Kích hoạt độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng ký tự hoa, thường, số, ký tự đặc biệt, chu kỳ đổi mật khẩu, lịch sử lưu mật khẩu và ngăn chặn các profile ghi đè trái phép. \\
-3 & Dịch vụ hệ thống và Ghi vết (Services \& Logging) & 3 controls & Xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ đồng bộ thời gian NTP chính và phụ, cấu hình chuyển tiếp log tập trung qua Syslog Profile. \\
-4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Giám sát trạng thái đồng bộ HA giữa hai thiết bị Active/Passive, thiết lập cơ chế giám sát đường truyền (Path Monitoring), cấu hình trạng thái Passive Link tự động và tắt tính năng Preemption. \\
-5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile kích hoạt cơ chế chống tấn công từ chối dịch vụ SYN Flood bằng kỹ thuật SYN Cookies, ngăn chặn gói tin giả mạo IP Spoofing và các gói tin dị thường TCP. \\
-6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm soát không cho phép luật chứa dịch vụ ANY từ vùng Untrust, thiết lập luật chặn địa chỉ độc hại ở vị trí ưu tiên cao nhất của Rulebase, bật chế độ ghi log cuối phiên cho các luật mặc định. \\
+1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\
+2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Bật yêu cầu độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng chữ hoa, chữ thường, chữ số, ký tự đặc biệt, thời hạn đổi mật khẩu, lưu lịch sử mật khẩu cũ và không để tồn tại các profile ghi đè chính sách chung. \\
+3 & Dịch vụ hệ thống và Ghi log (Services \& Logging) & 3 controls & Bật xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ NTP đồng bộ thời gian chính và phụ, cấu hình chuyển tiếp log tập trung về Syslog Server. \\
+4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Kiểm tra trạng thái đồng bộ giữa hai firewall Active và Passive, bật cơ chế giám sát đường truyền (Path Monitoring), để cổng Passive ở chế độ Auto và tắt tính năng giành quyền (Preemption). \\
+5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\
+6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm tra không cho phép mở cổng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\
 \bottomrule
 \end{tabularx}
 \rowcolors{2}{}{}
@@ -1047,3 +1049,4 @@ Kết quả thực nghiệm khẳng định hệ thống tự động hóa hoạ
 \end{enumerate}
 
 \end{document}
+
