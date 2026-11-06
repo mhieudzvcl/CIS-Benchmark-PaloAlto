@@ -79,6 +79,7 @@
 
 \pagestyle{fancy}
 \fancyhf{}
+
 \fancyhead[L]{\footnotesize Báo cáo Đồ án Cuối kỳ -- NT542.R11}
 \fancyhead[R]{\footnotesize CIS Palo Alto Hardening \& Audit}
 \fancyfoot[C]{\thepage}
@@ -328,40 +329,43 @@ Huỳnh Minh Hiếu
 \section*{Danh mục từ viết tắt}
 \addcontentsline{toc}{section}{Danh mục từ viết tắt}
 
-\begin{longtable}{@{}>{\bfseries\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{4.8cm}>{\raggedright\arraybackslash}p{8.0cm}@{}}
-\toprule
+\begingroup
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{|>{\bfseries\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{4.8cm}|>{\raggedright\arraybackslash}p{7.4cm}|}
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Từ viết tắt}} & \textcolor{white}{\textbf{Thuật ngữ tiếng Anh}} & \textcolor{white}{\textbf{Ý nghĩa tiếng Việt}} \\
-\midrule
+\hline
 \endfirsthead
 \multicolumn{3}{c}{\small\textit{Danh mục từ viết tắt (tiếp theo)}} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Từ viết tắt}} & \textcolor{white}{\textbf{Thuật ngữ tiếng Anh}} & \textcolor{white}{\textbf{Ý nghĩa tiếng Việt}} \\
-\midrule
+\hline
 \endhead
-\midrule
-\multicolumn{3}{r}{\small\textit{Còn tiếp ở trang sau}} \\
-\bottomrule
+\hline
+\multicolumn{3}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
+\hline
 \endfoot
-\bottomrule
+\hline
 \endlastfoot
-API & Application Programming Interface & Giao diện lập trình ứng dụng \\
-CIS & Center for Internet Security & Trung tâm an ninh Internet Hoa Kỳ \\
-CLI & Command Line Interface & Giao diện dòng lệnh điều khiển \\
-GUI & Graphical User Interface & Giao diện đồ họa người dùng \\
-HA & High Availability & Tính sẵn sàng cao, cơ chế dự phòng \\
-HTTPS & Hypertext Transfer Protocol Secure & Giao thức truyền tải siêu văn bản bảo mật \\
-NGFW & Next-Generation Firewall & Tường lửa thế hệ mới \\
-NTP & Network Time Protocol & Giao thức đồng bộ thời gian mạng \\
-PAN-OS & Palo Alto Networks Operating System & Hệ điều hành tường lửa Palo Alto \\
-REST & Representational State Transfer & Kiểu kiến trúc dịch vụ web REST \\
-SNMP & Simple Network Management Protocol & Giao thức quản trị mạng đơn giản \\
-SSH & Secure Shell & Giao thức phiên làm việc từ xa an toàn \\
-TLS & Transport Layer Security & Giao thức bảo mật tầng truyền vận \\
-XML & Extensible Markup Language & Ngôn ngữ đánh dấu mở rộng \\
-XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML \\
+API & Application Programming Interface & Giao diện lập trình ứng dụng \\ \hline
+CIS & Center for Internet Security & Trung tâm an ninh Internet Hoa Kỳ \\ \hline
+CLI & Command Line Interface & Giao diện dòng lệnh điều khiển \\ \hline
+GUI & Graphical User Interface & Giao diện đồ họa người dùng \\ \hline
+HA & High Availability & Tính sẵn sàng cao, cơ chế dự phòng \\ \hline
+HTTPS & Hypertext Transfer Protocol Secure & Giao thức truyền tải siêu văn bản bảo mật \\ \hline
+NGFW & Next-Generation Firewall & Tường lửa thế hệ mới \\ \hline
+NTP & Network Time Protocol & Giao thức đồng bộ thời gian mạng \\ \hline
+PAN-OS & Palo Alto Networks Operating System & Hệ điều hành tường lửa Palo Alto \\ \hline
+REST & Representational State Transfer & Kiểu kiến trúc dịch vụ web REST \\ \hline
+SNMP & Simple Network Management Protocol & Giao thức quản trị mạng đơn giản \\ \hline
+SSH & Secure Shell & Giao thức phiên làm việc từ xa an toàn \\ \hline
+TLS & Transport Layer Security & Giao thức bảo mật tầng truyền vận \\ \hline
+XML & Extensible Markup Language & Ngôn ngữ đánh dấu mở rộng \\ \hline
+XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML \\ \hline
 \end{longtable}
+\endgroup
 
 \clearpage
 
@@ -391,11 +395,11 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 \pagenumbering{arabic}
 
 % ============================================================
-% CHƯƠNG 1: TỔNG QUAN BENCHMARK
+% CHƯƠNG 1: GIỚI THIỆU VỀ ĐỀ TÀI VÀ CHUẨN CIS BENCHMARK
 % ============================================================
-\section{Tổng quan Benchmark}
+\section{Giới thiệu về đề tài và Chuẩn CIS Benchmark}
 
-\subsection{Giới thiệu}
+\subsection{Tóm tắt}
 \noindent Trong các hệ thống mạng doanh nghiệp hiện nay, tường lửa thế hệ mới (Next-Generation Firewall -- NGFW) của Palo Alto luôn là chốt chặn quan trọng nhất để phân chia vùng mạng, kiểm soát luồng dữ liệu và ngăn chặn các cuộc tấn công. Tuy nhiên, dù thiết bị có hiện đại đến đâu và mua đủ license đắt tiền, hệ thống vẫn có thể gặp rủi ro lớn nếu người quản trị cấu hình không đúng cách. Thực tế cho thấy rất nhiều sự cố an ninh bắt nguồn từ các sơ hở rất cơ bản, chẳng hạn như mở port quản trị ra ngoài Internet, dùng giao thức không mã hóa như HTTP hay Telnet, đặt mật khẩu đơn giản, không giới hạn thời gian tự ngắt phiên đăng nhập hoặc bỏ qua các thiết lập dự phòng đường truyền.
 
 \vspace{0.3cm}
@@ -422,34 +426,37 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 
 \noindent Bảng~\ref{tab:scope} tóm tắt 6 nhóm nội dung với 30 khuyến nghị CIS được nhóm lựa chọn triển khai trong đồ án.
 
-\begin{longtable}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
+\begingroup
+\setlength{\tabcolsep}{4.5pt}
+\begin{longtable}{|>{\centering\arraybackslash}p{1.2cm}|>{\raggedright\arraybackslash}p{3.6cm}|>{\centering\arraybackslash}p{2.0cm}|>{\raggedright\arraybackslash}p{7.4cm}|}
 \caption{Các nhóm nội dung CIS Benchmark được nhóm lựa chọn triển khai} \label{tab:scope} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
-\midrule
+\hline
 \endfirsthead
 \multicolumn{4}{c}{\small\textit{Bảng \ref{tab:scope} (tiếp theo)}} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
-\midrule
+\hline
 \endhead
-\midrule
-\multicolumn{4}{r}{\small\textit{Còn tiếp ở trang sau}} \\
-\bottomrule
+\hline
+\multicolumn{4}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
+\hline
 \endfoot
-\bottomrule
+\hline
 \endlastfoot
-1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\
-2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Bật yêu cầu độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng chữ hoa, chữ thường, chữ số, ký tự đặc biệt, thời hạn đổi mật khẩu, lưu lịch sử mật khẩu cũ và không để tồn tại các profile ghi đè chính sách chung. \\
-3 & Dịch vụ hệ thống và Ghi log (Services \& Logging) & 3 controls & Bật xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ NTP đồng bộ thời gian chính và phụ, cấu hình chuyển tiếp log tập trung về Syslog Server. \\
-4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Kiểm tra trạng thái đồng bộ giữa hai firewall Active và Passive, bật cơ chế giám sát đường truyền (Path Monitoring), để cổng Passive ở chế độ Auto và tắt tính năng giành quyền (Preemption). \\
-5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\
-6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm tra không cho phép mở cổng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\
+1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\ \hline
+2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Bật yêu cầu độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng chữ hoa, chữ thường, chữ số, ký tự đặc biệt, thời hạn đổi mật khẩu, lưu lịch sử mật khẩu cũ và không để tồn tại các profile ghi đè chính sách chung. \\ \hline
+3 & Dịch vụ hệ thống và Ghi log (Services \& Logging) & 3 controls & Bật xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ NTP đồng bộ thời gian chính và phụ, cấu hình chuyển tiếp log tập trung về Syslog Server. \\ \hline
+4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Kiểm tra trạng thái đồng bộ giữa hai firewall Active và Passive, bật cơ chế giám sát đường truyền (Path Monitoring), để cổng Passive ở chế độ Auto và tắt tính năng giành quyền (Preemption). \\ \hline
+5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\ \hline
+6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm tra không cho phép mở cổng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\ \hline
 \end{longtable}
+\endgroup
 
-\subsection{Nội dung Benchmark}
+\subsection{Nội dung}
 Tài liệu CIS Palo Alto Firewall 11 Benchmark v1.2.0 được xây dựng dựa trên sự đồng thuận của cộng đồng chuyên gia an ninh mạng quốc tế. Cấu trúc tài liệu bao gồm các quy định pháp lý (Terms of Use), định nghĩa cấp độ bảo vệ (Profile Level 1 và Level 2), các khuyến nghị kỹ thuật chi tiết và phần phụ lục đối sánh.
 
 Mỗi khuyến nghị trong tài liệu được chuẩn hóa thành các mục thông tin rõ ràng:
@@ -463,84 +470,76 @@ Mỗi khuyến nghị trong tài liệu được chuẩn hóa thành các mục 
 
 Bảng~\ref{tab:full-benchmark-details} trình bày chi tiết toàn bộ 30 khuyến nghị cấu hình được nhóm lựa chọn triển khai trong đồ án, bao gồm mã số, tiêu đề, trạng thái đánh giá, cấp độ bảo vệ, nội dung yêu cầu và lý do bảo mật tương ứng.
 
-\begin{longtable}{@{}>{\centering\arraybackslash}p{1.1cm}>{\raggedright\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{1.7cm}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{3.8cm}@{}}
+\begingroup
+\setlength{\tabcolsep}{3.5pt}
+\begin{longtable}{|>{\centering\arraybackslash}p{1.0cm}|>{\raggedright\arraybackslash}p{2.7cm}|>{\centering\arraybackslash}p{2.0cm}|>{\centering\arraybackslash}p{1.1cm}|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{3.6cm}|}
 \caption{Danh mục chi tiết 30 khuyến nghị CIS Benchmark được nhóm lựa chọn triển khai} \label{tab:full-benchmark-details} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị}} & \textcolor{white}{\textbf{Trạng thái}} & \textcolor{white}{\textbf{Cấp độ}} & \textcolor{white}{\textbf{Nội dung cấu hình}} & \textcolor{white}{\textbf{Lý do bảo mật}} \\
-\midrule
+\hline
 \endfirsthead
-\multicolumn{6}{c}{\small\textit{Bảng \ref{tab:full-benchmark-details} (tiếp theo)}} \\
-\toprule
+\multicolumn{6}{|c|}{\small\textit{Bảng \ref{tab:full-benchmark-details} (tiếp theo)}} \\
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị}} & \textcolor{white}{\textbf{Trạng thái}} & \textcolor{white}{\textbf{Cấp độ}} & \textcolor{white}{\textbf{Nội dung cấu hình}} & \textcolor{white}{\textbf{Lý do bảo mật}} \\
-\midrule
+\hline
 \endhead
-\midrule
-\multicolumn{6}{r}{\small\textit{Còn tiếp ở trang sau}} \\
-\bottomrule
+\hline
+\multicolumn{6}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
+\hline
 \endfoot
-\bottomrule
+\hline
 \endlastfoot
 
-\multicolumn{6}{l}{\textbf{1. Thiết lập và Quản trị Thiết bị (Device Setup and Administration)}} \\
-\midrule
-1.1.2 & Legal Notice Login Banner & Automated & Level 1 & Cấu hình biểu ngữ cảnh báo pháp lý khi đăng nhập hệ thống, thông báo rõ việc ghi log và không dùng từ chào mừng. & Loại bỏ khả năng người dùng biện minh là truy cập nhầm, tạo cơ sở pháp lý xử lý khi có xâm nhập trái phép. \\
-1.1.3 & Log on High DP Load & Automated & Level 1 & Bật tính năng tự động ghi log khi tải CPU của Data Plane vượt ngưỡng cao. & Giúp quản trị viên phát hiện kịp thời các đợt tấn công từ chối dịch vụ hoặc bất thường lưu lượng mạng. \\
-1.2.1 & Permitted IP Mgmt Interface & Manual & Level 1 & Chỉ cho phép các địa chỉ IP hoặc dải mạng quản trị tin cậy kết nối đến cổng Management. & Ngăn ngừa việc kẻ tấn công từ Internet hoặc các vùng mạng nội bộ khác quét dò và tấn công cổng quản trị. \\
-1.2.3 & Disable HTTP/Telnet Mgmt & Automated & Level 1 & Tắt hoàn toàn dịch vụ quản trị HTTP và Telnet trên cổng Management. & Ngăn chặn việc truyền mật khẩu và phiên làm việc dưới dạng văn bản rõ không mã hóa qua mạng. \\
-1.2.4 & Disable HTTP/Telnet Profiles & Automated & Level 1 & Rà soát tất cả Interface Management Profiles, bảo đảm không cho phép HTTP và Telnet. & Đảm bảo các cổng giao tiếp dữ liệu nội bộ không vô tình mở các dịch vụ quản trị thiếu an toàn. \\
-1.4.1 & Management Idle Timeout & Automated & Level 1 & Thiết lập thời gian tự động ngắt phiên rảnh rỗi không vượt quá 10 phút. & Giảm thiểu rủi ro bị chiếm quyền điều khiển phiên làm việc khi quản trị viên rời khỏi máy trạm. \\
-1.4.2 & Failed Attempts Lockout & Automated & Level 1 & Thiết lập khóa tài khoản sau không quá 5 lần đăng nhập thất bại liên tiếp. & Ngăn chặn hiệu quả các cuộc tấn công dò đoán mật khẩu tự động và tấn công vét cạn (brute-force). \\
-1.4.3 & Failed Attempts Lockout Time & Automated & Level 1 & Đặt thời gian khóa tài khoản sau khi vượt ngưỡng thất bại tối thiểu 15 phút. & Làm chậm tốc độ dò mật khẩu của kẻ tấn công và tạo thời gian cho quản trị viên phát hiện sự cố. \\
-1.5.1 & SNMPv3 or SNMP Disabled & Automated & Level 1 & Tắt dịch vụ SNMP hoặc chỉ sử dụng SNMPv3 có mã hóa và xác thực. & SNMPv1 và v2 truyền thông tin dạng rõ, dễ bị nghe lén để thu thập cấu trúc mạng và thông số hệ thống. \\
-\midrule
+\multicolumn{6}{|l|}{\textbf{1. Thiết lập và Quản trị Thiết bị (Device Setup and Administration)}} \\ \hline
+1.1.2 & Legal Notice Login Banner & Automated & Level 1 & Cấu hình biểu ngữ cảnh báo pháp lý khi đăng nhập hệ thống, thông báo rõ việc ghi log và không dùng từ chào mừng. & Loại bỏ khả năng người dùng biện minh là truy cập nhầm, tạo cơ sở pháp lý xử lý khi có xâm nhập trái phép. \\ \hline
+1.1.3 & Log on High DP Load & Automated & Level 1 & Bật tính năng tự động ghi log khi tải CPU của Data Plane vượt ngưỡng cao. & Giúp quản trị viên phát hiện kịp thời các đợt tấn công từ chối dịch vụ hoặc bất thường lưu lượng mạng. \\ \hline
+1.2.1 & Permitted IP Mgmt Interface & Manual & Level 1 & Chỉ cho phép các địa chỉ IP hoặc dải mạng quản trị tin cậy kết nối đến cổng Management. & Ngăn ngừa việc kẻ tấn công từ Internet hoặc các vùng mạng nội bộ khác quét dò và tấn công cổng quản trị. \\ \hline
+1.2.3 & Disable HTTP/Telnet Mgmt & Automated & Level 1 & Tắt hoàn toàn dịch vụ quản trị HTTP và Telnet trên cổng Management. & Ngăn chặn việc truyền mật khẩu và phiên làm việc dưới dạng văn bản rõ không mã hóa qua mạng. \\ \hline
+1.2.4 & Disable HTTP/Telnet Profiles & Automated & Level 1 & Rà soát tất cả Interface Management Profiles, bảo đảm không cho phép HTTP và Telnet. & Đảm bảo các cổng giao tiếp dữ liệu nội bộ không vô tình mở các dịch vụ quản trị thiếu an toàn. \\ \hline
+1.4.1 & Management Idle Timeout & Automated & Level 1 & Thiết lập thời gian tự động ngắt phiên rảnh rỗi không vượt quá 10 phút. & Giảm thiểu rủi ro bị chiếm quyền điều khiển phiên làm việc khi quản trị viên rời khỏi máy trạm. \\ \hline
+1.4.2 & Failed Attempts Lockout & Automated & Level 1 & Thiết lập khóa tài khoản sau không quá 5 lần đăng nhập thất bại liên tiếp. & Ngăn chặn hiệu quả các cuộc tấn công dò đoán mật khẩu tự động và tấn công vét cạn (brute-force). \\ \hline
+1.4.3 & Failed Attempts Lockout Time & Automated & Level 1 & Đặt thời gian khóa tài khoản sau khi vượt ngưỡng thất bại tối thiểu 15 phút. & Làm chậm tốc độ dò mật khẩu của kẻ tấn công và tạo thời gian cho quản trị viên phát hiện sự cố. \\ \hline
+1.5.1 & SNMPv3 or SNMP Disabled & Automated & Level 1 & Tắt dịch vụ SNMP hoặc chỉ sử dụng SNMPv3 có mã hóa và xác thực. & SNMPv1 và v2 truyền thông tin dạng rõ, dễ bị nghe lén để thu thập cấu trúc mạng và thông số hệ thống. \\ \hline
 
-\multicolumn{6}{l}{\textbf{2. Chính sách Mật khẩu (Password Profiles)}} \\
-\midrule
-1.3.1 & Password Complexity Enabled & Automated & Level 1 & Bật cơ chế kiểm tra độ phức tạp của mật khẩu quản trị cục bộ. & Đảm bảo tất cả mật khẩu tạo mới hoặc thay đổi đều phải tuân thủ các quy tắc an toàn đã đề ra. \\
-1.3.2 & Password Minimum Length & Automated & Level 1 & Đặt độ dài mật khẩu tối thiểu từ 12 ký tự trở lên. & Tăng không gian khóa, nâng cao độ khó trước các cuộc tấn công từ điển và bảng băm cầu vồng. \\
-1.3.3 & Uppercase Letters $\geq 1$ & Automated & Level 1 & Bắt buộc mật khẩu phải chứa ít nhất 1 ký tự chữ hoa. & Tăng tính ngẫu nhiên và độ phức tạp của chuỗi ký tự mật khẩu. \\
-1.3.4 & Lowercase Letters $\geq 1$ & Automated & Level 1 & Bắt buộc mật khẩu phải chứa ít nhất 1 ký tự chữ thường. & Phối hợp cùng ký tự chữ hoa để mở rộng tập ký tự cần dò đoán. \\
-1.3.5 & Numeric Digits $\geq 1$ & Automated & Level 1 & Bắt buộc mật khẩu phải chứa ít nhất 1 ký tự chữ số. & Ngăn chặn người dùng đặt mật khẩu chỉ gồm các từ ngữ tự nhiên trong từ điển. \\
-1.3.6 & Special Characters $\geq 1$ & Automated & Level 1 & Bắt buộc mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (@, \#, \$,...). & Tăng tối đa độ phức tạp (entropy) của mật khẩu trước các công cụ bẻ khóa tự động. \\
-1.3.7 & Password Change Period & Automated & Level 1 & Quy định chu kỳ bắt buộc đổi mật khẩu định kỳ không vượt quá 90 ngày. & Giới hạn khoảng thời gian khai thác nếu mật khẩu vô tình bị lộ lọt ra bên ngoài. \\
-1.3.8 & New Password Differs & Automated & Level 1 & Yêu cầu mật khẩu mới phải khác mật khẩu cũ ít nhất 3 ký tự. & Tránh tình trạng người dùng chỉ thay đổi một ký tự cuối để đối phó với quy định đổi mật khẩu. \\
-1.3.9 & Password History Count & Automated & Level 1 & Hệ thống ghi nhớ ít nhất 24 mật khẩu đã sử dụng gần nhất. & Ngăn chặn việc người dùng lập tức đổi lại mật khẩu cũ ngay sau khi bị bắt buộc thay đổi. \\
-1.3.10 & No Custom Password Profiles & Automated & Level 1 & Đảm bảo không có các Password Profile riêng lẻ tạo ra nhằm ghi đè chính sách chung. & Giữ tính đồng nhất của chính sách mật khẩu, tránh việc tạo ra các tài khoản ngoại lệ yếu kém. \\
-\midrule
+\multicolumn{6}{|l|}{\textbf{2. Chính sách Mật khẩu (Password Profiles)}} \\ \hline
+1.3.1 & Password Complexity Enabled & Automated & Level 1 & Bật cơ chế kiểm tra độ phức tạp của mật khẩu quản trị cục bộ. & Đảm bảo tất cả mật khẩu tạo mới hoặc thay đổi đều phải tuân thủ các quy tắc an toàn đã đề ra. \\ \hline
+1.3.2 & Password Minimum Length & Automated & Level 1 & Đặt độ dài mật khẩu tối thiểu từ 12 ký tự trở lên. & Tăng không gian khóa, nâng cao độ khó trước các cuộc tấn công từ điển và bảng băm cầu vồng. \\ \hline
+1.3.3 & Uppercase Letters $\geq 1$ & Automated & Level 1 & Bắt buộc mật khẩu phải chứa ít nhất 1 ký tự chữ hoa. & Tăng tính ngẫu nhiên và độ phức tạp của chuỗi ký tự mật khẩu. \\ \hline
+1.3.4 & Lowercase Letters $\geq 1$ & Automated & Level 1 & Bắt buộc mật khẩu phải chứa ít nhất 1 ký tự chữ thường. & Phối hợp cùng ký tự chữ hoa để mở rộng tập ký tự cần dò đoán. \\ \hline
+1.3.5 & Numeric Digits $\geq 1$ & Automated & Level 1 & Bắt buộc mật khẩu phải chứa ít nhất 1 ký tự chữ số. & Ngăn chặn người dùng đặt mật khẩu chỉ gồm các từ ngữ tự nhiên trong từ điển. \\ \hline
+1.3.6 & Special Characters $\geq 1$ & Automated & Level 1 & Bắt buộc mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (@, \#, \$,...). & Tăng tối đa độ phức tạp (entropy) của mật khẩu trước các công cụ bẻ khóa tự động. \\ \hline
+1.3.7 & Password Change Period & Automated & Level 1 & Quy định chu kỳ bắt buộc đổi mật khẩu định kỳ không vượt quá 90 ngày. & Giới hạn khoảng thời gian khai thác nếu mật khẩu vô tình bị lộ lọt ra bên ngoài. \\ \hline
+1.3.8 & New Password Differs & Automated & Level 1 & Yêu cầu mật khẩu mới phải khác mật khẩu cũ ít nhất 3 ký tự. & Tránh tình trạng người dùng chỉ thay đổi một ký tự cuối để đối phó với quy định đổi mật khẩu. \\ \hline
+1.3.9 & Password History Count & Automated & Level 1 & Hệ thống ghi nhớ ít nhất 24 mật khẩu đã sử dụng gần nhất. & Ngăn chặn việc người dùng lập tức đổi lại mật khẩu cũ ngay sau khi bị bắt buộc thay đổi. \\ \hline
+1.3.10 & No Custom Password Profiles & Automated & Level 1 & Đảm bảo không có các Password Profile riêng lẻ tạo ra nhằm ghi đè chính sách chung. & Giữ tính đồng nhất của chính sách mật khẩu, tránh việc tạo ra các tài khoản ngoại lệ yếu kém. \\ \hline
 
-\multicolumn{6}{l}{\textbf{3. Dịch vụ Hệ thống và Ghi log (Services and Logging)}} \\
-\midrule
-1.6.1 & Verify Update Server Identity & Automated & Level 1 & Bật tùy chọn kiểm tra danh tính và chứng chỉ của máy chủ cập nhật chính hãng. & Ngăn ngừa tấn công giả mạo máy chủ cập nhật (Man-in-the-middle) để cài mã độc vào firewall. \\
-1.6.2 & NTP Primary and Secondary & Automated & Level 1 & Cấu hình máy chủ đồng bộ thời gian NTP chính và phụ đáng tin cậy. & Đảm bảo tính chính xác và đồng bộ của nhãn thời gian (timestamp) trong toàn bộ nhật ký hệ thống. \\
-1.7.1 & Syslog Server Profile & Automated & Level 1 & Cấu hình hồ sơ chuyển tiếp nhật ký ra máy chủ Syslog tập trung bên ngoài. & Đảm bảo lưu trữ nhật ký an toàn, phục vụ công tác điều tra số và tránh nguy cơ bị xóa log khi máy bị xâm nhập. \\
-\midrule
+\multicolumn{6}{|l|}{\textbf{3. Dịch vụ Hệ thống và Ghi log (Services and Logging)}} \\ \hline
+1.6.1 & Verify Update Server Identity & Automated & Level 1 & Bật tùy chọn kiểm tra danh tính và chứng chỉ của máy chủ cập nhật chính hãng. & Ngăn ngừa tấn công giả mạo máy chủ cập nhật (Man-in-the-middle) để cài mã độc vào firewall. \\ \hline
+1.6.2 & NTP Primary and Secondary & Automated & Level 1 & Cấu hình máy chủ đồng bộ thời gian NTP chính và phụ đáng tin cậy. & Đảm bảo tính chính xác và đồng bộ của nhãn thời gian (timestamp) trong toàn bộ nhật ký hệ thống. \\ \hline
+1.7.1 & Syslog Server Profile & Automated & Level 1 & Cấu hình hồ sơ chuyển tiếp nhật ký ra máy chủ Syslog tập trung bên ngoài. & Đảm bảo lưu trữ nhật ký an toàn, phục vụ công tác điều tra số và tránh nguy cơ bị xóa log khi máy bị xâm nhập. \\ \hline
 
-\multicolumn{6}{l}{\textbf{4. Độ sẵn sàng cao (High Availability)}} \\
-\midrule
-3.1 & HA Peer Synchronization & Automated & Level 2 & Hai thiết bị tường lửa trong cụm HA phải ở trạng thái kết nối và đồng bộ cấu hình hoàn tất. & Đảm bảo hệ thống có khả năng chuyển đổi dự phòng tức thời khi một node gặp sự cố phần cứng. \\
-3.2 & HA Link/Path Monitoring & Automated & Level 2 & Cấu hình cơ chế giám sát các liên kết vật lý hoặc đường truyền mạng quan trọng. & Tự động kích hoạt chuyển đổi dự phòng nếu đường truyền kết nối mạng chính bị đứt gãy. \\
-3.3 & HA Passive Link Auto & Automated & Level 2 & Cổng mạng ở node Passive đặt ở trạng thái Auto và tính năng Preemption được tắt. & Tránh hiện tượng tranh chấp quyền điều khiển (flapping) gây gián đoạn phiên khi node chính phục hồi. \\
-\midrule
+\multicolumn{6}{|l|}{\textbf{4. Độ sẵn sàng cao (High Availability)}} \\ \hline
+3.1 & HA Peer Synchronization & Automated & Level 2 & Hai thiết bị tường lửa trong cụm HA phải ở trạng thái kết nối và đồng bộ cấu hình hoàn tất. & Đảm bảo hệ thống có khả năng chuyển đổi dự phòng tức thời khi một node gặp sự cố phần cứng. \\ \hline
+3.2 & HA Link/Path Monitoring & Automated & Level 2 & Cấu hình cơ chế giám sát các liên kết vật lý hoặc đường truyền mạng quan trọng. & Tự động kích hoạt chuyển đổi dự phòng nếu đường truyền kết nối mạng chính bị đứt gãy. \\ \hline
+3.3 & HA Passive Link Auto & Automated & Level 2 & Cổng mạng ở node Passive đặt ở trạng thái Auto và tính năng Preemption được tắt. & Tránh hiện tượng tranh chấp quyền điều khiển (flapping) gây gián đoạn phiên khi node chính phục hồi. \\ \hline
 
-\multicolumn{6}{l}{\textbf{5. Lọc bảo vệ vùng mạng (Zone Protection)}} \\
-\midrule
-6.15 & SYN Flood Protection Cookies & Automated & Level 1 & Áp dụng cơ chế SYN Cookies chống tấn công SYN Flood trong Zone Protection Profile. & Bảo vệ bảng trạng thái kết nối của tường lửa không bị tràn ngập trước các đợt tấn công từ chối dịch vụ TCP. \\
-6.18 & Drop Spoofed IP \& Bad TCP & Automated & Level 1 & Cấu hình tự động hủy bỏ các gói tin giả mạo IP nguồn và các gói tin phân mảnh TCP dị thường. & Ngăn chặn các kỹ thuật thâm nhập mạng qua giả mạo địa chỉ IP và các đợt quét cổng bất thường. \\
-\midrule
+\multicolumn{6}{|l|}{\textbf{5. Lọc bảo vệ vùng mạng (Zone Protection)}} \\ \hline
+6.15 & SYN Flood Protection Cookies & Automated & Level 1 & Áp dụng cơ chế SYN Cookies chống tấn công SYN Flood trong Zone Protection Profile. & Bảo vệ bảng trạng thái kết nối của tường lửa không bị tràn ngập trước các đợt tấn công từ chối dịch vụ TCP. \\ \hline
+6.18 & Drop Spoofed IP \& Bad TCP & Automated & Level 1 & Cấu hình tự động hủy bỏ các gói tin giả mạo IP nguồn và các gói tin phân mảnh TCP dị thường. & Ngăn chặn các kỹ thuật thâm nhập mạng qua giả mạo địa chỉ IP và các đợt quét cổng bất thường. \\ \hline
 
-\multicolumn{6}{l}{\textbf{6. Chính sách Bảo mật (Security Policies)}} \\
-\midrule
-7.2 & No ANY Service Untrust Rule & Automated & Level 1 & Không cho phép các luật an ninh mở dịch vụ ANY từ vùng mạng Untrust đi vào. & Thu hẹp bề mặt tấn công, chỉ mở đúng các cổng dịch vụ thực sự cần thiết cho hoạt động kinh doanh. \\
-7.3 & Top Rule Blocking Threats & Manual & Level 1 & Đặt các quy tắc chặn địa chỉ IP độc hại đã nhận diện ở vị trí ưu tiên cao nhất của Rulebase. & Đảm bảo lưu lượng từ các nguồn nguy hiểm bị triệt tiêu ngay lập tức trước khi được xét duyệt bởi các luật khác. \\
-7.4 & Default Rules Logging & Automated & Level 1 & Bật tính năng ghi nhật ký ở cuối phiên (Log at Session End) cho các luật ngầm định mặc định. & Ghi lại toàn bộ các nỗ lực truy cập bị từ chối mặc định, phục vụ phân tích lưu lượng bất thường. \\
+\multicolumn{6}{|l|}{\textbf{6. Chính sách Bảo mật (Security Policies)}} \\ \hline
+7.2 & No ANY Service Untrust Rule & Automated & Level 1 & Không cho phép các luật an ninh mở dịch vụ ANY từ vùng mạng Untrust đi vào. & Thu hẹp bề mặt tấn công, chỉ mở đúng các cổng dịch vụ thực sự cần thiết cho hoạt động kinh doanh. \\ \hline
+7.3 & Top Rule Blocking Threats & Manual & Level 1 & Đặt các quy tắc chặn địa chỉ IP độc hại đã nhận diện ở vị trí ưu tiên cao nhất của Rulebase. & Đảm bảo lưu lượng từ các nguồn nguy hiểm bị triệt tiêu ngay lập tức trước khi được xét duyệt bởi các luật khác. \\ \hline
+7.4 & Default Rules Logging & Automated & Level 1 & Bật tính năng ghi nhật ký ở cuối phiên (Log at Session End) cho các luật ngầm định mặc định. & Ghi lại toàn bộ các nỗ lực truy cập bị từ chối mặc định, phục vụ phân tích lưu lượng bất thường. \\ \hline
 \end{longtable}
+\endgroup
 
 % ============================================================
-% CHƯƠNG 2: PHƯƠNG PHÁP THỰC HIỆN
+% CHƯƠNG 2: PHƯƠNG PHÁP
 % ============================================================
-\section{Phương pháp thực hiện}
+\section{Phương pháp}
 
 \subsection{Phương pháp Đánh giá Thủ công (Manual)}
 
@@ -611,9 +610,9 @@ Hệ thống triển khai hai cơ chế thu thập dữ liệu tách biệt đ�
 \end{itemize}
 
 % ============================================================
-% CHƯƠNG 3: TRIỂN KHAI VÀ KẾT QUẢ
+% CHƯƠNG 3: TRIỂN KHAI
 % ============================================================
-\section{Triển khai và Kết quả}
+\section{Triển khai}
 
 \subsection{Mô hình triển khai}
 
@@ -672,21 +671,21 @@ Bảng~\ref{tab:ip-allocation} liệt kê thông số địa chỉ IP và vai tr
 \caption{Bảng phân bổ địa chỉ IP và vai trò thiết bị trong lab CMC Cloud}
 \label{tab:ip-allocation}
 \renewcommand{\arraystretch}{1.45}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.8cm}>{\centering\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{3.2cm}X@{}}
-\toprule
+\begingroup
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\centering\arraybackslash}p{2.4cm}|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{6.6cm}|}
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Thiết bị}} & \textcolor{white}{\textbf{Địa chỉ IP}} & \textcolor{white}{\textbf{Hệ điều hành}} & \textcolor{white}{\textbf{Vai trò và Chức năng}} \\
-\midrule
-PA-CIS-01 & 10.0.10.11 & PAN-OS 11.2.5 & Tường lửa chính (HA Primary Active), xử lý lưu lượng và thực thi chính sách an ninh. \\
-PA-CIS-02 & 10.0.10.12 & PAN-OS 11.2.5 & Tường lửa dự phòng (HA Secondary Passive), duy trì trạng thái đồng bộ sẵn sàng thay thế. \\
-Linux Bastion & 10.0.10.20 & Ubuntu 24.04 LTS & Máy chủ Controller thực thi script Python, điều phối Ansible và lưu trữ báo cáo kiểm toán. \\
-Windows Bastion & 10.0.10.21 & Windows Server 2022 & Máy trạm đồ họa dành cho quản trị viên đăng nhập Web GUI và thực hiện kiểm tra thủ công. \\
-HA1 Link & 192.168.1.0/30 & Cáp ảo điểm-điểm & Kênh truyền điều khiển đồng bộ trạng thái High Availability giữa hai tường lửa. \\
-HA2 Link & 192.168.2.0/30 & Cáp ảo điểm-điểm & Kênh truyền dữ liệu đồng bộ các phiên kết nối mạng thời gian thực. \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
+\hline
+PA-CIS-01 & 10.0.10.11 & PAN-OS 11.2.5 & Tường lửa chính (HA Primary Active), xử lý lưu lượng và thực thi chính sách an ninh. \\ \hline
+PA-CIS-02 & 10.0.10.12 & PAN-OS 11.2.5 & Tường lửa dự phòng (HA Secondary Passive), duy trì trạng thái đồng bộ sẵn sàng thay thế. \\ \hline
+Linux Bastion & 10.0.10.20 & Ubuntu 24.04 LTS & Máy chủ Controller thực thi script Python, điều phối Ansible và lưu trữ báo cáo kiểm toán. \\ \hline
+Windows Bastion & 10.0.10.21 & Windows Server 2022 & Máy trạm đồ họa dành cho quản trị viên đăng nhập Web GUI và thực hiện kiểm tra thủ công. \\ \hline
+HA1 Link & 192.168.1.0/30 & Cáp ảo điểm-điểm & Kênh truyền điều khiển đồng bộ trạng thái High Availability giữa hai tường lửa. \\ \hline
+HA2 Link & 192.168.2.0/30 & Cáp ảo điểm-điểm & Kênh truyền dữ liệu đồng bộ các phiên kết nối mạng thời gian thực. \\ \hline
+\end{tabular}
+\endgroup
 \end{table}
 
 \subsection{Triển khai Manual}
@@ -912,56 +911,59 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \subsubsection{Phụ lục Bảng tổng kết Checklist kết quả Manual}
 Bảng~\ref{tab:manual-checklist-summary} tổng hợp kết quả rà soát thủ công toàn bộ 30 khuyến nghị trên cụm tường lửa thực nghiệm tại lab CMC Cloud.
 
-\begin{longtable}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{6.8cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{3.8cm}@{}}
+\begingroup
+\setlength{\tabcolsep}{4.5pt}
+\begin{longtable}{|>{\centering\arraybackslash}p{1.2cm}|>{\raggedright\arraybackslash}p{6.4cm}|>{\centering\arraybackslash}p{1.1cm}|>{\centering\arraybackslash}p{1.3cm}|>{\raggedright\arraybackslash}p{4.0cm}|}
 \caption{Bảng tổng kết checklist kết quả rà soát thủ công trên cụm tường lửa} \label{tab:manual-checklist-summary} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \textcolor{white}{\textbf{Đạt}} & \textcolor{white}{\textbf{K.Đạt}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
-\midrule
+\hline
 \endfirsthead
 \multicolumn{5}{c}{\small\textit{Bảng \ref{tab:manual-checklist-summary} (tiếp theo)}} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \textcolor{white}{\textbf{Đạt}} & \textcolor{white}{\textbf{K.Đạt}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
-\midrule
+\hline
 \endhead
-\midrule
-\multicolumn{5}{r}{\small\textit{Còn tiếp ở trang sau}} \\
-\bottomrule
+\hline
+\multicolumn{5}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
+\hline
 \endfoot
-\bottomrule
+\hline
 \endlastfoot
-1.1.2 & Cấu hình biểu ngữ cảnh báo pháp lý (Login Banner) & $\boxtimes$ & $\square$ & Đã cấu hình trên GUI \\
-1.1.3 & Bật ghi log khi tải Data Plane cao & $\boxtimes$ & $\square$ & Checkbox Logging đã bật \\
-1.2.1 & Cấu hình Permitted IP Addresses cho Management & $\boxtimes$ & $\square$ & Đúng 2 IP Bastion \\
-1.2.3 & Tắt dịch vụ HTTP và Telnet trên cổng Management & $\boxtimes$ & $\square$ & Đã bỏ chọn cả hai \\
-1.2.4 & Tắt HTTP và Telnet trong Management Profiles & $\boxtimes$ & $\square$ & Các profile đều tuân thủ \\
-1.3.1 & Bật tính năng kiểm tra độ phức tạp mật khẩu & $\boxtimes$ & $\square$ & Complexity: Enabled \\
-1.3.2 & Độ dài mật khẩu tối thiểu từ 12 ký tự trở lên & $\boxtimes$ & $\square$ & Minimum Length = 12 \\
-1.3.3 & Mật khẩu phải chứa ít nhất 1 chữ hoa & $\boxtimes$ & $\square$ & Uppercase = 1 \\
-1.3.4 & Mật khẩu phải chứa ít nhất 1 chữ thường & $\boxtimes$ & $\square$ & Lowercase = 1 \\
-1.3.5 & Mật khẩu phải chứa ít nhất 1 chữ số & $\boxtimes$ & $\square$ & Numeric = 1 \\
-1.3.6 & Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt & $\boxtimes$ & $\square$ & Special = 1 \\
-1.3.7 & Chu kỳ đổi mật khẩu không quá 90 ngày & $\boxtimes$ & $\square$ & Expiration = 90 days \\
-1.3.8 & Mật khẩu mới khác mật khẩu cũ từ 3 ký tự & $\boxtimes$ & $\square$ & Difference = 3 chars \\
-1.3.9 & Hệ thống lưu nhớ 24 mật khẩu gần nhất & $\boxtimes$ & $\square$ & History Count = 24 \\
-1.3.10 & Không tồn tại Password Profile riêng lẻ ghi đè & $\boxtimes$ & $\square$ & Bảng Profile để trống \\
-1.4.1 & Thời gian ngắt phiên rảnh rỗi không quá 10 phút & $\boxtimes$ & $\square$ & Idle Timeout = 10 min \\
-1.4.2 & Khóa tài khoản sau không quá 5 lần đăng nhập sai & $\boxtimes$ & $\square$ & Failed Attempts = 5 \\
-1.4.3 & Thời gian khóa tài khoản tối thiểu 15 phút & $\boxtimes$ & $\square$ & Lockout Time = 15 min \\
-1.5.1 & Tắt SNMP hoặc chỉ sử dụng SNMPv3 có mã hóa & $\boxtimes$ & $\square$ & SNMPv1/v2 đã vô hiệu \\
-1.6.1 & Bật xác thực danh tính máy chủ cập nhật chính hãng & $\boxtimes$ & $\square$ & Checkbox Verify bật \\
-1.6.2 & Cấu hình máy chủ NTP chính và phụ thích hợp & $\boxtimes$ & $\square$ & Có 2 máy chủ NTP \\
-1.7.1 & Cấu hình hồ sơ máy chủ Syslog tập trung & $\boxtimes$ & $\square$ & Syslog Profile gán đầy đủ \\
-3.1 & Trạng thái đồng bộ cụm HA hoàn tất (Synchronized) & $\boxtimes$ & $\square$ & CLI: state synchronized \\
-3.2 & Cấu hình giám sát liên kết Link/Path Monitoring & $\boxtimes$ & $\square$ & Link Monitoring bật \\
-3.3 & Passive Link ở chế độ Auto và tắt Preemption & $\boxtimes$ & $\square$ & Auto và Preemption No \\
-6.15 & Chống SYN Flood bằng kỹ thuật SYN Cookies & $\boxtimes$ & $\square$ & SYN Cookies kích hoạt \\
-6.18 & Tự động hủy gói tin giả mạo IP và gói tin dị thường & $\boxtimes$ & $\square$ & Drop Spoofed IP bật \\
-7.2 & Không cho phép mở cổng ANY từ vùng Untrust & $\boxtimes$ & $\square$ & Chỉ mở port chỉ định \\
-7.3 & Đặt luật chặn IP độc hại ở đầu danh sách Rulebase & $\boxtimes$ & $\square$ & Rule Drop đặt ở Top 1 \\
-7.4 & Bật ghi log cuối phiên cho các luật mặc định & $\boxtimes$ & $\square$ & Log Session End bật \\
+1.1.2 & Cấu hình biểu ngữ cảnh báo pháp lý (Login Banner) & $\boxtimes$ & $\square$ & Đã cấu hình trên GUI \\ \hline
+1.1.3 & Bật ghi log khi tải Data Plane cao & $\boxtimes$ & $\square$ & Checkbox Logging đã bật \\ \hline
+1.2.1 & Cấu hình Permitted IP Addresses cho Management & $\boxtimes$ & $\square$ & Đúng 2 IP Bastion \\ \hline
+1.2.3 & Tắt dịch vụ HTTP và Telnet trên cổng Management & $\boxtimes$ & $\square$ & Đã bỏ chọn cả hai \\ \hline
+1.2.4 & Tắt HTTP và Telnet trong Management Profiles & $\boxtimes$ & $\square$ & Các profile đều tuân thủ \\ \hline
+1.3.1 & Bật tính năng kiểm tra độ phức tạp mật khẩu & $\boxtimes$ & $\square$ & Complexity: Enabled \\ \hline
+1.3.2 & Độ dài mật khẩu tối thiểu từ 12 ký tự trở lên & $\boxtimes$ & $\square$ & Minimum Length = 12 \\ \hline
+1.3.3 & Mật khẩu phải chứa ít nhất 1 chữ hoa & $\boxtimes$ & $\square$ & Uppercase = 1 \\ \hline
+1.3.4 & Mật khẩu phải chứa ít nhất 1 chữ thường & $\boxtimes$ & $\square$ & Lowercase = 1 \\ \hline
+1.3.5 & Mật khẩu phải chứa ít nhất 1 chữ số & $\boxtimes$ & $\square$ & Numeric = 1 \\ \hline
+1.3.6 & Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt & $\boxtimes$ & $\square$ & Special = 1 \\ \hline
+1.3.7 & Chu kỳ đổi mật khẩu không quá 90 ngày & $\boxtimes$ & $\square$ & Expiration = 90 days \\ \hline
+1.3.8 & Mật khẩu mới khác mật khẩu cũ từ 3 ký tự & $\boxtimes$ & $\square$ & Difference = 3 chars \\ \hline
+1.3.9 & Hệ thống lưu nhớ 24 mật khẩu gần nhất & $\boxtimes$ & $\square$ & History Count = 24 \\ \hline
+1.3.10 & Không tồn tại Password Profile riêng lẻ ghi đè & $\boxtimes$ & $\square$ & Bảng Profile để trống \\ \hline
+1.4.1 & Thời gian ngắt phiên rảnh rỗi không quá 10 phút & $\boxtimes$ & $\square$ & Idle Timeout = 10 min \\ \hline
+1.4.2 & Khóa tài khoản sau không quá 5 lần đăng nhập sai & $\boxtimes$ & $\square$ & Failed Attempts = 5 \\ \hline
+1.4.3 & Thời gian khóa tài khoản tối thiểu 15 phút & $\boxtimes$ & $\square$ & Lockout Time = 15 min \\ \hline
+1.5.1 & Tắt SNMP hoặc chỉ sử dụng SNMPv3 có mã hóa & $\boxtimes$ & $\square$ & SNMPv1/v2 đã vô hiệu \\ \hline
+1.6.1 & Bật xác thực danh tính máy chủ cập nhật chính hãng & $\boxtimes$ & $\square$ & Checkbox Verify bật \\ \hline
+1.6.2 & Cấu hình máy chủ NTP chính và phụ thích hợp & $\boxtimes$ & $\square$ & Có 2 máy chủ NTP \\ \hline
+1.7.1 & Cấu hình hồ sơ máy chủ Syslog tập trung & $\boxtimes$ & $\square$ & Syslog Profile gán đầy đủ \\ \hline
+3.1 & Trạng thái đồng bộ cụm HA hoàn tất (Synchronized) & $\boxtimes$ & $\square$ & CLI: state synchronized \\ \hline
+3.2 & Cấu hình giám sát liên kết Link/Path Monitoring & $\boxtimes$ & $\square$ & Link Monitoring bật \\ \hline
+3.3 & Passive Link ở chế độ Auto và tắt Preemption & $\boxtimes$ & $\square$ & Auto và Preemption No \\ \hline
+6.15 & Chống SYN Flood bằng kỹ thuật SYN Cookies & $\boxtimes$ & $\square$ & SYN Cookies kích hoạt \\ \hline
+6.18 & Tự động hủy gói tin giả mạo IP và gói tin dị thường & $\boxtimes$ & $\square$ & Drop Spoofed IP bật \\ \hline
+7.2 & Không cho phép mở cổng ANY từ vùng Untrust & $\boxtimes$ & $\square$ & Chỉ mở port chỉ định \\ \hline
+7.3 & Đặt luật chặn IP độc hại ở đầu danh sách Rulebase & $\boxtimes$ & $\square$ & Rule Drop đặt ở Top 1 \\ \hline
+7.4 & Bật ghi log cuối phiên cho các luật mặc định & $\boxtimes$ & $\square$ & Log Session End bật \\ \hline
 \end{longtable}
+\endgroup
 
 \subsection{Triển khai Automation}
 
@@ -1009,15 +1011,20 @@ Module \texttt{src/remediation.py} thực hiện quy trình tự động sửa l
     \item \textbf{Thực thi giao dịch nguyên khối (Atomic Commit):} Gửi lệnh Commit (\texttt{type=commit}). Nếu tiến trình Commit thành công, hệ thống chuyển sang bước kiểm tra lại. Nếu xảy ra lỗi hoặc gián đoạn kết nối, hệ thống tự động kích hoạt tiến trình Rollback để trả lại cấu hình ban đầu, đảm bảo tuyệt đối không gây mất dịch vụ mạng.
 \end{enumerate}
 
-\subsubsection{Kết quả thực nghiệm Local và Remote Automation}
+% ============================================================
+% CHƯƠNG 4: KẾT QUẢ
+% ============================================================
+\section{Kết quả}
+
+\subsection{Kết quả thực nghiệm Local và Remote Automation}
 \begin{itemize}
-    \item \textbf{Kịch bản Local Automation:} Chạy trực tiếp trên Linux Bastion tới PA-CIS-01 (\texttt{10.0.10.11}). Kết quả thực thi cho thấy thời gian quét toàn bộ 30 CIS Controls chỉ mất **3.2 giây**, toàn bộ 30/30 mục đều đạt trạng thái \texttt{PASS} tuyệt đối (100\% điểm tuân thủ).
-    \item \textbf{Kịch bản Remote Automation qua Ansible:} Kích hoạt playbook \texttt{02\_fleet\_audit.yaml}. Ansible tận dụng cơ chế đa luồng thực thi đồng thời trên cả hai thiết bị PA-CIS-01 và PA-CIS-02 trong inventory, hoàn tất toàn bộ tiến trình quét trong vòng **4.8 giây** và xuất báo cáo tổng hợp tình trạng an ninh của toàn bộ fleet mà không cần người quản trị can thiệp thủ công.
+    \item \textbf{Kịch bản Local Automation:} Chạy trực tiếp trên Linux Bastion tới PA-CIS-01 (\texttt{10.0.10.11}). Kết quả thực thi cho thấy thời gian quét toàn bộ 30 CIS Controls chỉ mất 3.2 giây, toàn bộ 30/30 mục đều đạt trạng thái \texttt{PASS} tuyệt đối (100\% điểm tuân thủ).
+    \item \textbf{Kịch bản Remote Automation qua Ansible:} Kích hoạt playbook \texttt{02\_fleet\_audit.yaml}. Ansible tận dụng cơ chế đa luồng thực thi đồng thời trên cả hai thiết bị PA-CIS-01 và PA-CIS-02 trong inventory, hoàn tất toàn bộ tiến trình quét trong vòng 4.8 giây và xuất báo cáo tổng hợp tình trạng an ninh của toàn bộ fleet mà không cần người quản trị can thiệp thủ công.
 \end{itemize}
 
 \evidence{images/automated_cis_1_4_1.png}{Kết quả quét tự động hóa toàn bộ 30 CIS Controls đạt tỷ lệ tuân thủ 100\%}{fig:automation-results-screen}
 
-\subsubsection{Đánh giá và So sánh Hiệu năng giữa Manual và Automation}
+\subsection{Đánh giá và So sánh Hiệu năng giữa Manual và Automation}
 Bảng~\ref{tab:perf-comparison-final} tổng hợp các chỉ số so sánh định lượng giữa hai phương pháp.
 
 \begin{table}[H]
@@ -1025,25 +1032,25 @@ Bảng~\ref{tab:perf-comparison-final} tổng hợp các chỉ số so sánh đ�
 \caption{Bảng so sánh định lượng hiệu năng giữa phương pháp Manual và Automation}
 \label{tab:perf-comparison-final}
 \renewcommand{\arraystretch}{1.45}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}X@{}}
-\toprule
+\begingroup
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{7.0cm}|}
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Tiêu chí đánh giá}} & \textcolor{white}{\textbf{Phương pháp Thủ công (Manual)}} & \textcolor{white}{\textbf{Phương pháp Tự động (Automation)}} \\
-\midrule
-Thời gian quét (1 Firewall) & 45 -- 60 phút / thiết bị & Khoảng 3.2 giây / thiết bị (nhanh hơn 900 lần) \\
-Thời gian sửa lỗi (1 Firewall) & 25 -- 40 phút / thiết bị & Khoảng 4.5 giây / thiết bị \\
-Khả năng mở rộng (Fleet 10 FW) & Tăng tuyến tính (8 -- 10 giờ làm việc) & Chạy song song qua Ansible (dưới 15 giây) \\
-Độ chính xác và Tính nhất quán & Dễ nhìn sót do mệt mỏi hoặc thiếu chú ý & Nhất quán 100\%, hoàn toàn không có sai sót chủ quan \\
-Lưu trữ bằng chứng kiểm toán & Chụp ảnh từng bước bằng tay, dễ thất lạc & Báo cáo HTML trực quan, xuất file JSON tự động \\
-Khả năng tích hợp định kỳ & Khó duy trì thường xuyên & Dễ dàng lập lịch định kỳ hoặc nhúng vào CI/CD \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
+\hline
+Thời gian quét (1 Firewall) & 45 -- 60 phút / thiết bị & Khoảng 3.2 giây / thiết bị (nhanh hơn 900 lần) \\ \hline
+Thời gian sửa lỗi (1 Firewall) & 25 -- 40 phút / thiết bị & Khoảng 4.5 giây / thiết bị \\ \hline
+Khả năng mở rộng (Fleet 10 FW) & Tăng tuyến tính (8 -- 10 giờ làm việc) & Chạy song song qua Ansible (dưới 15 giây) \\ \hline
+Độ chính xác và Tính nhất quán & Dễ nhìn sót do mệt mỏi hoặc thiếu chú ý & Nhất quán 100\%, hoàn toàn không có sai sót chủ quan \\ \hline
+Lưu trữ bằng chứng kiểm toán & Chụp ảnh từng bước bằng tay, dễ thất lạc & Báo cáo HTML trực quan, xuất file JSON tự động \\ \hline
+Khả năng tích hợp định kỳ & Khó duy trì thường xuyên & Dễ dàng lập lịch định kỳ hoặc nhúng vào CI/CD \\ \hline
+\end{tabular}
+\endgroup
 \end{table}
 
 % ============================================================
-% CHƯƠNG 4: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+% CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
 % ============================================================
 \section{Kết luận và Hướng phát triển}
 

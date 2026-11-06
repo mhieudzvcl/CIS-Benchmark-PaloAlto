@@ -363,32 +363,35 @@ Môi trường thử nghiệm thực tế của đề tài được triển khai
 
 \noindent Bảng~\ref{tab:scope} tóm tắt 6 nhóm nội dung với 30 khuyến nghị CIS được nhóm lựa chọn triển khai trong đồ án.
 
-\begin{longtable}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
+\begingroup
+\setlength{\tabcolsep}{4.5pt}
+\begin{longtable}{|>{\centering\arraybackslash}p{1.2cm}|>{\raggedright\arraybackslash}p{3.6cm}|>{\centering\arraybackslash}p{2.0cm}|>{\raggedright\arraybackslash}p{7.4cm}|}
 \caption{Các nhóm nội dung CIS Benchmark được nhóm lựa chọn triển khai} \label{tab:scope} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
-\midrule
+\hline
 \endfirsthead
-\multicolumn{4}{c}{\small\textit{Bảng \ref{tab:scope} (tiếp theo)}} \\
-\toprule
+\multicolumn{4}{|c|}{\small\textit{Bảng \ref{tab:scope} (tiếp theo)}} \\
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{STT}} & \textcolor{white}{\textbf{Nhóm nội dung}} & \textcolor{white}{\textbf{Số lượng}} & \textcolor{white}{\textbf{Hạng mục và Ý nghĩa kỹ thuật triển khai}} \\
-\midrule
+\hline
 \endhead
-\midrule
-\multicolumn{4}{r}{\small\textit{Còn tiếp ở trang sau}} \\
-\bottomrule
+\hline
+\multicolumn{4}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
+\hline
 \endfoot
-\bottomrule
+\hline
 \endlastfoot
-1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\
-2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Bật yêu cầu độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng chữ hoa, chữ thường, chữ số, ký tự đặc biệt, thời hạn đổi mật khẩu, lưu lịch sử mật khẩu cũ và không để tồn tại các profile ghi đè chính sách chung. \\
-3 & Dịch vụ hệ thống và Ghi log (Services \& Logging) & 3 controls & Bật xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ NTP đồng bộ thời gian chính và phụ, cấu hình chuyển tiếp log tập trung về Syslog Server. \\
-4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Kiểm tra trạng thái đồng bộ giữa hai firewall Active và Passive, bật cơ chế giám sát đường truyền (Path Monitoring), để cổng Passive ở chế độ Auto và tắt tính năng giành quyền (Preemption). \\
-5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\
-6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm tra không cho phép mở cổng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\
+1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\ \hline
+2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Bật yêu cầu độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng chữ hoa, chữ thường, chữ số, ký tự đặc biệt, thời hạn đổi mật khẩu, lưu lịch sử mật khẩu cũ và không để tồn tại các profile ghi đè chính sách chung. \\ \hline
+3 & Dịch vụ hệ thống và Ghi log (Services \& Logging) & 3 controls & Bật xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ NTP đồng bộ thời gian chính và phụ, cấu hình chuyển tiếp log tập trung về Syslog Server. \\ \hline
+4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Kiểm tra trạng thái đồng bộ giữa hai firewall Active và Passive, bật cơ chế giám sát đường truyền (Path Monitoring), để cổng Passive ở chế độ Auto và tắt tính năng giành quyền (Preemption). \\ \hline
+5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\ \hline
+6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm tra không cho phép mở cổng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\ \hline
 \end{longtable}
+\endgroup
 
 \subsubsection{Nhóm khuyến nghị Manual}
 Theo tài liệu chuẩn của CIS, nhóm khuyến nghị Manual là những tiêu chí mà việc khẳng định trạng thái an toàn cần sự can thiệp của con người nhằm đối chiếu với chính sách an ninh nội bộ hoặc kiến trúc mạng thực tế. Một trường cấu hình tồn tại trong hệ thống chưa đủ để khẳng định là đạt, mà giá trị của trường đó phải tương thích hoàn toàn với bối cảnh vận hành.
@@ -475,52 +478,42 @@ Trong quá trình quản trị hệ điều hành PAN-OS, quản trị viên có
 
 Bảng~\ref{tab:gui-cli-comparison} tổng hợp phương thức thao tác cho toàn bộ các nhóm khuyến nghị tiêu biểu trong đề tài, thể hiện rõ những tiêu chí có thể kiểm tra qua GUI, qua CLI hoặc có thể áp dụng linh hoạt cả hai cách.
 
-\begin{longtable}{@{}>{\centering\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
+\begingroup
+\setlength{\tabcolsep}{4.5pt}
+\begin{longtable}{|>{\centering\arraybackslash}p{1.4cm}|>{\raggedright\arraybackslash}p{3.6cm}|>{\centering\arraybackslash}p{2.0cm}|>{\raggedright\arraybackslash}p{7.4cm}|}
 \caption{Tổng hợp phương thức kiểm tra thủ công qua GUI và CLI} \label{tab:gui-cli-comparison} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mã CIS}} & \textcolor{white}{\textbf{Tên khuyến nghị}} & \textcolor{white}{\textbf{Phương thức}} & \textcolor{white}{\textbf{Thao tác thực hiện trên hệ thống}} \\
-\midrule
+\hline
 \endfirsthead
-\multicolumn{4}{c}{\small\textit{Bảng \ref{tab:gui-cli-comparison} (tiếp theo)}} \\
-\toprule
+\multicolumn{4}{|c|}{\small\textit{Bảng \ref{tab:gui-cli-comparison} (tiếp theo)}} \\
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mã CIS}} & \textcolor{white}{\textbf{Tên khuyến nghị}} & \textcolor{white}{\textbf{Phương thức}} & \textcolor{white}{\textbf{Thao tác thực hiện trên hệ thống}} \\
-\midrule
+\hline
 \endhead
-\midrule
-\multicolumn{4}{r}{\small\textit{Còn tiếp ở trang sau}} \\
-\bottomrule
+\hline
+\multicolumn{4}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
+\hline
 \endfoot
-\bottomrule
+\hline
 \endlastfoot
-1.1.2 & Legal Notice Login Banner & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Banners.\\
- & & & CLI: \texttt{show config running | match login-banner} \\
-1.1.3 & Log on High DP Load & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Logging.\\
- & & & CLI: \texttt{show config running | match enable-log-high-dp-load} \\
-1.2.1 & Permitted IP Management & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Interfaces} $\rightarrow$ Management.\\
- & & & CLI: \texttt{show config running | match permitted-ip} \\
-1.2.3 & Disable HTTP/Telnet Mgmt & Cả hai & GUI: Bỏ chọn ô HTTP và Telnet tại Management Interface.\\
- & & & CLI: \texttt{show config running | match "http\textbar{}telnet"} \\
-1.3.1 & Password Complexity & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Password.\\
- & & & CLI: \texttt{show config running | match password-complexity} \\
-1.3.2 & Password Min Length $\geq 12$ & Cả hai & GUI: Đọc giá trị Minimum Length tại Password Complexity.\\
- & & & CLI: \texttt{show config running | match minimum-length} \\
-1.4.1 & Idle Timeout $\leq 10$ phút & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Authentication.\\
- & & & CLI: \texttt{show config running | match idle-timeout} \\
-1.4.2 & Failed Attempts Lockout $\leq 5$ & Cả hai & GUI: Đọc giá trị Failed Attempts tại Authentication Settings.\\
- & & & CLI: \texttt{show config running | match failed-attempts} \\
-1.6.2 & NTP Primary and Secondary & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Services} $\rightarrow$ NTP.\\
- & & & CLI: \texttt{show config running | match ntp-servers} \\
-3.1 & HA Peer Synchronization & Cả hai & GUI: \textbf{Dashboard} $\rightarrow$ High Availability Widget.\\
- & & & CLI: \texttt{show high-availability state} (Operational) \\
-3.3 & HA Passive Link Auto & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{High Availability} $\rightarrow$ General.\\
- & & & CLI: \texttt{show config running | match passive-link-state} \\
-6.15 & SYN Flood Protection & Web GUI & GUI: \textbf{Network} $\rightarrow$ \textbf{Zone Protection} $\rightarrow$ SYN Cookies.\\
- & & & CLI: Cần duyệt cây cấu hình XML phức tạp \\
-7.3 & Block Malicious IP Top Rule & Web GUI & GUI: \textbf{Policies} $\rightarrow$ \textbf{Security}, kiểm tra thứ tự rule.\\
- & & & CLI: \texttt{show config running | match "rulebase security"} \\
+1.1.2 & Legal Notice Login Banner & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Banners.\newline CLI: \texttt{show config running | match login-banner} \\ \hline
+1.1.3 & Log on High DP Load & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Logging.\newline CLI: \texttt{show config running | match enable-log-high-dp-load} \\ \hline
+1.2.1 & Permitted IP Management & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Interfaces} $\rightarrow$ Management.\newline CLI: \texttt{show config running | match permitted-ip} \\ \hline
+1.2.3 & Disable HTTP/Telnet Mgmt & Cả hai & GUI: Bỏ chọn ô HTTP và Telnet tại Management Interface.\newline CLI: \texttt{show config running | match "http\textbar{}telnet"} \\ \hline
+1.3.1 & Password Complexity & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Password.\newline CLI: \texttt{show config running | match password-complexity} \\ \hline
+1.3.2 & Password Min Length $\geq 12$ & Cả hai & GUI: Đọc giá trị Minimum Length tại Password Complexity.\newline CLI: \texttt{show config running | match minimum-length} \\ \hline
+1.4.1 & Idle Timeout $\leq 10$ phút & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management} $\rightarrow$ Authentication.\newline CLI: \texttt{show config running | match idle-timeout} \\ \hline
+1.4.2 & Failed Attempts Lockout $\leq 5$ & Cả hai & GUI: Đọc giá trị Failed Attempts tại Authentication Settings.\newline CLI: \texttt{show config running | match failed-attempts} \\ \hline
+1.6.2 & NTP Primary and Secondary & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Services} $\rightarrow$ NTP.\newline CLI: \texttt{show config running | match ntp-servers} \\ \hline
+3.1 & HA Peer Synchronization & Cả hai & GUI: \textbf{Dashboard} $\rightarrow$ High Availability Widget.\newline CLI: \texttt{show high-availability state} (Operational) \\ \hline
+3.3 & HA Passive Link Auto & Cả hai & GUI: \textbf{Device} $\rightarrow$ \textbf{High Availability} $\rightarrow$ General.\newline CLI: \texttt{show config running | match passive-link-state} \\ \hline
+6.15 & SYN Flood Protection & Web GUI & GUI: \textbf{Network} $\rightarrow$ \textbf{Zone Protection} $\rightarrow$ SYN Cookies.\newline CLI: Cần duyệt cây cấu hình XML phức tạp \\ \hline
+7.3 & Block Malicious IP Top Rule & Web GUI & GUI: \textbf{Policies} $\rightarrow$ \textbf{Security}, kiểm tra thứ tự rule.\newline CLI: \texttt{show config running | match "rulebase security"} \\ \hline
 \end{longtable}
+\endgroup
 
 \subsubsection{Ví dụ chi tiết 1: CIS 1.2.1 -- Permitted IP Addresses}
 \noindent\textbf{Mục tiêu bảo mật:} Ngăn chặn hoàn toàn các truy cập trái phép đến cổng quản trị của firewall bằng cách chỉ cho phép các IP thuộc vùng quản trị tin cậy.
@@ -551,18 +544,18 @@ permitted-ip {
 \caption{Đối chiếu kết quả đánh giá thực tế cho CIS 1.2.1}
 \label{tab:cis-121-eval}
 \renewcommand{\arraystretch}{1.45}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
-\toprule
+\begingroup
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.1cm}|>{\raggedright\arraybackslash}p{5.1cm}|}
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Thuộc tính đánh giá}} & \textcolor{white}{\textbf{Trường hợp an toàn (Đạt)}} & \textcolor{white}{\textbf{Trường hợp mất an toàn (Không đạt)}} \\
-\midrule
-Danh sách địa chỉ khai báo & \texttt{10.0.10.20/32}, \texttt{10.0.10.21/32} & Trống (bỏ trống) hoặc chứa \texttt{0.0.0.0/0} \\
-Đối chiếu thiết kế mạng & Đúng hai máy trạm Bastion quản trị & Cho phép dải mạng lạ hoặc mở toàn Internet \\
-Đánh giá tuân thủ & \textcolor{CISGreen}{\textbf{PASS}} & \textcolor{CISRed}{\textbf{FAIL}} \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
+\hline
+Danh sách địa chỉ khai báo & \texttt{10.0.10.20/32}, \texttt{10.0.10.21/32} & Trống (bỏ trống) hoặc chứa \texttt{0.0.0.0/0} \\ \hline
+Đối chiếu thiết kế mạng & Đúng hai máy trạm Bastion quản trị & Cho phép dải mạng lạ hoặc mở toàn Internet \\ \hline
+Đánh giá tuân thủ & \textcolor{CISGreen}{\textbf{PASS}} & \textcolor{CISRed}{\textbf{FAIL}} \\ \hline
+\end{tabular}
+\endgroup
 \end{table}
 
 \evidence{images/manual_cis_1_2_1.png}{Kiểm tra thực tế Permitted IP Addresses trên PA-CIS-01 qua Web GUI}{fig:manual-cis-121}
@@ -889,77 +882,80 @@ Bảng~\ref{tab:ip-plan} mô tả thông số kỹ thuật chi tiết của các
 \caption{Bảng phân bổ địa chỉ IP và vai trò các thiết bị trong lab CMC Cloud}
 \label{tab:ip-plan}
 \renewcommand{\arraystretch}{1.45}
-\rowcolors{2}{CISLightBlue}{white}
-\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.8cm}>{\centering\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{3.2cm}X@{}}
-\toprule
+\begingroup
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\centering\arraybackslash}p{2.2cm}|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{6.6cm}|}
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Thiết bị}} & \textcolor{white}{\textbf{Địa chỉ IP}} & \textcolor{white}{\textbf{Hệ điều hành}} & \textcolor{white}{\textbf{Vai trò và Chức năng}} \\
-\midrule
-PA-CIS-01 & 10.0.10.11 & PAN-OS 11.2.5 & Tường lửa chính (HA Primary Active Node), xử lý lưu lượng mạng và thực thi chính sách bảo vệ. \\
-PA-CIS-02 & 10.0.10.12 & PAN-OS 11.2.5 & Tường lửa dự phòng (HA Secondary Passive Node), duy trì đồng bộ phiên và cấu hình sẵn sàng thay thế. \\
-Linux Bastion & 10.0.10.20 & Ubuntu 24.04 LTS & Máy chủ Controller thực thi Python CIS Scanner, kịch bản Ansible và lưu trữ nhật ký báo cáo. \\
-Windows Bastion & 10.0.10.21 & Windows Server 2022 & Máy trạm đồ họa dành cho quản trị viên thao tác Web GUI và lưu trữ bằng chứng kiểm tra thủ công. \\
-HA1 Link & 192.168.1.0/30 & Cáp ảo điểm-điểm & Kênh truyền điều khiển đồng bộ trạng thái High Availability giữa hai tường lửa. \\
-HA2 Link & 192.168.2.0/30 & Cáp ảo điểm-điểm & Kênh truyền dữ liệu đồng bộ phiên làm việc (Session Synchronization). \\
-\bottomrule
-\end{tabularx}
-\rowcolors{2}{}{}
+\hline
+PA-CIS-01 & 10.0.10.11 & PAN-OS 11.2.5 & Tường lửa chính (HA Primary Active Node), xử lý lưu lượng mạng và thực thi chính sách bảo vệ. \\ \hline
+PA-CIS-02 & 10.0.10.12 & PAN-OS 11.2.5 & Tường lửa dự phòng (HA Secondary Passive Node), duy trì đồng bộ phiên và cấu hình sẵn sàng thay thế. \\ \hline
+Linux Bastion & 10.0.10.20 & Ubuntu 24.04 LTS & Máy chủ Controller thực thi Python CIS Scanner, kịch bản Ansible và lưu trữ nhật ký báo cáo. \\ \hline
+Windows Bastion & 10.0.10.21 & Windows Server 2022 & Máy trạm đồ họa dành cho quản trị viên thao tác Web GUI và lưu trữ bằng chứng kiểm tra thủ công. \\ \hline
+HA1 Link & 192.168.1.0/30 & Cáp ảo điểm-điểm & Kênh truyền điều khiển đồng bộ trạng thái High Availability giữa hai tường lửa. \\ \hline
+HA2 Link & 192.168.2.0/30 & Cáp ảo điểm-điểm & Kênh truyền dữ liệu đồng bộ phiên làm việc (Session Synchronization). \\ \hline
+\end{tabular}
+\endgroup
 \end{table}
 
 \subsection{Triển khai Đánh giá Thủ công (Manual)}
 
 Nhóm thực hiện quy trình kiểm tra thủ công toàn bộ các khuyến nghị trên cụm tường lửa. Kết quả kiểm tra được tổng hợp chi tiết theo biểu mẫu chuẩn trong Bảng~\ref{tab:manual-results}.
 
-\begin{longtable}{@{}>{\centering\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{4.0cm}>{\centering\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{3.9cm}@{}}
+\begingroup
+\setlength{\tabcolsep}{4.5pt}
+\begin{longtable}{|>{\centering\arraybackslash}p{1.2cm}|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\centering\arraybackslash}p{1.6cm}|>{\raggedright\arraybackslash}p{3.8cm}|}
 \caption{Bảng tổng hợp kết quả đánh giá thủ công trên cụm tường lửa Palo Alto} \label{tab:manual-results} \\
-\toprule
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Nội dung kiểm tra}} & \textcolor{white}{\textbf{Kết quả thực tế quan sát}} & \textcolor{white}{\textbf{Đánh giá}} & \textcolor{white}{\textbf{Minh chứng đối chứng}} \\
-\midrule
+\hline
 \endfirsthead
-\multicolumn{5}{c}{\small\textit{Bảng \ref{tab:manual-results} (tiếp theo)}} \\
-\toprule
+\multicolumn{5}{|c|}{\small\textit{Bảng \ref{tab:manual-results} (tiếp theo)}} \\
+\hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Nội dung kiểm tra}} & \textcolor{white}{\textbf{Kết quả thực tế quan sát}} & \textcolor{white}{\textbf{Đánh giá}} & \textcolor{white}{\textbf{Minh chứng đối chứng}} \\
-\midrule
+\hline
 \endhead
-\midrule
-\multicolumn{5}{r}{\small\textit{Còn tiếp ở trang sau}} \\
-\bottomrule
+\hline
+\multicolumn{5}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
+\hline
 \endfoot
-\bottomrule
+\hline
 \endlastfoot
-1.1.2 & Legal Notice Login Banner & Có cấu hình thông báo pháp lý & \textcolor{CISGreen}{\textbf{Đạt}} & Banner hiển thị khi mở GUI \\
-1.1.3 & Log on High DP Load & Đã đánh giá bật ghi log tải cao & \textcolor{CISGreen}{\textbf{Đạt}} & Checkbox Logging bật \\
-1.2.1 & Permitted IP Management & Danh sách chỉ gồm 2 máy Bastion & \textcolor{CISGreen}{\textbf{Đạt}} & Đúng 10.0.10.20, 10.0.10.21 \\
-1.2.3 & Disable HTTP/Telnet Mgmt & Đã tắt cả hai dịch vụ không mã hóa & \textcolor{CISGreen}{\textbf{Đạt}} & Không thể kết nối HTTP/Telnet \\
-1.2.4 & Disable HTTP/Telnet Profile & Các profile đều không cho phép & \textcolor{CISGreen}{\textbf{Đạt}} & Profile Interface chuẩn hóa \\
-1.3.1 & Password Complexity Enabled & Cơ chế kiểm tra độ phức tạp bật & \textcolor{CISGreen}{\textbf{Đạt}} & Password Complexity: Enabled \\
-1.3.2 & Password Min Length $\geq 12$ & Độ dài tối thiểu thiết lập 12 & \textcolor{CISGreen}{\textbf{Đạt}} & Minimum Length = 12 \\
-1.3.3 & Uppercase Letters $\geq 1$ & Yêu cầu tối thiểu 1 chữ hoa & \textcolor{CISGreen}{\textbf{Đạt}} & Uppercase Letters = 1 \\
-1.3.4 & Lowercase Letters $\geq 1$ & Yêu cầu tối thiểu 1 chữ thường & \textcolor{CISGreen}{\textbf{Đạt}} & Lowercase Letters = 1 \\
-1.3.5 & Numeric Digits $\geq 1$ & Yêu cầu tối thiểu 1 chữ số & \textcolor{CISGreen}{\textbf{Đạt}} & Numeric Digits = 1 \\
-1.3.6 & Special Characters $\geq 1$ & Yêu cầu tối thiểu 1 ký tự đặc biệt & \textcolor{CISGreen}{\textbf{Đạt}} & Special Characters = 1 \\
-1.3.7 & Password Expiration $\leq 90$ & Chu kỳ đổi mật khẩu 90 ngày & \textcolor{CISGreen}{\textbf{Đạt}} & Expiration Period = 90 \\
-1.3.8 & Password Difference $\geq 3$ & Khác mật khẩu cũ từ 3 ký tự & \textcolor{CISGreen}{\textbf{Đạt}} & Character Difference = 3 \\
-1.3.9 & Password History $\geq 24$ & Ghi nhớ 24 mật khẩu gần nhất & \textcolor{CISGreen}{\textbf{Đạt}} & Password History Count = 24 \\
-1.3.10 & No Custom Password Profiles & Không có profile ghi đè trái phép & \textcolor{CISGreen}{\textbf{Đạt}} & Bảng Password Profile trống \\
-1.4.1 & Idle Timeout $\leq 10$ phút & Thời gian ngắt phiên đặt 10 phút & \textcolor{CISGreen}{\textbf{Đạt}} & Idle Timeout = 10 \\
-1.4.2 & Failed Attempts Lockout $\leq 5$ & Khóa sau 5 lần nhập sai liên tiếp & \textcolor{CISGreen}{\textbf{Đạt}} & Failed Attempts = 5 \\
-1.4.3 & Lockout Time $\geq 15$ phút & Thời gian khóa tài khoản 15 phút & \textcolor{CISGreen}{\textbf{Đạt}} & Lockout Time = 15 \\
-1.5.1 & SNMPv3 or SNMP Disabled & Giao thức SNMP được tắt an toàn & \textcolor{CISGreen}{\textbf{Đạt}} & Service SNMP không bật \\
-1.6.1 & Verify Update Server Identity & Đã bật xác thực máy chủ cập nhật & \textcolor{CISGreen}{\textbf{Đạt}} & Checkbox Verify bật \\
-1.6.2 & NTP Primary and Secondary & Có 2 máy chủ NTP tin cậy hoạt động & \textcolor{CISGreen}{\textbf{Đạt}} & Primary và Secondary NTP \\
-1.7.1 & Syslog Server Profile & Có cấu hình hồ sơ máy chủ Syslog & \textcolor{CISGreen}{\textbf{Đạt}} & Syslog Profile đã gán \\
-3.1 & HA Peer Synchronization & Hai thiết bị đồng bộ hoàn tất & \textcolor{CISGreen}{\textbf{Đạt}} & CLI: state synchronized \\
-3.2 & HA Link/Path Monitoring & Đã cấu hình giám sát đường truyền & \textcolor{CISGreen}{\textbf{Đạt}} & Link Monitoring bật \\
-3.3 & HA Passive Link Auto & Passive Link là Auto, Preemption tắt & \textcolor{CISGreen}{\textbf{Đạt}} & Passive State: Auto \\
-6.15 & SYN Cookies Enabled & Zone Protection kích hoạt SYN Cookies & \textcolor{CISGreen}{\textbf{Đạt}} & Action: SYN Cookies \\
-6.18 & Drop Spoofed IP \& Bad TCP & Đã bật hủy gói tin giả mạo IP & \textcolor{CISGreen}{\textbf{Đạt}} & Drop Spoofed IP bật \\
-7.2 & No ANY Service Untrust Rule & Không có luật chứa dịch vụ ANY & \textcolor{CISGreen}{\textbf{Đạt}} & Service chỉ định cổng cụ thể \\
-7.3 & Top Rule Blocking Threats & Luật chặn IP độc hại đứng đầu bảng & \textcolor{CISGreen}{\textbf{Đạt}} & Rule Drop Malicious ở Top 1 \\
-7.4 & Default Rules Logging & Bật ghi log cuối phiên cho rule mặc định & \textcolor{CISGreen}{\textbf{Đạt}} & Log at Session End bật \\
+1.1.2 & Legal Notice Login Banner & Có cấu hình thông báo pháp lý & \textcolor{CISGreen}{\textbf{Đạt}} & Banner hiển thị khi mở GUI \\ \hline
+1.1.3 & Log on High DP Load & Đã đánh giá bật ghi log tải cao & \textcolor{CISGreen}{\textbf{Đạt}} & Checkbox Logging bật \\ \hline
+1.2.1 & Permitted IP Management & Danh sách chỉ gồm 2 máy Bastion & \textcolor{CISGreen}{\textbf{Đạt}} & Đúng 10.0.10.20, 10.0.10.21 \\ \hline
+1.2.3 & Disable HTTP/Telnet Mgmt & Đã tắt cả hai dịch vụ không mã hóa & \textcolor{CISGreen}{\textbf{Đạt}} & Không thể kết nối HTTP/Telnet \\ \hline
+1.2.4 & Disable HTTP/Telnet Profile & Các profile đều không cho phép & \textcolor{CISGreen}{\textbf{Đạt}} & Profile Interface chuẩn hóa \\ \hline
+1.3.1 & Password Complexity Enabled & Cơ chế kiểm tra độ phức tạp bật & \textcolor{CISGreen}{\textbf{Đạt}} & Password Complexity: Enabled \\ \hline
+1.3.2 & Password Min Length $\geq 12$ & Độ dài tối thiểu thiết lập 12 & \textcolor{CISGreen}{\textbf{Đạt}} & Minimum Length = 12 \\ \hline
+1.3.3 & Uppercase Letters $\geq 1$ & Yêu cầu tối thiểu 1 chữ hoa & \textcolor{CISGreen}{\textbf{Đạt}} & Uppercase Letters = 1 \\ \hline
+1.3.4 & Lowercase Letters $\geq 1$ & Yêu cầu tối thiểu 1 chữ thường & \textcolor{CISGreen}{\textbf{Đạt}} & Lowercase Letters = 1 \\ \hline
+1.3.5 & Numeric Digits $\geq 1$ & Yêu cầu tối thiểu 1 chữ số & \textcolor{CISGreen}{\textbf{Đạt}} & Numeric Digits = 1 \\ \hline
+1.3.6 & Special Characters $\geq 1$ & Yêu cầu tối thiểu 1 ký tự đặc biệt & \textcolor{CISGreen}{\textbf{Đạt}} & Special Characters = 1 \\ \hline
+1.3.7 & Password Expiration $\leq 90$ & Chu kỳ đổi mật khẩu 90 ngày & \textcolor{CISGreen}{\textbf{Đạt}} & Expiration Period = 90 \\ \hline
+1.3.8 & Password Difference $\geq 3$ & Khác mật khẩu cũ từ 3 ký tự & \textcolor{CISGreen}{\textbf{Đạt}} & Character Difference = 3 \\ \hline
+1.3.9 & Password History $\geq 24$ & Ghi nhớ 24 mật khẩu gần nhất & \textcolor{CISGreen}{\textbf{Đạt}} & Password History Count = 24 \\ \hline
+1.3.10 & No Custom Password Profiles & Không có profile ghi đè trái phép & \textcolor{CISGreen}{\textbf{Đạt}} & Bảng Password Profile trống \\ \hline
+1.4.1 & Idle Timeout $\leq 10$ phút & Thời gian ngắt phiên đặt 10 phút & \textcolor{CISGreen}{\textbf{Đạt}} & Idle Timeout = 10 \\ \hline
+1.4.2 & Failed Attempts Lockout $\leq 5$ & Khóa sau 5 lần nhập sai liên tiếp & \textcolor{CISGreen}{\textbf{Đạt}} & Failed Attempts = 5 \\ \hline
+1.4.3 & Lockout Time $\geq 15$ phút & Thời gian khóa tài khoản 15 phút & \textcolor{CISGreen}{\textbf{Đạt}} & Lockout Time = 15 \\ \hline
+1.5.1 & SNMPv3 or SNMP Disabled & Giao thức SNMP được tắt an toàn & \textcolor{CISGreen}{\textbf{Đạt}} & Service SNMP không bật \\ \hline
+1.6.1 & Verify Update Server Identity & Đã bật xác thực máy chủ cập nhật & \textcolor{CISGreen}{\textbf{Đạt}} & Checkbox Verify bật \\ \hline
+1.6.2 & NTP Primary and Secondary & Có 2 máy chủ NTP tin cậy hoạt động & \textcolor{CISGreen}{\textbf{Đạt}} & Primary và Secondary NTP \\ \hline
+1.7.1 & Syslog Server Profile & Có cấu hình hồ sơ máy chủ Syslog & \textcolor{CISGreen}{\textbf{Đạt}} & Syslog Profile đã gán \\ \hline
+3.1 & HA Peer Synchronization & Hai thiết bị đồng bộ hoàn tất & \textcolor{CISGreen}{\textbf{Đạt}} & CLI: state synchronized \\ \hline
+3.2 & HA Link/Path Monitoring & Đã cấu hình giám sát đường truyền & \textcolor{CISGreen}{\textbf{Đạt}} & Link Monitoring bật \\ \hline
+3.3 & HA Passive Link Auto & Passive Link là Auto, Preemption tắt & \textcolor{CISGreen}{\textbf{Đạt}} & Passive State: Auto \\ \hline
+6.15 & SYN Cookies Enabled & Zone Protection kích hoạt SYN Cookies & \textcolor{CISGreen}{\textbf{Đạt}} & Action: SYN Cookies \\ \hline
+6.18 & Drop Spoofed IP \& Bad TCP & Đã bật hủy gói tin giả mạo IP & \textcolor{CISGreen}{\textbf{Đạt}} & Drop Spoofed IP bật \\ \hline
+7.2 & No ANY Service Untrust Rule & Không có luật chứa dịch vụ ANY & \textcolor{CISGreen}{\textbf{Đạt}} & Service chỉ định cổng cụ thể \\ \hline
+7.3 & Top Rule Blocking Threats & Luật chặn IP độc hại đứng đầu bảng & \textcolor{CISGreen}{\textbf{Đạt}} & Rule Drop Malicious ở Top 1 \\ \hline
+7.4 & Default Rules Logging & Bật ghi log cuối phiên cho rule mặc định & \textcolor{CISGreen}{\textbf{Đạt}} & Log at Session End bật \\ \hline
 \end{longtable}
+\endgroup
 
 \subsection{Triển khai Đánh giá Tự động hóa (Automated)}
 
