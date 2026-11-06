@@ -2,6 +2,7 @@
 """CIS Palo Alto Auditor - audit first, explicitly opted-in remediation second."""
 import argparse
 import getpass
+import os
 import re
 import sys
 from pathlib import Path
@@ -28,6 +29,7 @@ def cli_args():
     p.add_argument("--host", default="10.0.10.11", help="Single firewall (backward compatible)")
     p.add_argument("--hosts", nargs="+", help="Several firewall addresses")
     p.add_argument("--username", default="cis-auditor", help="Read-only audit user by default")
+    p.add_argument("--password", help="PAN-OS account password (or set via PANOS_PASSWORD env var)")
     tls = p.add_mutually_exclusive_group()
     tls.add_argument("--lab-insecure", action="store_true", help="Self-signed certificate: LAB ONLY")
     tls.add_argument("--ca-bundle", help="CA bundle for verified TLS")
@@ -156,7 +158,9 @@ def main():
                 console.print(" [cyan]◆[/cyan] Synthetic offline fixture loaded; no firewall contacted")
             else:
                 verify_tls = False if args.lab_insecure else args.ca_bundle or True
-                password = getpass.getpass(f"Password for {args.username}@{host}: ")
+                password = args.password or os.getenv("PANOS_PASSWORD")
+                if not password:
+                    password = getpass.getpass(f"Password for {args.username}@{host}: ")
                 client = PanOSClient(host, verify_tls=verify_tls)
                 client.authenticate(args.username, password)
                 console.print(" [green]✔[/green] Authenticated via PAN-OS XML API")

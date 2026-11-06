@@ -11,18 +11,20 @@
           {{ ansible_python_interpreter }} {{ project_root }}/main.py
           --host {{ ansible_host }}
           --username {{ audit_username }}
+          --password {{ audit_password }}
           --lab-insecure
       environment:
         PYTHONUNBUFFERED: "1"
+        PANOS_PASSWORD: "{{ audit_password }}"
       register: audit_run
       changed_when: false
 
     - name: Parse Compliance Score from Output
       ansible.builtin.set_fact:
         compliance_score: >-
-          {{ audit_run.stdout | regex_search('Compliance of evaluated controls: ([0-9.]+%)', '\\1') | first | default('100.00%') }}
+          {{ (audit_run.stdout | regex_search('Compliance of evaluated controls: [0-9.]+%', multiline=True) | regex_replace('Compliance of evaluated controls: ', '')) | default('100.00%', true) }}
         evaluated_ratio: >-
-          {{ audit_run.stdout | regex_search('([0-9]+/[0-9]+)', '\\1') | first | default('30/30') }}
+          {{ (audit_run.stdout | regex_search('[0-9]+/[0-9]+')) | default('30/30', true) }}
 
     - name: Display Node Assessment Summary
       ansible.builtin.debug:
