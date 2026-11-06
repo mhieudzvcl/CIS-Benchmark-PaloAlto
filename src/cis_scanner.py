@@ -357,10 +357,11 @@ class CISScanner:
         return self.make(rule, "Default security rules log at session end", f"{len(logged)}/{len(default_rules)} logged", "REVIEW", evidence)
 
     def check_log_high_dp_load(self, rule):
-        val = self.text(self.device, "./deviceconfig/setting/logging/log-high-dp-load/text()")
-        if val is None:
-            val = self.text(self.device, ".//log-high-dp-load/text()")
-        evidence = "devices/entry/deviceconfig/setting/logging/log-high-dp-load"
+        val = (self.text(self.device, ".//deviceconfig/setting/management/enable-log-high-dp-load/text()") or
+               self.text(self.device, ".//enable-log-high-dp-load/text()") or
+               self.text(self.device, ".//log-high-dp-load/text()") or
+               self.text(self.config, ".//enable-log-high-dp-load/text()"))
+        evidence = "devices/entry/deviceconfig/setting/management/enable-log-high-dp-load"
         if val == "yes":
             return self.make(rule, "Enabled (yes)", "yes", "PASS", evidence,
                              "Log on high DP load is active")
@@ -398,22 +399,23 @@ class CISScanner:
                          "REVIEW", evidence, "Verify passive link state in GUI")
 
     def check_zone_protection_syn_cookies(self, rule):
-        profiles = self.config.xpath(".//network/profiles/zone-protection-profile/entry")
-        evidence = "network/profiles/zone-protection-profile"
+        profiles = (self.config.xpath(".//network/profiles/zone-protection-profile/entry") or
+                    self.config.xpath(".//zone-protection-profile/entry"))
+        evidence = "network/profiles/zone-protection-profile/flood/tcp-syn"
         if not profiles:
             return self.make(rule, "Zone Protection Profile with SYN Cookies enabled",
                              "None", "FAIL", evidence, "No Zone Protection Profile configured")
         valid_profiles = []
         for p in profiles:
             pname = p.get("name")
-            syn_enabled = self.text(p, ".//flood/tcp-syn/enable/text()")
-            action_tag = p.xpath(".//flood/tcp-syn/action/*")
-            action_name = action_tag[0].tag if action_tag else ""
-            if syn_enabled == "yes" and ("syn-cookies" in action_name or "syn-cookie" in action_name):
-                valid_profiles.append(pname)
-            elif syn_enabled == "yes":
-                action_text = self.text(p, ".//flood/tcp-syn/action/text()")
-                if action_text and "cookie" in action_text.lower():
+            tcp_syn = p.xpath(".//flood/tcp-syn")
+            if tcp_syn:
+                syn_elem = tcp_syn[0]
+                action_tags = syn_elem.xpath(".//action/*")
+                action_tag_names = [t.tag.lower() for t in action_tags]
+                action_text = (self.text(syn_elem, ".//action/text()") or "").lower()
+                enable_text = (self.text(syn_elem, "./enable/text()") or "").lower()
+                if any("syn-cookie" in tag for tag in action_tag_names) or "cookie" in action_text or enable_text == "yes":
                     valid_profiles.append(pname)
         if valid_profiles:
             assigned_zones = self.config.xpath(".//zone/entry[network/zone-protection-profile]/@name")
@@ -427,23 +429,34 @@ class CISScanner:
                          "Zone Protection Profile does not have SYN Cookies enabled")
 
     def check_zone_protection_packet_drop(self, rule):
-        profiles = self.config.xpath(".//network/profiles/zone-protection-profile/entry")
-        evidence = "network/profiles/zone-protection-profile/packet-based-attack-protection"
+        profiles = (self.config.xpath(".//network/profiles/zone-protection-profile/entry") or
+                    self.config.xpath(".//zone-protection-profile/entry"))
+        evidence = "network/profiles/zone-protection-profile/packet-based-attack"
         if not profiles:
             return self.make(rule, "Drop spoofed IP and mismatched TCP segments enabled",
                              "None", "FAIL", evidence, "No Zone Protection Profile configured")
         active = []
         for p in profiles:
             pname = p.get("name")
-            spoof = self.text(p, ".//drop-spoofed-ip-address/text()") or self.text(p, ".//drop-spoofed-ip/text()")
-            tcp_drop = (self.text(p, ".//drop-mismatched-overlapping-tcp-segment/text()") or
-                        self.text(p, ".//reject-non-syn-tcp/text()"))
-            if spoof == "yes" or tcp_drop == "yes":
-                features = []
-                if spoof == "yes":
-                    features.append("drop-spoofed-ip")
-                if tcp_drop == "yes":
-                    features.append("tcp-drop")
+            spoof = (self.text(p, ".//discard-ip-spoof/text()") or
+                     self.text(p, ".//drop-spoofed-ip-address/text()") or
+                     self.text(p, ".//drop-spoofed-ip/text()"))
+            tcp_overlap = (self.text(p, ".//overlapping-segment/text()") or
+                           self.text(p, ".//drop-mismatched-overlapping-tcp-segment/text()"))
+            tcp_syn_data = (self.text(p, ".//discard-syn-with-data/text()") or
+                            self.text(p, ".//discard-synack-with-data/text()"))
+            reject_non_syn = self.text(p, ".//reject-non-syn-tcp/text()")
+            
+            features = []
+            if spoof in ("yes", "drop"):
+                features.append("discard-ip-spoof")
+            if tcp_overlap in ("drop", "yes"):
+                features.append("mismatched-tcp-drop")
+            if tcp_syn_data in ("yes", "drop"):
+                features.append("tcp-syn-data-drop")
+            if reject_non_syn in ("yes", "drop"):
+                features.append("reject-non-syn-tcp")
+            if features:
                 active.append(f"{pname} [{'+'.join(features)}]")
         if active:
             return self.make(rule, "Drop spoofed IP and mismatched TCP segments enabled",

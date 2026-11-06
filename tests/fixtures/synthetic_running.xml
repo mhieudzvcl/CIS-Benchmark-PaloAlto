@@ -20,8 +20,8 @@
       <update-server-identity-check>yes</update-server-identity-check>
     </system>
     <setting>
-      <logging><log-high-dp-load>yes</log-high-dp-load></logging>
       <management>
+        <enable-log-high-dp-load>yes</enable-log-high-dp-load>
         <idle-timeout>10</idle-timeout>
         <failed-attempts>3</failed-attempts>
         <lockout-time>30</lockout-time>

@@ -44,8 +44,8 @@ def prepare_change(control_id, config, before_status):
         parent = base + "/deviceconfig/system"
         elements = ["<login-banner>Authorized Access Only</login-banner>"]
     elif control_id == "1.1.3":
-        parent = base + "/deviceconfig/setting/logging"
-        elements = ["<log-high-dp-load>yes</log-high-dp-load>"]
+        parent = base + "/deviceconfig/setting/management"
+        elements = ["<enable-log-high-dp-load>yes</enable-log-high-dp-load>"]
     elif control_id == "1.4.1":
         parent = base + "/deviceconfig/setting/management"
         elements = ["<idle-timeout>10</idle-timeout>"]
