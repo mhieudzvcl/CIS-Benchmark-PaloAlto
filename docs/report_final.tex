@@ -416,7 +416,7 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 
 \vspace{0.3cm}
 
-\noindent Toàn bộ mô hình thực nghiệm được nhóm triển khai trên hạ tầng CMC Cloud, gồm một cặp tường lửa Palo Alto VM-Series chạy PAN-OS 11.2.5 cấu hình High Availability chế độ Active/Passive, một máy Linux Bastion dùng làm máy trạm chạy kịch bản Python và Ansible, cùng một máy Windows Bastion dùng để thao tác giao diện quản trị đồ họa.
+\noindent Môi trường thử nghiệm thực tế của đề tài được triển khai hoàn chỉnh trên hạ tầng đám mây CMC Cloud bên trong mạng riêng ảo \textbf{VPC-LTKB} với dải mạng tổng thể \textbf{10.0.0.0/16}. Hệ thống bao gồm cụm hai tường lửa Palo Alto VM-Series (phiên bản PAN-OS 11.2.5) thiết lập cơ chế High Availability Active/Passive với hai địa chỉ IP ảo dự phòng (Pair Address) gồm \textbf{VIP Untrust: 10.0.1.100} và \textbf{VIP Trust: 10.0.20.100}, phối hợp cùng máy chủ điều khiển \textbf{VM-LINUX-BASTION} (\texttt{10.0.10.20}), máy trạm đồ họa \textbf{VM-WINDOW-BASTION} (\texttt{10.0.10.21}) và máy client nội bộ \textbf{VM-CLIENT-TEST} (\texttt{10.0.20.20}) phục vụ kiểm thử lưu lượng an ninh qua firewall.
 
 \vspace{0.3cm}
 
@@ -616,55 +616,93 @@ Hệ thống triển khai hai cơ chế thu thập dữ liệu tách biệt đ�
 
 \subsection{Mô hình triển khai}
 
-Hệ thống lab thực nghiệm được xây dựng hoàn chỉnh trên nền tảng CMC Cloud. Hình~\ref{fig:lab-architecture} thể hiện chi tiết topo kết nối mạng giữa các thành phần.
+\noindent Toàn bộ hệ thống thực nghiệm được thiết kế và triển khai hoàn chỉnh trên hạ tầng điện toán đám mây CMC Cloud (Vùng khả dụng AZ1) bên trong một Đám mây cá nhân ảo định danh là \textbf{VPC-LTKB} với không gian địa chỉ mạng tổng thể \textbf{10.0.0.0/16}. Kiến trúc mạng mô phỏng trung thực mô hình an ninh doanh nghiệp nhiều phân vùng (Zone Segmentation), bao gồm 4 mạng con (Subnets) chuyên dụng kết nối qua cụm tường lửa thế hệ mới Palo Alto VM-Series (phiên bản PAN-OS 11.2.5) vận hành theo cơ chế High Availability Active/Passive:
+
+\vspace{0.3cm}
+
+\noindent Chi tiết các phân vùng mạng con trong VPC-LTKB bao gồm:
+\begin{enumerate}
+    \item \textbf{Phân vùng mạng ngoài (SN-CIS-UNTRUST -- 10.0.1.0/24, Gateway 10.0.1.1):} Tiếp nhận lưu lượng từ Internet hoặc CMC WAN. Giao diện mạng Untrust của hai firewall được cấp phát IP lần lượt là \texttt{10.0.1.11} (PA-CIS-01) và \texttt{10.0.1.12} (PA-CIS-02). Đặc biệt, hai thiết bị chia sẻ chung địa chỉ IP ảo dự phòng \textbf{VIP Untrust: 10.0.1.100} (cấu hình theo cơ chế Pair Address trên CMC Cloud), đảm bảo khi xảy ra sự cố chuyển đổi dự phòng (failover), luồng dữ liệu bên ngoài vẫn được định tuyến liên tục đến nút Active mà không bị gián đoạn.
+    \item \textbf{Phân vùng quản trị cô lập (SN-CIS-MGMT -- 10.0.10.0/24, Gateway 10.0.10.1):} Dành riêng cho lưu lượng quản trị chuyên biệt (Out-of-band Management), kết nối cổng quản trị của PA-CIS-01 (\texttt{10.0.10.11}), PA-CIS-02 (\texttt{10.0.10.12}), máy chủ điều khiển \textbf{VM-LINUX-BASTION} (\texttt{10.0.10.20}) và máy trạm đồ họa \textbf{VM-WINDOW-BASTION} (\texttt{10.0.10.21}). Phân vùng này được cô lập tuyệt đối khỏi lưu lượng dữ liệu người dùng.
+    \item \textbf{Phân vùng nội bộ tin cậy (SN-CIS-TRUST -- 10.0.20.0/24, Gateway 10.0.20.1):} Đại diện cho mạng cục bộ (LAN) của tổ chức. Giao diện mạng Trust của hai firewall có IP là \texttt{10.0.20.11} và \texttt{10.0.20.12}, cùng gán địa chỉ IP ảo \textbf{VIP Trust: 10.0.20.100} (Pair Address) đóng vai trò Default Gateway cho toàn bộ máy trạm nội bộ. Máy chủ kiểm thử \textbf{VM-CLIENT-TEST} (\texttt{10.0.20.20}) được bố trí trong vùng này, trỏ gateway về VIP \texttt{10.0.20.100} để kiểm tra khả năng lọc gói, thực thi chính sách an ninh và bảo vệ vùng mạng (Zone Protection).
+    \item \textbf{Phân vùng đồng bộ dữ liệu HA2 (SN-CIS-HA2 -- 10.0.30.0/24, Gateway 10.0.30.1):} Dành riêng cho kênh truyền dữ liệu đồng bộ trạng thái phiên làm việc (Session Synchronization) giữa hai nút tường lửa qua giao diện \texttt{10.0.30.11} và \texttt{10.0.30.12}. Bên cạnh đó, kênh HA1 Control được cấu hình liên kết điều khiển trao đổi gói tin Heartbeat để giám sát tính sẵn sàng.
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\noindent Hình~\ref{fig:lab-architecture} thể hiện chi tiết sơ đồ topo kết nối mạng tổng thể trong VPC-LTKB trên nền tảng CMC Cloud.
 
 \begin{figure}[H]
 \centering
+\resizebox{0.95\textwidth}{!}{%
 \begin{tikzpicture}[
     font=\small,
     >=Stealth,
-    node distance=1.5cm,
-    cloud/.style={draw=UITBlue, fill=PaleBlue, ellipse, minimum height=1.4cm, minimum width=3.0cm, align=center},
-    server/.style={draw=CISBlue, fill=white, rounded corners=2mm, minimum height=1.1cm, minimum width=2.8cm, align=center},
-    firewall/.style={draw=CISRed, fill=white, rounded corners=2mm, minimum height=1.3cm, minimum width=3.2cm, align=center, thick},
-    netbox/.style={draw=gray, dashed, inner sep=0.4cm, rounded corners=3mm}
+    cloud/.style={draw=UITBlue, fill=PaleBlue, ellipse, minimum height=1.1cm, minimum width=3.4cm, align=center},
+    server/.style={draw=CISBlue, fill=white, rounded corners=2mm, minimum height=1.1cm, text width=5.6cm, align=center},
+    firewall/.style={draw=CISRed, fill=white, rounded corners=2mm, minimum height=1.4cm, text width=5.6cm, align=center, thick},
+    vipbox/.style={draw=CISOrange, fill=yellow!15, rounded corners=2mm, minimum height=0.95cm, text width=7.4cm, align=center, thick},
+    mgmtbox/.style={draw=CISBlue, fill=CISLightBlue!60, rounded corners=2mm, minimum height=0.95cm, text width=7.4cm, align=center, thick},
+    netbox/.style={draw=gray, dashed, inner sep=0.35cm, rounded corners=3mm}
 ]
 
-\node[cloud] (internet) at (0, 4.5) {\textbf{Internet / CMC WAN}\\0.0.0.0/0};
+% Top: Internet
+\node[cloud] (internet) at (0, 7.8) {\textbf{Internet / CMC WAN}\\Gateway: 0.0.0.0/0};
 
-\node[firewall] (fw1) at (-3.5, 2.0) {\textbf{PA-CIS-01 (Active)}\\PAN-OS 11.2.5\\Mgmt: 10.0.10.11};
-\node[firewall] (fw2) at (3.5, 2.0) {\textbf{PA-CIS-02 (Passive)}\\PAN-OS 11.2.5\\Mgmt: 10.0.10.12};
+% Subnet Untrust Box & VIP
+\node[vipbox, text width=8.0cm] (vip_untrust) at (0, 5.8) {\textbf{VIP Untrust (Pair Address): 10.0.1.100}\\[2pt]\scriptsize Subnet: SN-CIS-UNTRUST (10.0.1.0/24) -- Gateway: 10.0.1.1};
 
-\draw[thick, draw=red] (fw1.east) -- node[above, font=\footnotesize, text=red] {HA1 (Control: 192.168.1.1/30)} node[below, font=\footnotesize, text=red] {HA2 (Data: 192.168.2.1/30)} (fw2.west);
+% Firewalls
+\node[firewall] (fw1) at (-4.8, 3.4) {\textbf{PA-CIS-01 (Active)}\\[2pt]\scriptsize PAN-OS 11.2.5 (4 vCPU / 12GB RAM)\\[2pt]\scriptsize Mgmt: \texttt{10.0.10.11} \quad Untrust: \texttt{10.0.1.11}\\[1pt]\scriptsize Trust: \texttt{10.0.20.11} \quad HA2: \texttt{10.0.30.11}};
 
-\draw[thick, draw=UITBlue] (internet.south) -- ++(0,-0.8) -| (fw1.north);
-\draw[thick, draw=UITBlue] (internet.south) -- ++(0,-0.8) -| (fw2.north);
+\node[firewall] (fw2) at (4.8, 3.4) {\textbf{PA-CIS-02 (Passive)}\\[2pt]\scriptsize PAN-OS 11.2.5 (4 vCPU / 12GB RAM)\\[2pt]\scriptsize Mgmt: \texttt{10.0.10.12} \quad Untrust: \texttt{10.0.1.12}\\[1pt]\scriptsize Trust: \texttt{10.0.20.12} \quad HA2: \texttt{10.0.30.12}};
 
-\node[server] (linux_bastion) at (-3.5, -1.5) {\textbf{Linux Bastion}\\Ubuntu 24.04 LTS\\Python CIS Engine\\Ansible Controller\\\texttt{10.0.10.20}};
-\node[server] (win_bastion) at (3.5, -1.5) {\textbf{Windows Bastion}\\Windows Server 2022\\Trạm quản trị GUI\\\texttt{10.0.10.21}};
+% Connect Internet to Untrust VIP to FWs
+\draw[thick, draw=UITBlue, ->] (internet.south) -- (vip_untrust.north);
+\draw[thick, draw=UITBlue] (vip_untrust.south) -| (fw1.north);
+\draw[thick, draw=UITBlue] (vip_untrust.south) -| (fw2.north);
 
-\draw[thick, draw=CISGreen] (fw1.south) -- (linux_bastion.north) node[midway, left, font=\footnotesize] {HTTPS:443};
-\draw[thick, draw=CISGreen] (fw2.south) -- (linux_bastion.north) node[midway, above, font=\footnotesize] {HTTPS:443};
-\draw[thick, draw=UITBlue] (fw1.south) -- (win_bastion.north);
-\draw[thick, draw=UITBlue] (fw2.south) -- (win_bastion.north) node[midway, right, font=\footnotesize] {Web GUI};
+% HA links (in the gap between firewalls)
+\draw[thick, draw=red, dashed] ($(fw1.east)+(0,0.25)$) -- ($(fw2.west)+(0,0.25)$) node[midway, above=1pt, font=\scriptsize\bfseries, text=red] {HA1 Control (Peer Heartbeat)};
+\draw[thick, draw=red] ($(fw1.east)+(0,-0.25)$) -- ($(fw2.west)+(0,-0.25)$) node[midway, below=1pt, font=\scriptsize\bfseries, text=red] {HA2 Data (SN-CIS-HA2: 10.0.30.0/24)};
 
+% Management Subnet (Left column)
+\node[mgmtbox] (mgmt_header) at (-4.8, 1.2) {\textbf{SN-CIS-MGMT (10.0.10.0/24)}\\[2pt]\scriptsize Gateway: 10.0.10.1 -- Vùng quản trị cô lập};
+
+\node[server] (linux_bastion) at (-4.8, -0.8) {\textbf{VM-LINUX-BASTION}\\[2pt]\scriptsize Ubuntu 24.04 (2 vCPU / 2GB RAM)\\[2pt]\scriptsize Python CIS Engine / Ansible Controller\\[2pt]\footnotesize IP: \texttt{10.0.10.20}};
+
+\node[server] (win_bastion) at (-4.8, -2.8) {\textbf{VM-WINDOW-BASTION}\\[2pt]\scriptsize Windows 10 Pro (2 vCPU / 4GB RAM)\\[2pt]\scriptsize Trạm quản trị Web GUI / Evidence\\[2pt]\footnotesize IP: \texttt{10.0.10.21}};
+
+% Trust Subnet (Right column)
+\node[vipbox] (vip_trust) at (4.8, 1.2) {\textbf{VIP Trust (Pair Address): 10.0.20.100}\\[2pt]\scriptsize Subnet: SN-CIS-TRUST (10.0.20.0/24) -- Gateway: 10.0.20.1};
+
+\node[server] (client_test) at (4.8, -1.8) {\textbf{VM-CLIENT-TEST}\\[2pt]\scriptsize Ubuntu 24.04 (1 vCPU / 1GB RAM)\\[2pt]\scriptsize Client kiểm thử chính sách Security\\[2pt]\footnotesize IP: \texttt{10.0.20.20} \quad (Default Gateway: \texttt{10.0.20.100})};
+
+% Connections in Mgmt Subnet
+\draw[thick, draw=CISGreen, <->] (fw1.south) -- (mgmt_header.north) node[pos=0.35, left=2pt, font=\scriptsize, fill=white, inner sep=1pt] {HTTPS:443};
+\draw[thick, draw=CISGreen] (mgmt_header.south) -- (linux_bastion.north);
+\draw[thick, draw=CISGreen] (linux_bastion.south) -- (win_bastion.north);
+
+% Connections in Trust Subnet
+\draw[thick, draw=UITBlue] (fw2.south) -- (vip_trust.north);
+\draw[thick, draw=UITBlue, ->] (client_test.north) -- (vip_trust.south) node[midway, right=2pt, font=\scriptsize] {Default Route qua VIP};
+
+% Subnet boundaries
 \begin{scope}[on background layer]
-\node[netbox, fit=(linux_bastion) (win_bastion), label=below:\textbf{Management Subnet (10.0.10.0/24)}] {};
+\node[netbox, fit=(mgmt_header) (linux_bastion) (win_bastion), fill=CISLightBlue!20] (mgmt_box) {};
+\node[netbox, fit=(vip_trust) (client_test), fill=green!5] (trust_box) {};
+\node[draw=UITBlue, thick, dashed, inner sep=0.5cm, rounded corners=4mm, fit=(internet) (vip_untrust) (fw1) (fw2) (mgmt_box) (trust_box), label={[font=\small\bfseries, text=UITBlue]above:\textbf{VPC-LTKB (10.0.0.0/16) -- CMC Cloud (Zone AZ1)}}] (vpc_box) {};
 \end{scope}
 
-\end{tikzpicture}
-\caption{Sơ đồ topo kiến trúc mạng lab CMC Cloud triển khai thực nghiệm}
+\end{tikzpicture}%
+}
+\caption{Sơ đồ topo kiến trúc mạng lab CMC Cloud triển khai thực nghiệm trong VPC-LTKB}
 \label{fig:lab-architecture}
 \end{figure}
 
-Mô hình bao gồm các vùng mạng chính:
-\begin{itemize}
-    \item \textbf{Vùng quản trị (Management Subnet -- 10.0.10.0/24):} Kết nối các cổng quản trị của hai tường lửa cùng hai máy trạm Bastion. Mọi truy cập cấu hình và điều khiển đều được cô lập trong vùng này.
-    \item \textbf{Vùng mạng ngoài (WAN):} Nhận kết nối trực tiếp từ cổng Internet của hạ tầng CMC Cloud.
-    \item \textbf{Kênh liên kết HA1 và HA2:} Hai liên kết ảo điểm-điểm nối trực tiếp giữa PA-CIS-01 và PA-CIS-02, dùng cho việc trao đổi gói tin nhịp tim (Heartbeat) và đồng bộ trạng thái các phiên làm việc (Session Sync).
-\end{itemize}
+\vspace{0.3cm}
 
-Bảng~\ref{tab:ip-allocation} liệt kê thông số địa chỉ IP và vai trò cụ thể của từng thiết bị trong mô hình.
+\noindent Bảng~\ref{tab:ip-allocation} liệt kê thông số địa chỉ IP và vai trò cụ thể của từng thành phần trong mô hình.
 
 \begin{table}[H]
 \centering\small
@@ -672,18 +710,25 @@ Bảng~\ref{tab:ip-allocation} liệt kê thông số địa chỉ IP và vai tr
 \label{tab:ip-allocation}
 \renewcommand{\arraystretch}{1.45}
 \begingroup
-\setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\centering\arraybackslash}p{2.4cm}|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{6.6cm}|}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{6.4cm}|}
 \hline
 \rowcolor{CISBlue}
-\textcolor{white}{\textbf{Thiết bị}} & \textcolor{white}{\textbf{Địa chỉ IP}} & \textcolor{white}{\textbf{Hệ điều hành}} & \textcolor{white}{\textbf{Vai trò và Chức năng}} \\
+\textcolor{white}{\textbf{Thành phần}} & \textcolor{white}{\textbf{Địa chỉ IP / CIDR}} & \textcolor{white}{\textbf{Phân vùng Subnet}} & \textcolor{white}{\textbf{Vai trò và Thông số kỹ thuật}} \\
 \hline
-PA-CIS-01 & 10.0.10.11 & PAN-OS 11.2.5 & Tường lửa chính (HA Primary Active), xử lý lưu lượng và thực thi chính sách an ninh. \\ \hline
-PA-CIS-02 & 10.0.10.12 & PAN-OS 11.2.5 & Tường lửa dự phòng (HA Secondary Passive), duy trì trạng thái đồng bộ sẵn sàng thay thế. \\ \hline
-Linux Bastion & 10.0.10.20 & Ubuntu 24.04 LTS & Máy chủ Controller thực thi script Python, điều phối Ansible và lưu trữ báo cáo kiểm toán. \\ \hline
-Windows Bastion & 10.0.10.21 & Windows Server 2022 & Máy trạm đồ họa dành cho quản trị viên đăng nhập Web GUI và thực hiện kiểm tra thủ công. \\ \hline
-HA1 Link & 192.168.1.0/30 & Cáp ảo điểm-điểm & Kênh truyền điều khiển đồng bộ trạng thái High Availability giữa hai tường lửa. \\ \hline
-HA2 Link & 192.168.2.0/30 & Cáp ảo điểm-điểm & Kênh truyền dữ liệu đồng bộ các phiên kết nối mạng thời gian thực. \\ \hline
+VPC-LTKB & 10.0.0.0/16 & Toàn bộ VPC & VPC tổng thể triển khai lab trên hạ tầng CMC Cloud AZ1. \\ \hline
+SN-CIS-UNTRUST & 10.0.1.0/24 (GW: 10.0.1.1) & Vùng ngoài & Mạng con kết nối lưu lượng Internet / WAN từ bên ngoài vào firewall. \\ \hline
+VIP Untrust & 10.0.1.100 & SN-CIS-UNTRUST & IP ảo dự phòng (Pair Address) của cụm HA xử lý lưu lượng ngoài. \\ \hline
+SN-CIS-TRUST & 10.0.20.0/24 (GW: 10.0.20.1) & Vùng trong & Mạng con nội bộ tin cậy chứa các tài nguyên máy chủ và máy trạm. \\ \hline
+VIP Trust & 10.0.20.100 & SN-CIS-TRUST & IP ảo dự phòng (Pair Address) đóng vai trò Default Gateway cho vùng Trust. \\ \hline
+SN-CIS-MGMT & 10.0.10.0/24 (GW: 10.0.10.1) & Vùng quản trị & Mạng con cô lập dành riêng cho các giao thức quản trị và quét bảo mật. \\ \hline
+SN-CIS-HA2 & 10.0.30.0/24 (GW: 10.0.30.1) & Vùng HA & Mạng con chuyên dụng dành cho kênh truyền đồng bộ dữ liệu phiên HA2. \\ \hline
+PA-CIS-01 & Mgmt: 10.0.10.11\newline Untrust: 10.0.1.11\newline Trust: 10.0.20.11\newline HA2: 10.0.30.11 & Đa phân vùng & Tường lửa chính (HA Primary Active Node), PAN-OS 11.2.5 (4 vCPU / 12 GB RAM), xử lý toàn bộ lưu lượng định tuyến và chính sách an ninh. \\ \hline
+PA-CIS-02 & Mgmt: 10.0.10.12\newline Untrust: 10.0.1.12\newline Trust: 10.0.20.12\newline HA2: 10.0.30.12 & Đa phân vùng & Tường lửa dự phòng (HA Secondary Passive Node), PAN-OS 11.2.5 (4 vCPU / 12 GB RAM), duy trì đồng bộ phiên và cấu hình sẵn sàng thay thế tức thời. \\ \hline
+VM-LINUX-BASTION & 10.0.10.20 & SN-CIS-MGMT & Máy chủ Controller, Ubuntu 24.04 (2 vCPU / 2 GB RAM), thực thi Python CIS Scanner, kịch bản Ansible và lưu trữ nhật ký báo cáo. \\ \hline
+VM-WINDOW-BASTION & 10.0.10.21 & SN-CIS-MGMT & Máy trạm quản trị đồ họa, Windows 10 Pro (2 vCPU / 4 GB RAM), phục vụ đăng nhập Web GUI và đối chứng thủ công. \\ \hline
+VM-CLIENT-TEST & 10.0.20.20 & SN-CIS-TRUST & Máy trạm kiểm thử nội bộ, Ubuntu 24.04 (1 vCPU / 1 GB RAM), trỏ Default Gateway về VIP \texttt{10.0.20.100} để kiểm tra an ninh mạng. \\ \hline
+HA1 Control Link & Kênh ảo điểm-điểm & Kênh dự phòng & Liên kết truyền gói tin Heartbeat và kiểm soát trạng thái High Availability. \\ \hline
 \end{tabular}
 \endgroup
 \end{table}
