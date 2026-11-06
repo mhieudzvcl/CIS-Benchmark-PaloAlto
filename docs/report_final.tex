@@ -760,7 +760,7 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \paragraph{1.2.1. Đảm bảo cấu hình Permitted IP Addresses cho cổng Management}
 \begin{itemize}
     \item Bước 1: Điều hướng đến \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Interfaces} $\rightarrow$ chọn \textbf{Management}.
-    \item Bước 2: Tại khung \textit{Permitted IP Addresses}, nhấn Add để thêm các địa chỉ máy trạm quản trị hợp lệ gồm \texttt{10.0.10.20/32} và \texttt{10.0.10.21/32}.
+    \item Bước 2: Tại khung \textit{Permitted IP Addresses}, nhấn Add để thêm các địa chỉ máy trạm quản trị hợp lệ gồm \texttt{10.0.10.20/32} và \texttt{10.0.10.21/32} hoặc nguyên subnet quản trị là 10.0.10.0/24.
     \item Bước 3: Kiểm tra và xóa bỏ các dải địa chỉ quá rộng như \texttt{0.0.0.0/0}.
     \item Bước 4: Nhấn OK và Commit cấu hình.
 \end{itemize}
@@ -796,7 +796,7 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \paragraph{1.4.2. Giới hạn số lần đăng nhập thất bại liên tiếp trước khi khóa tài khoản (Failed Attempts)}
 \begin{itemize}
     \item Bước 1: Trong cùng hộp thoại \textbf{Authentication Settings} (\textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management}).
-    \item Bước 2: Nhập giá trị \texttt{5} vào ô \textit{Failed Attempts}.
+    \item Bước 2: Nhập giá trị \texttt{3} vào ô \textit{Failed Attempts}.
     \item Bước 3: Nhấn OK và Commit.
 \end{itemize}
 \evidence{images/manual_cis_1_4_2.png}{Cấu hình giới hạn số lần đăng nhập thất bại}{fig:manual-cis-142}
@@ -887,7 +887,11 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
     \item Bước 2: Kiểm tra widget \textbf{High Availability}, đảm bảo trạng thái kết nối peer là \textit{Connected} và trạng thái cấu hình là \textit{Synchronized}.
     \item Bước 3: Kiểm tra qua dòng lệnh CLI bằng lệnh \texttt{show high-availability state}.
 \end{itemize}
-\evidence{images/manual_cis_3_1.png}{Kiểm tra trạng thái đồng bộ cụm High Availability}{fig:manual-cis-31}
+\evidence{images/manual_cis_3_1.png}{Kiểm tra trạng thái đồng bộ cụm High Availability trên GUI của PA-CIS-01 (1)}{fig:manual-cis-31}
+
+\evidence{images/manual_cis_3_1b.png}{Kiểm tra trạng thái đồng bộ cụm High Availability trên GUI của PA-CIS-02 (2)}{fig:manual-cis-31b}
+
+\evidence{images/manual_cis_3_1c.png}{Kiểm tra trạng thái đồng bộ cụm High Availability bằng CLI (3)}{fig:manual-cis-31c}
 
 \paragraph{3.2. Cấu hình giám sát đường truyền và liên kết mạng (Link/Path Monitoring)}
 \begin{itemize}
@@ -924,7 +928,9 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
     \item Bước 3: Chuyển sang tab \textbf{TCP Drop}, bật các tùy chọn loại bỏ gói tin phân mảnh và dị thường TCP.
     \item Bước 4: Nhấn OK và Commit.
 \end{itemize}
-\evidence{images/manual_cis_6_18.png}{Kích hoạt cơ chế hủy gói tin giả mạo IP và TCP bất thường}{fig:manual-cis-618}
+\evidence{images/manual_cis_6_18.png}{Kích hoạt cơ chế hủy gói tin giả mạo IP và TCP bất thường (1)}{fig:manual-cis-618}
+
+\evidence{images/manual_cis_6_18b.png}{Kích hoạt cơ chế hủy gói tin giả mạo IP và TCP bất thường (2)}{fig:manual-cis-618b}
 
 \subsubsection{6. Chính sách Bảo mật (Security Policies)}
 
