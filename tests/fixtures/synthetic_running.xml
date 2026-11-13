@@ -50,7 +50,7 @@
       <zone><entry name="untrust"><network><zone-protection-profile>ZP-Untrust-Protection</zone-protection-profile></network></entry></zone>
       <rulebase><security><rules>
         <entry name="Block-Malicious-Threats"><action>deny</action><from><member>untrust</member></from><to><member>any</member></to><source><member>any</member></source><destination><member>any</member></destination><service><member>any</member></service></entry>
-      </rules></rulebase>
+      </rules></security></rulebase>
     </entry></vsys>
   </deviceconfig></entry></devices>
 </config>

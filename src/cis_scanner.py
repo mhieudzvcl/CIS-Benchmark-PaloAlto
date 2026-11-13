@@ -574,10 +574,15 @@ class CISScanner:
             pname = p.get("name", "unknown")
             scan = p.find("./scan")
             if scan is not None:
-                tcp = scan.xpath("./entry[@name='tcp-port-scan']/action") or scan.xpath(".//tcp-port-scan")
-                udp = scan.xpath("./entry[@name='udp-port-scan']/action") or scan.xpath(".//udp-port-scan")
-                host = scan.xpath("./entry[@name='host-sweep']/action") or scan.xpath(".//host-sweep")
-                if tcp or udp or host:
+                # PAN-OS uses Threat IDs 8001 (tcp-port-scan), 8002 (host-sweep), 8003 (udp-port-scan)
+                # or named entries / elements
+                entries = (
+                    scan.xpath("./entry[@name='8001' or @name='8002' or @name='8003' or @name='tcp-port-scan' or @name='udp-port-scan' or @name='host-sweep']") or
+                    scan.xpath(".//tcp-port-scan | .//udp-port-scan | .//host-sweep") or
+                    scan.xpath("./entry[action]") or
+                    scan.xpath("./entry")
+                )
+                if entries:
                     return self.make(rule, "Reconnaissance scan protection enabled",
                                      f"Profile '{pname}' scan protection active", "PASS", evidence)
         return self.make(rule, "Reconnaissance scan protection enabled", "Not enabled", "FAIL", evidence,
