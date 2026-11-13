@@ -70,18 +70,28 @@ flowchart TD
 
 | Nhóm | Control | Nội dung đánh giá |
 |---|---|---|
+| Management Interface | `1.2.2` | Permitted IP Addresses cho Interface Management Profiles |
 | Management Interface | `1.2.3` | Vô hiệu hóa HTTP và Telnet trên Management Interface |
 | Password Security | `1.3.1–1.3.9` | Bật Password Complexity; chiều dài, thành phần và chính sách mật khẩu |
 | Authentication | `1.4.1` | Management Idle Timeout không vượt quá 10 phút |
 | Device Services | `1.6.2` | NTP chính và NTP dự phòng phù hợp chính sách tổ chức |
+| User-ID | `2.3` | Chỉ bật User-ID trên vùng mạng nội bộ (Trust) |
 | High Availability | `3.1` | Trạng thái HA peer, configuration/session synchronization |
 | High Availability | `3.2` | Link Monitoring hoặc Path Monitoring |
+| WildFire | `5.1` | Dung lượng tối đa gửi phân tích WildFire |
+| WildFire | `5.4` | Bật ghi nhận thông tin phiên WildFire Session Info |
+| Zone Protection | `6.15` | SYN Flood Protection trên Zone Protection Profile |
+| Zone Protection | `6.16` | UDP/ICMP Flood Protection trên Zone Protection Profile |
+| Zone Protection | `6.17` | Reconnaissance Protection (chống quét cổng) |
+| Zone Protection | `6.18` | Block các gói tin IP không hợp lệ (IP Options/Spoofing) |
+| Security Policy | `7.1` | Application phải được chỉ định tường minh (không dùng any) từ Untrust |
+| Security Policy | `7.2` | Service phải được chỉ định tường minh (không dùng any) |
 
-Tổng cộng có **14 control được lựa chọn để triển khai**. Đây là phạm vi nghiên cứu và thử nghiệm của nhóm, **không đại diện cho toàn bộ CIS Benchmark**. Một số trường hợp cần đối chiếu thêm GUI/CLI, trạng thái vận hành hoặc chính sách tổ chức trước khi kết luận.
+Tổng cộng có **37 control được lựa chọn để triển khai**. Đây là phạm vi nghiên cứu và thử nghiệm của nhóm, **không đại diện cho toàn bộ CIS Benchmark**. Một số trường hợp cần đối chiếu thêm GUI/CLI, trạng thái vận hành hoặc chính sách tổ chức trước khi kết luận.
 
 ### Phạm vi Automated Remediation
 
-Phiên bản hiện tại chỉ cho phép lên kế hoạch và khắc phục theo **allowlist gồm 4 control**: `1.2.3`, `1.3.1`, `1.3.2`, `1.4.1`. Các thay đổi về HA và NTP không được tự động áp dụng trong phiên bản này. Tính năng remediation yêu cầu quyền quản trị phù hợp và chưa được xác nhận đầy đủ trên mọi trường hợp vận hành thực tế.
+Phiên bản hiện tại chỉ cho phép lên kế hoạch và khắc phục theo **allowlist gồm 7 control**: `1.2.3`, `1.3.1`, `1.3.2`, `1.3.3`, `1.3.4`, `1.3.5`, `1.4.1`. Tính năng remediation yêu cầu quyền quản trị phù hợp và chưa được xác nhận đầy đủ trên mọi trường hợp vận hành thực tế.
 
 ## 5. Môi trường triển khai và kết quả thực nghiệm
 
@@ -91,7 +101,7 @@ Hệ thống được thử nghiệm trong môi trường **CMC Cloud**, gồm h
 
 - Chạy thành công **12/12 unit tests** với dữ liệu XML giả lập.
 - Kết nối và xác thực PAN-OS XML API trên **cả hai firewall**.
-- Thu thập Running Configuration và dữ liệu HA; thực hiện quét **14 control/thiết bị**.
+- Thu thập Running Configuration và dữ liệu HA; thực hiện quét **37 control/thiết bị**.
 - Tạo báo cáo **HTML và JSON** cho từng lần quét.
 - Ghi nhận đúng các trường hợp `PASS`, `FAIL`, `REVIEW`; một số kiểm tra HA chưa đạt vì lab tại thời điểm đó chưa bật HA.
 
@@ -145,7 +155,7 @@ CIS-PaloAlto-Auditor/
 
 ## 9. Giới hạn và định hướng phát triển
 
-Dự án là **prototype phục vụ nghiên cứu, học tập và kiểm chứng trên lab**. Các giới hạn quan trọng gồm: mới bao phủ 14 control, một số thiết lập mặc định hoặc dữ liệu HA cần xác minh thêm, chưa có rollback tự động khi Commit thất bại và chưa kiểm thử đầy đủ mọi trạng thái PAN-OS/HA. Chương trình không thay thế quy trình change management hoặc phê duyệt thay đổi cấu hình của doanh nghiệp.
+Dự án là **prototype phục vụ nghiên cứu, học tập và kiểm chứng trên lab**. Các giới hạn quan trọng gồm: mới bao phủ 37 control, một số thiết lập mặc định hoặc dữ liệu HA cần xác minh thêm, chưa có rollback tự động khi Commit thất bại và chưa kiểm thử đầy đủ mọi trạng thái PAN-OS/HA. Chương trình không thay thế quy trình change management hoặc phê duyệt thay đổi cấu hình của doanh nghiệp.
 
 Các hướng mở rộng tiếp theo:
 
