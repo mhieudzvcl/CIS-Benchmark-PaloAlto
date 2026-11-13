@@ -24,6 +24,7 @@
 \usepackage{indentfirst}
 \setlength{\parindent}{1.1cm}
 \usepackage[table]{xcolor}
+\usepackage{float}
 \usepackage{tikz}
 \usetikzlibrary{
     arrows.meta,
@@ -387,7 +388,7 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 
 \vspace{0.3cm}
 
-\noindent Bảng~\ref{tab:scope} tóm tắt 6 nhóm nội dung với 30 khuyến nghị CIS được nhóm lựa chọn triển khai trong đồ án.
+\noindent Bảng~\ref{tab:scope} tóm tắt 8 nhóm nội dung với 37 khuyến nghị CIS được nhóm lựa chọn triển khai trong đồ án.
 
 \begingroup
 \setlength{\tabcolsep}{4.5pt}
@@ -410,12 +411,14 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 \endfoot
 \hline
 \endlastfoot
-1 & Quản trị thiết bị (Device Setup \& Mgmt) & 9 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\ \hline
+1 & Quản trị thiết bị (Device Setup \& Mgmt) & 10 controls & Cấu hình banner cảnh báo đăng nhập, bật log cảnh báo khi tải Data Plane cao, giới hạn IP được phép quản trị trên cổng Management và Interface Profiles, tắt HTTP và Telnet, đặt thời gian tự ngắt phiên rảnh rỗi và khóa tài khoản khi gõ sai mật khẩu nhiều lần. \\ \hline
 2 & Chính sách mật khẩu (Password Profiles) & 10 controls & Bật yêu cầu độ phức tạp mật khẩu, quy định độ dài tối thiểu, số lượng chữ hoa, chữ thường, chữ số, ký tự đặc biệt, thời hạn đổi mật khẩu, lưu lịch sử mật khẩu cũ và không để tồn tại các profile ghi đè chính sách chung. \\ \hline
 3 & Dịch vụ hệ thống và Ghi log (Services \& Logging) & 3 controls & Bật xác thực máy chủ cập nhật chính hãng, cấu hình máy chủ NTP đồng bộ thời gian chính và phụ, cấu hình chuyển tiếp log tập trung về Syslog Server. \\ \hline
 4 & Độ sẵn sàng cao (High Availability -- HA) & 3 controls & Kiểm tra trạng thái đồng bộ giữa hai firewall Active và Passive, bật cơ chế giám sát đường truyền (Path Monitoring), để cổng Passive ở chế độ Auto và tắt tính năng giành quyền (Preemption). \\ \hline
-5 & Lọc bảo vệ vùng mạng (Zone Protection) & 2 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\ \hline
-6 & Chính sách bảo mật (Security Policies) & 3 controls & Kiểm tra không cho phép mở cổng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\ \hline
+5 & Phân vùng và Định danh (Zone \& User-ID) & 1 control & Đảm bảo chỉ bật cơ chế định danh người dùng (User-ID) trên các phân vùng mạng nội bộ tin cậy (Trust), vô hiệu hóa hoàn toàn trên vùng Untrust để ngăn chặn lộ lọt dữ liệu định danh ra ngoài. \\ \hline
+6 & Phân tích mã độc WildFire (WildFire Analysis) & 2 controls & Thiết lập kích thước tệp tải lên tối đa cho phân tích mã độc chuyên sâu (PE $\geq$ 10MB) và kích hoạt thu thập đầy đủ thông tin phiên gửi kèm (Session Information). \\ \hline
+7 & Lọc bảo vệ vùng mạng (Zone Protection) & 4 controls & Cấu hình Zone Protection Profile để chống tấn công SYN Flood bằng kỹ thuật SYN Cookies, chống tấn công UDP/ICMP Flood, bật cơ chế phát hiện và chặn quét cổng (Reconnaissance Protection), tự động loại bỏ các gói tin giả mạo IP Spoofing và các gói tin TCP bất thường. \\ \hline
+8 & Chính sách bảo mật (Security Policies) & 4 controls & Kiểm tra không cho phép mở dịch vụ ANY hoặc ứng dụng ANY từ vùng Untrust, đặt luật chặn các IP độc hại lên đầu danh sách chính sách và bật ghi log ở cuối phiên cho các luật mặc định. \\ \hline
 \end{longtable}
 \endgroup
 
@@ -435,12 +438,12 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 
 \vspace{0.3cm}
 
-\noindent Bảng~\ref{tab:full-benchmark-details} trình bày chi tiết toàn bộ 30 khuyến nghị cấu hình được nhóm lựa chọn triển khai trong đồ án, bao gồm mã số, tiêu đề, trạng thái đánh giá, cấp độ bảo vệ, nội dung yêu cầu và lý do bảo mật tương ứng.
+\noindent Bảng~\ref{tab:full-benchmark-details} trình bày chi tiết toàn bộ 37 khuyến nghị cấu hình được nhóm lựa chọn triển khai trong đồ án, bao gồm mã số, tiêu đề, trạng thái đánh giá, cấp độ bảo vệ, nội dung yêu cầu và lý do bảo mật tương ứng.
 
 \begingroup
 \setlength{\tabcolsep}{3.5pt}
 \begin{longtable}{|>{\centering\arraybackslash}p{1.0cm}|>{\raggedright\arraybackslash}p{2.7cm}|>{\centering\arraybackslash}p{2.0cm}|>{\centering\arraybackslash}p{1.1cm}|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{3.6cm}|}
-\caption{Danh mục chi tiết 30 khuyến nghị CIS Benchmark được nhóm lựa chọn triển khai} \label{tab:full-benchmark-details} \\
+\caption{Danh mục chi tiết 37 khuyến nghị CIS Benchmark được nhóm lựa chọn triển khai} \label{tab:full-benchmark-details} \\
 \hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị}} & \textcolor{white}{\textbf{Trạng thái}} & \textcolor{white}{\textbf{Cấp độ}} & \textcolor{white}{\textbf{Nội dung cấu hình}} & \textcolor{white}{\textbf{Lý do bảo mật}} \\
@@ -463,6 +466,7 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 1.1.2 & Legal Notice Login Banner & Automated & Level 1 & Cấu hình biểu ngữ cảnh báo pháp lý khi đăng nhập hệ thống, thông báo rõ việc ghi log và không dùng từ chào mừng. & Loại bỏ khả năng người dùng biện minh là truy cập nhầm, tạo cơ sở pháp lý xử lý khi có xâm nhập trái phép. \\ \hline
 1.1.3 & Log on High DP Load & Automated & Level 1 & Bật tính năng tự động ghi log khi tải CPU của Data Plane vượt ngưỡng cao. & Giúp quản trị viên phát hiện kịp thời các đợt tấn công từ chối dịch vụ hoặc bất thường lưu lượng mạng. \\ \hline
 1.2.1 & Permitted IP Mgmt Interface & Manual & Level 1 & Chỉ cho phép các địa chỉ IP hoặc dải mạng quản trị tin cậy kết nối đến cổng Management. & Ngăn ngừa việc kẻ tấn công từ Internet hoặc các vùng mạng nội bộ khác quét dò và tấn công cổng quản trị. \\ \hline
+1.2.2 & Permitted IP Mgmt Profiles & Automated & Level 1 & Cấu hình danh sách Permitted IP Addresses cho tất cả Interface Management Profiles có mở dịch vụ quản trị từ xa. & Ngăn ngừa truy cập trái phép vào các cổng dữ liệu mạng được bật giao thức quản trị. \\ \hline
 1.2.3 & Disable HTTP/Telnet Mgmt & Automated & Level 1 & Tắt hoàn toàn dịch vụ quản trị HTTP và Telnet trên cổng Management. & Ngăn chặn việc truyền mật khẩu và phiên làm việc dưới dạng văn bản rõ không mã hóa qua mạng. \\ \hline
 1.2.4 & Disable HTTP/Telnet Profiles & Automated & Level 1 & Rà soát tất cả Interface Management Profiles, bảo đảm không cho phép HTTP và Telnet. & Đảm bảo các cổng giao tiếp dữ liệu nội bộ không vô tình mở các dịch vụ quản trị thiếu an toàn. \\ \hline
 1.4.1 & Management Idle Timeout & Automated & Level 1 & Thiết lập thời gian tự động ngắt phiên rảnh rỗi không vượt quá 10 phút. & Giảm thiểu rủi ro bị chiếm quyền điều khiển phiên làm việc khi quản trị viên rời khỏi máy trạm. \\ \hline
@@ -487,16 +491,26 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 1.6.2 & NTP Primary and Secondary & Automated & Level 1 & Cấu hình máy chủ đồng bộ thời gian NTP chính và phụ đáng tin cậy. & Đảm bảo tính chính xác và đồng bộ của nhãn thời gian (timestamp) trong toàn bộ nhật ký hệ thống. \\ \hline
 1.7.1 & Syslog Server Profile & Automated & Level 1 & Cấu hình hồ sơ chuyển tiếp nhật ký ra máy chủ Syslog tập trung bên ngoài. & Đảm bảo lưu trữ nhật ký an toàn, phục vụ công tác điều tra số và tránh nguy cơ bị xóa log khi máy bị xâm nhập. \\ \hline
 
-\multicolumn{6}{|l|}{\textbf{4. Độ sẵn sàng cao (High Availability)}} \\ \hline
+\multicolumn{6}{|l|}{\textbf{4. Phân vùng Mạng và Định danh Người dùng (Zone and User-ID)}} \\ \hline
+2.3 & User-ID on Trusted Zones Only & Automated & Level 1 & Chỉ bật tính năng User Identification trên các vùng mạng nội bộ tin cậy (Trust), tắt trên vùng Untrust. & Ngăn chặn việc thăm dò, thu thập danh tính người dùng nội bộ từ môi trường bên ngoài Internet. \\ \hline
+
+\multicolumn{6}{|l|}{\textbf{5. Độ sẵn sàng cao (High Availability)}} \\ \hline
 3.1 & HA Peer Synchronization & Automated & Level 2 & Hai thiết bị tường lửa trong cụm HA phải ở trạng thái kết nối và đồng bộ cấu hình hoàn tất. & Đảm bảo hệ thống có khả năng chuyển đổi dự phòng tức thời khi một node gặp sự cố phần cứng. \\ \hline
 3.2 & HA Link/Path Monitoring & Automated & Level 2 & Cấu hình cơ chế giám sát các liên kết vật lý hoặc đường truyền mạng quan trọng. & Tự động kích hoạt chuyển đổi dự phòng nếu đường truyền kết nối mạng chính bị đứt gãy. \\ \hline
 3.3 & HA Passive Link Auto & Automated & Level 2 & Cổng mạng ở node Passive đặt ở trạng thái Auto và tính năng Preemption được tắt. & Tránh hiện tượng tranh chấp quyền điều khiển (flapping) gây gián đoạn phiên khi node chính phục hồi. \\ \hline
 
-\multicolumn{6}{|l|}{\textbf{5. Lọc bảo vệ vùng mạng (Zone Protection)}} \\ \hline
+\multicolumn{6}{|l|}{\textbf{6. Phân tích Mã độc WildFire (WildFire Analysis)}} \\ \hline
+5.1 & WildFire Max File Size Limit & Automated & Level 1 & Thiết lập kích thước tải lên tối đa cho các tệp gửi phân tích WildFire (định dạng PE $\geq$ 10 MB). & Tối đa hóa khả năng quét và phát hiện các mẫu mã độc thực thi có dung lượng lớn. \\ \hline
+5.4 & WildFire Session Information & Automated & Level 1 & Kích hoạt tính năng thu thập và gửi đầy đủ thông tin phiên (Session Information) cho WildFire. & Cung cấp ngữ cảnh phong phú (IP, Port, User, URL) phục vụ phân tích tương quan và điều tra số. \\ \hline
+
+\multicolumn{6}{|l|}{\textbf{7. Lọc bảo vệ vùng mạng (Zone Protection)}} \\ \hline
 6.15 & SYN Flood Protection Cookies & Automated & Level 1 & Áp dụng cơ chế SYN Cookies chống tấn công SYN Flood trong Zone Protection Profile. & Bảo vệ bảng trạng thái kết nối của tường lửa không bị tràn ngập trước các đợt tấn công từ chối dịch vụ TCP. \\ \hline
+6.16 & Flood Protection Enabled & Automated & Level 1 & Kích hoạt cơ chế chống tấn công làm tràn ngập mạng (Flood Protection) cho UDP và ICMP trong Zone Protection Profile. & Ngăn chặn các đợt tấn công từ chối dịch vụ băng thông làm cạn kiệt tài nguyên xử lý gói của firewall. \\ \hline
+6.17 & Reconnaissance Protection & Automated & Level 1 & Kích hoạt tính năng chống quét cổng (TCP/UDP Port Scan, Host Sweep) trong Zone Protection Profile. & Phát hiện sớm và chủ động chặn đứng các hoạt động thám sát, dò quét cổng của kẻ tấn công. \\ \hline
 6.18 & Drop Spoofed IP \& Bad TCP & Automated & Level 1 & Cấu hình tự động hủy bỏ các gói tin giả mạo IP nguồn và các gói tin phân mảnh TCP dị thường. & Ngăn chặn các kỹ thuật thâm nhập mạng qua giả mạo địa chỉ IP và các đợt quét cổng bất thường. \\ \hline
 
-\multicolumn{6}{|l|}{\textbf{6. Chính sách Bảo mật (Security Policies)}} \\ \hline
+\multicolumn{6}{|l|}{\textbf{8. Chính sách Bảo mật (Security Policies)}} \\ \hline
+7.1 & No ANY Application Untrust Rule & Automated & Level 1 & Không cho phép các luật an ninh mở ứng dụng ANY (Application ANY) cho lưu lượng từ vùng Untrust. & Ngăn chặn các ứng dụng không rõ nguồn gốc đi qua tường lửa, thực thi nguyên tắc kiểm soát ứng dụng App-ID. \\ \hline
 7.2 & No ANY Service Untrust Rule & Automated & Level 1 & Không cho phép các luật an ninh mở dịch vụ ANY từ vùng mạng Untrust đi vào. & Thu hẹp bề mặt tấn công, chỉ mở đúng các cổng dịch vụ thực sự cần thiết cho hoạt động kinh doanh. \\ \hline
 7.3 & Top Rule Blocking Threats & Manual & Level 1 & Đặt các quy tắc chặn địa chỉ IP độc hại đã nhận diện ở vị trí ưu tiên cao nhất của Rulebase. & Đảm bảo lưu lượng từ các nguồn nguy hiểm bị triệt tiêu ngay lập tức trước khi được xét duyệt bởi các luật khác. \\ \hline
 7.4 & Default Rules Logging & Automated & Level 1 & Bật tính năng ghi nhật ký ở cuối phiên (Log at Session End) cho các luật ngầm định mặc định. & Ghi lại toàn bộ các nỗ lực truy cập bị từ chối mặc định, phục vụ phân tích lưu lượng bất thường. \\ \hline
@@ -559,7 +573,7 @@ XPath & XML Path Language & Ngôn ngữ truy vấn thành phần tài liệu XML
 \subsubsection{Hai cơ chế thu thập dữ liệu chuyên sâu}
 \noindent Hệ thống triển khai hai cơ chế thu thập dữ liệu tách biệt để đảm bảo tính toàn diện:
 \begin{enumerate}
-    \item \textbf{Thu thập Running Configuration (\texttt{type=config\&action=show}):} Lấy toàn bộ cây dữ liệu XML cấu hình tĩnh đang có hiệu lực hoạt động trên hệ thống (đã được Commit thành công). Nguồn dữ liệu này dùng để kiểm tra 27/30 tiêu chí về chính sách bảo vệ, thông số mật khẩu, dịch vụ mạng và quy tắc tường lửa.
+    \item \textbf{Thu thập Running Configuration (\texttt{type=config\&action=show}):} Lấy toàn bộ cây dữ liệu XML cấu hình tĩnh đang có hiệu lực hoạt động trên hệ thống (đã được Commit thành công). Nguồn dữ liệu này dùng để kiểm tra 34/37 tiêu chí về chính sách bảo vệ, thông số mật khẩu, dịch vụ mạng và quy tắc tường lửa.
     \item \textbf{Thu thập Trạng thái Vận hành Thời gian thực (\texttt{type=op\&cmd=...}):} Sử dụng các lệnh vận hành XML Op Commands để truy vấn trạng thái thực tế không có trong file cấu hình tĩnh. Điển hình là lệnh kiểm tra trạng thái cụm High Availability:
     \begin{center}
     \texttt{<show><high-availability><state></state></high-availability></show>}
@@ -711,25 +725,31 @@ HA1 Control Link & Kênh ảo điểm-điểm & Kênh dự phòng & Liên kết 
 
 \subsection{Triển khai Manual}
 
-Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiết trên từng khuyến nghị của hệ thống. Dưới đây là các bước thao tác cụ thể cho từng mục:
+\noindent Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiết trên từng khuyến nghị của hệ thống. Dưới đây là các bước thao tác cụ thể cho từng mục:
 
-\subsubsection{1. Thiết lập và Quản trị Thiết bị}
+\subsubsection{Thiết lập và Quản trị Thiết bị (Hạng mục 1)}
 
 \paragraph{1.1.2. Đảm bảo cấu hình biểu ngữ cảnh báo pháp lý khi đăng nhập (Login Banner)}
 \begin{itemize}
     \item Bước 1: Từ Windows Bastion, đăng nhập vào Web GUI của tường lửa.
     \item Bước 2: Điều hướng đến \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management}.
-    \item Bước 3: Nhấp vào biểu tượng chỉnh sửa tại khung \textbf{Banners and Messages}, điền thông điệp cảnh báo pháp lý vào ô \textit{Login Banner} (ví dụ: \texttt{Authorized Access Only}). Lưu ý không dùng các từ mang tính chào mừng.
-    \item Bước 4: Nhấn OK và thực hiện Commit cấu hình.
+    \item Bước 3: Nhấp vào biểu tượng chỉnh sửa tại khung \textbf{General Settings}, điền thông điệp cảnh báo pháp lý vào ô \textit{Login Banner} (ví dụ: \texttt{Authorized Access Only}). Lưu ý không dùng các từ mang tính chào mừng.
+    \item Bước 4: Nhấn OK và thực hiện Commit để áp dụng cấu hình.
 \end{itemize}
-\evidence{images/manual_cis_1_1_2.png}{Cấu hình Login Banner trên tường lửa Palo Alto}{fig:manual-cis-112}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/manual_cis_1_1_2.png}
+    \caption{Cấu hình Login Banner trên tường lửa Palo Alto}
+    \label{fig:manual-cis-112}
+\end{figure}
 
 \paragraph{1.1.3. Đảm bảo bật tính năng ghi log khi tải Data Plane cao (Log on High DP Load)}
 \begin{itemize}
     \item Bước 1: Điều hướng đến \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management}.
     \item Bước 2: Tại khung \textbf{Logging and Reporting Settings}, chọn chỉnh sửa.
-    \item Bước 3: Đánh dấu chọn vào ô \textit{Log on High DP Load}.
-    \item Bước 4: Nhấn OK và thực hiện Commit cấu hình.
+    \item Bước 3: Đánh dấu chọn vào ô \textit{Enable Log on High DP Load}.
+    \item Bước 4: Nhấn OK và thực hiện Commit để áp dụng cấu hình.
 \end{itemize}
 \evidence{images/manual_cis_1_1_3.png}{Kích hoạt tính năng Log on High DP Load}{fig:manual-cis-113}
 
@@ -738,18 +758,32 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
     \item Bước 1: Điều hướng đến \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Interfaces} $\rightarrow$ chọn \textbf{Management}.
     \item Bước 2: Tại khung \textit{Permitted IP Addresses}, nhấn Add để thêm các địa chỉ máy trạm quản trị hợp lệ gồm \texttt{10.0.10.20/32} và \texttt{10.0.10.21/32} hoặc nguyên subnet quản trị là 10.0.10.0/24.
     \item Bước 3: Kiểm tra và xóa bỏ các dải địa chỉ quá rộng như \texttt{0.0.0.0/0}.
-    \item Bước 4: Nhấn OK và Commit cấu hình.
+    \item Bước 4: Nhấn OK và Commit để áp dụng cấu hình.
 \end{itemize}
 \evidence{images/manual_cis_1_2_1.png}{Cấu hình danh sách Permitted IP Addresses trên cổng Management}{fig:manual-cis-121}
+
+\paragraph{1.2.2. Cấu hình Permitted IP Addresses cho các Interface Management Profiles}
+\begin{itemize}
+    \item Bước 1: Điều hướng đến \textbf{Network} $\rightarrow$ \textbf{Network Profiles} $\rightarrow$ \textbf{Interface Mgmt}.
+    \item Bước 2: Nhấp chọn profile quản trị có kích hoạt các dịch vụ truy cập từ xa (như HTTPS, SSH, SNMP).
+    \item Bước 3: Tại mục \textit{Permitted IP Addresses}, nhấn Add để chỉ định danh sách IP của máy trạm quản trị Bastion (\texttt{10.0.10.20/32}, \texttt{10.0.10.21/32}) hoặc dải mạng quản trị cô lập \texttt{10.0.10.0/24}.
+    \item Bước 4: Nhấn OK và thực hiện Commit để áp dụng cấu hình.
+\end{itemize}
+\evidence{images/manual_cis_1_2_2.png}{Cấu hình danh sách Permitted IP Addresses trên Interface Management Profile}{fig:manual-cis-122}
 
 \paragraph{1.2.3. Vô hiệu hóa dịch vụ HTTP và Telnet trên cổng Management}
 \begin{itemize}
     \item Bước 1: Vẫn tại cửa sổ cấu hình cổng \textbf{Management} (\textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Interfaces}).
-    \item Bước 2: Tại mục \textit{Network Services}, bỏ chọn hai ô \textit{HTTP} và \textit{Telnet}.
+    \item Bước 2: Tại mục \textit{Administrative Management Services}, bỏ chọn hai ô \textit{HTTP} và \textit{Telnet} và mục \textit{Network Services} chỉ giữ lại Ping để debug.
     \item Bước 3: Chỉ giữ lại dịch vụ bảo mật \textit{HTTPS} và \textit{SSH}.
     \item Bước 4: Nhấn OK và Commit.
 \end{itemize}
-\evidence{images/manual_cis_1_2_3.png}{Tắt dịch vụ HTTP và Telnet trên cổng Management}{fig:manual-cis-123}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/manual_cis_1_2_3.png}
+    \caption{Tắt dịch vụ HTTP và Telnet trên cổng Management}
+    \label{fig:manual-cis-123}
+\end{figure}
 
 \paragraph{1.2.4. Vô hiệu hóa HTTP và Telnet trong tất cả Interface Management Profiles}
 \begin{itemize}
@@ -794,13 +828,13 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \end{itemize}
 \evidence{images/manual_cis_1_5_1.png}{Cấu hình bảo mật giao thức SNMP}{fig:manual-cis-151}
 
-\subsubsection{2. Chính sách Mật khẩu (Password Profiles)}
+\subsubsection{Chính sách Mật khẩu (Password Profiles) (Hạng mục 2)}
 
 \paragraph{1.3.1. Bật tính năng kiểm tra độ phức tạp của mật khẩu (Password Complexity)}
 \begin{itemize}
     \item Bước 1: Điều hướng đến \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{Management}.
     \item Bước 2: Nhấp vào biểu tượng chỉnh sửa tại khung \textbf{Minimum Password Complexity}.
-    \item Bước 3: Đánh dấu chọn vào ô \textit{Enable Password Complexity}.
+    \item Bước 3: Đánh dấu chọn vào ô \textit{Enabled}.
 \end{itemize}
 \evidence{images/manual_cis_1_3_1.png}{Bật tính năng Minimum Password Complexity}{fig:manual-cis-131}
 
@@ -815,7 +849,7 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
         \item \textit{Minimum Special Characters (1.3.6):} Nhập giá trị $\geq 1$ (nhóm đặt \texttt{1}).
         \item \textit{Password Expiration Period (1.3.7):} Nhập giá trị $\leq 90$ ngày (nhóm đặt \texttt{90}).
         \item \textit{New Password Differs By Characters (1.3.8):} Nhập giá trị $\geq 3$ (nhóm đặt \texttt{3}).
-        \item \textit{Password History Count (1.3.9):} Nhập giá trị $\geq 24$ (nhóm đặt \texttt{24}).
+        \item \textit{Prevent Password Reuse Limit (1.3.9):} Nhập giá trị $\geq 24$ (nhóm đặt \texttt{24}).
     \end{itemize}
     \item Nhấn OK và Commit cấu hình.
 \end{itemize}
@@ -828,7 +862,7 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \end{itemize}
 \evidence{images/manual_cis_1_3_10.png}{Kiểm tra danh mục Password Profiles}{fig:manual-cis-1310}
 
-\subsubsection{3. Dịch vụ Hệ thống và Ghi log}
+\subsubsection{Dịch vụ Hệ thống và Ghi log (Hạng mục 3)}
 
 \paragraph{1.6.1. Bật xác thực danh tính máy chủ cập nhật chính hãng (Verify Update Server Identity)}
 \begin{itemize}
@@ -855,7 +889,18 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \end{itemize}
 \evidence{images/manual_cis_1_7_1.png}{Tạo cấu hình hồ sơ máy chủ Syslog Server Profile}{fig:manual-cis-171}
 
-\subsubsection{4. Độ sẵn sàng cao (High Availability)}
+\subsubsection{Phân vùng Mạng và Định danh Người dùng (User-ID) (Hạng mục 5)}
+
+\paragraph{2.3. Chỉ kích hoạt User-ID trên các phân vùng mạng nội bộ tin cậy (Trust)}
+\begin{itemize}
+    \item Bước 1: Điều hướng đến \textbf{Network} $\rightarrow$ \textbf{Zones}.
+    \item Bước 2: Nhấp chọn phân vùng mạng ngoài \textbf{untrust}.
+    \item Bước 3: Tại cửa sổ cấu hình Zone, đảm bảo ô tùy chọn \textit{Enable User Identification} ở trạng thái bỏ chọn (Disable).
+    \item Bước 4: Nhấn OK và thực hiện Commit.
+\end{itemize}
+\evidence{images/manual_cis_2_3.png}{Vô hiệu hóa User Identification trên phân vùng Untrust}{fig:manual-cis-23}
+
+\subsubsection{Độ sẵn sàng cao (High Availability) (Hạng mục 4)}
 
 \paragraph{3.1. Đảm bảo trạng thái đồng bộ HA giữa hai thiết bị hoàn tất (HA Synchronization)}
 \begin{itemize}
@@ -863,12 +908,26 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
     \item Bước 2: Kiểm tra widget \textbf{High Availability}, đảm bảo trạng thái kết nối peer là \textit{Connected} và trạng thái cấu hình là \textit{Synchronized}.
     \item Bước 3: Kiểm tra qua dòng lệnh CLI bằng lệnh \texttt{show high-availability state}.
 \end{itemize}
-\evidence{images/manual_cis_3_1.png}{Kiểm tra trạng thái đồng bộ cụm High Availability trên GUI của PA-CIS-01 (1)}{fig:manual-cis-31}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/manual_cis_3_1.png}
+    \caption{Kiểm tra trạng thái đồng bộ cụm High Availability trên GUI của PA-CIS-01 (1)}
+    \label{fig:manual-cis-31}
+\end{figure}
 
-\evidence{images/manual_cis_3_1b.png}{Kiểm tra trạng thái đồng bộ cụm High Availability trên GUI của PA-CIS-02 (2)}{fig:manual-cis-31b}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/manual_cis_3_1b.png}
+    \caption{Kiểm tra trạng thái đồng bộ cụm High Availability trên GUI của PA-CIS-02 (2)}
+    \label{fig:manual-cis-31b}
+\end{figure}
 
-\evidence{images/manual_cis_3_1c.png}{Kiểm tra trạng thái đồng bộ cụm High Availability bằng CLI (3)}{fig:manual-cis-31c}
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/manual_cis_3_1c.png}
+    \caption{Kiểm tra trạng thái đồng bộ cụm High Availability bằng CLI (3)}
+    \label{fig:manual-cis-31c}
+\end{figure}
 \paragraph{3.2. Cấu hình giám sát đường truyền và liên kết mạng (Link/Path Monitoring)}
 \begin{itemize}
     \item Bước 1: Điều hướng đến \textbf{Device} $\rightarrow$ \textbf{High Availability} $\rightarrow$ chọn tab \textbf{Link and Path Monitoring}.
@@ -886,16 +945,53 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \end{itemize}
 \evidence{images/manual_cis_3_3.png}{Cấu hình Passive Link State và Election Settings}{fig:manual-cis-33}
 
-\subsubsection{5. Lọc bảo vệ vùng mạng (Zone Protection)}
+\subsubsection{Phân tích Mã độc WildFire (Hạng mục 6)}
+
+\paragraph{5.1. Thiết lập dung lượng tệp tin tải lên tối đa cho phân tích WildFire (PE $\geq$ 10MB)}
+\begin{itemize}
+    \item Bước 1: Điều hướng đến \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{WildFire}.
+    \item Bước 2: Nhấp vào biểu tượng chỉnh sửa tại khung \textbf{General Settings}.
+    \item Bước 3: Tại bảng \textit{File Size Limits}, chỉnh sửa giá trị tải lên tối đa cho định dạng thực thi \textit{pe (MB)} lên \texttt{10} (MB).
+    \item Bước 4: Nhấn OK và thực hiện Commit.
+\end{itemize}
+\evidence{images/manual_cis_5_1.png}{Cấu hình dung lượng tệp tin tối đa gửi phân tích WildFire}{fig:manual-cis-51}
+
+\paragraph{5.4. Kích hoạt thu thập đầy đủ thông tin phiên làm việc gửi về WildFire (Session Information)}
+\begin{itemize}
+    \item Bước 1: Vẫn tại trang \textbf{Device} $\rightarrow$ \textbf{Setup} $\rightarrow$ \textbf{WildFire}.
+    \item Bước 2: Tại khung \textbf{Session Information Settings}, nhấp chọn biểu tượng chỉnh sửa.
+    \item Bước 3: Tích chọn bật toàn bộ các thuộc tính thu thập thông tin phiên bao gồm: \textit{Source IP}, \textit{Source port}, \textit{Destination IP}, \textit{Destination port}, \textit{Virtual System}, \textit{Application}, \textit{User}, \textit{URL}, \textit{File name}, \textit{Email sender/recipient/subject}.
+    \item Bước 4: Nhấn OK và thực hiện Commit.
+\end{itemize}
+\evidence{images/manual_cis_5_4.png}{Kích hoạt đầy đủ các trường thu thập thông tin phiên WildFire Session Info}{fig:manual-cis-54}
+
+\subsubsection{Lọc bảo vệ vùng mạng (Zone Protection) (Hạng mục 7)}
 
 \paragraph{6.15. Kích hoạt bảo vệ SYN Flood bằng SYN Cookies trong Zone Protection Profile}
 \begin{itemize}
     \item Bước 1: Điều hướng đến \textbf{Network} $\rightarrow$ \textbf{Network Profiles} $\rightarrow$ \textbf{Zone Protection}.
     \item Bước 2: Mở profile bảo vệ vùng áp dụng cho vùng Untrust, chuyển sang tab \textbf{Flood Protection} $\rightarrow$ \textbf{SYN}.
-    \item Bước 3: Đánh dấu chọn \textit{Enable}, chọn cơ chế hành động là \textbf{SYN Cookies} và nhập các ngưỡng kích hoạt phù hợp.
+    \item Bước 3: Đánh dấu chọn \textit{Enable}, chọn cơ chế hành động là \textbf{SYN Cookies} và nhập các ngưỡng kích hoạt phù hợp hoặc để mặc định theo hệ thống.
     \item Bước 4: Nhấn OK và Commit.
 \end{itemize}
 \evidence{images/manual_cis_6_15.png}{Cấu hình chống tấn công SYN Flood bằng SYN Cookies}{fig:manual-cis-615}
+
+\paragraph{6.16. Kích hoạt bảo vệ chống tấn công Flood (UDP và ICMP Flood) trong Zone Protection Profile}
+\begin{itemize}
+    \item Bước 1: Điều hướng đến \textbf{Network} $\rightarrow$ \textbf{Network Profiles} $\rightarrow$ \textbf{Zone Protection}.
+    \item Bước 2: Chọn profile \textbf{ZP-Untrust-Protection}, chuyển sang tab \textbf{Flood Protection}.
+    \item Bước 3: Lần lượt tại tab con \textbf{UDP} và \textbf{ICMP}, tích chọn \textit{Enable} và cấu hình các ngưỡng kích hoạt cảnh báo (Alert) và hủy gói (Drop).
+    \item Bước 4: Nhấn OK và thực hiện Commit.
+\end{itemize}
+\evidence{images/manual_cis_6_16.png}{Cấu hình bảo vệ chống tấn công UDP Flood và ICMP Flood}{fig:manual-cis-616}
+
+\paragraph{6.17. Kích hoạt tính năng chống quét cổng và thám sát mạng (Reconnaissance Protection)}
+\begin{itemize}
+    \item Bước 1: Trong cùng Zone Protection Profile \textbf{ZP-Untrust-Protection}, chuyển sang tab \textbf{Reconnaissance Protection}.
+    \item Bước 2: Tích chọn bật (\textit{Enable}) và thiết lập Action là \textbf{Block} hoặc \textbf{Block IP} cho cả 3 dạng rà quét gồm: \textit{TCP Port Scan}, \textit{UDP Port Scan} và \textit{Host Sweep}.
+    \item Bước 3: Nhấn OK và thực hiện Commit.
+\end{itemize}
+\evidence{images/manual_cis_6_17.png}{Cấu hình tính năng chống quét cổng Reconnaissance Protection}{fig:manual-cis-617}
 
 \paragraph{6.18. Cấu hình hủy bỏ các gói tin giả mạo IP và gói tin dị thường TCP}
 \begin{itemize}
@@ -908,7 +1004,16 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 
 \evidence{images/manual_cis_6_18b.png}{Kích hoạt cơ chế hủy gói tin giả mạo IP và TCP bất thường (2)}{fig:manual-cis-618b}
 
-\subsubsection{6. Chính sách Bảo mật (Security Policies)}
+\subsubsection{Chính sách Bảo mật (Security Policies) (Hạng mục 8)}
+
+\paragraph{7.1. Đảm bảo không cho phép mở ứng dụng ANY (Application ANY) từ vùng Untrust}
+\begin{itemize}
+    \item Bước 1: Điều hướng đến \textbf{Policies} $\rightarrow$ \textbf{Security}.
+    \item Bước 2: Rà soát các quy tắc an ninh cho phép lưu lượng (Action: \textit{Allow}) xuất phát từ vùng mạng \textbf{untrust}.
+    \item Bước 3: Tại cột \textit{Application}, bảo đảm không có luật nào để giá trị là \texttt{any}. Phải chỉ định tường minh các ứng dụng hợp lệ (ví dụ: \texttt{ssl}, \texttt{web-browsing}, \texttt{ssh}).
+    \item Bước 4: Nhấn Commit để áp dụng chính sách.
+\end{itemize}
+\evidence{images/manual_cis_7_1.png}{Chỉ định tường minh ứng dụng cho các luật an ninh chiều từ vùng Untrust}{fig:manual-cis-71}
 
 \paragraph{7.2. Đảm bảo không có luật an ninh nào mở dịch vụ ANY từ vùng Untrust}
 \begin{itemize}
@@ -936,72 +1041,95 @@ Nhóm thực hiện các bước cấu hình và rà soát thủ công chi tiế
 \evidence{images/manual_cis_7_4.png}{Bật ghi log ở cuối phiên cho các luật mặc định}{fig:manual-cis-74}
 
 \subsubsection{Phụ lục Bảng tổng kết Checklist kết quả Manual}
-Bảng~\ref{tab:manual-checklist-summary} tổng hợp kết quả rà soát thủ công toàn bộ 30 khuyến nghị trên cụm tường lửa thực nghiệm tại lab CMC Cloud.
+\noindent Bảng~\ref{tab:manual-checklist-summary} tổng hợp kết quả rà soát thủ công toàn bộ 37 khuyến nghị trên cụm tường lửa thực nghiệm tại lab CMC Cloud, kèm theo công cụ kiểm tra tương ứng qua giao diện Web GUI hoặc dòng lệnh CLI.
 
 \begingroup
-\setlength{\tabcolsep}{4.5pt}
-\begin{longtable}{|>{\centering\arraybackslash}p{1.2cm}|>{\raggedright\arraybackslash}p{6.4cm}|>{\centering\arraybackslash}p{1.1cm}|>{\centering\arraybackslash}p{1.3cm}|>{\raggedright\arraybackslash}p{4.0cm}|}
+\setlength{\tabcolsep}{3.5pt}
+\begin{longtable}{|>{\centering\arraybackslash}p{1.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|>{\centering\arraybackslash}p{0.9cm}|>{\centering\arraybackslash}p{0.9cm}|>{\centering\arraybackslash}p{0.8cm}|>{\centering\arraybackslash}p{1.2cm}|>{\raggedright\arraybackslash}p{4.2cm}|}
 \caption{Bảng tổng kết checklist kết quả rà soát thủ công trên cụm tường lửa} \label{tab:manual-checklist-summary} \\
 \hline
 \rowcolor{CISBlue}
-\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \textcolor{white}{\textbf{Đạt}} & \textcolor{white}{\textbf{K.Đạt}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
+\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \textcolor{white}{\textbf{GUI}} & \textcolor{white}{\textbf{CLI}} & \textcolor{white}{\textbf{Đạt}} & \textcolor{white}{\textbf{K.Đạt}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
 \hline
 \endfirsthead
-\multicolumn{5}{c}{\small\textit{Bảng \ref{tab:manual-checklist-summary} (tiếp theo)}} \\
+\multicolumn{7}{c}{\small\textit{Bảng \ref{tab:manual-checklist-summary} (tiếp theo)}} \\
 \hline
 \rowcolor{CISBlue}
-\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \textcolor{white}{\textbf{Đạt}} & \textcolor{white}{\textbf{K.Đạt}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
+\textcolor{white}{\textbf{Mục}} & \textcolor{white}{\textbf{Khuyến nghị bảo mật CIS}} & \textcolor{white}{\textbf{GUI}} & \textcolor{white}{\textbf{CLI}} & \textcolor{white}{\textbf{Đạt}} & \textcolor{white}{\textbf{K.Đạt}} & \textcolor{white}{\textbf{Ghi chú đối chứng}} \\
 \hline
 \endhead
 \hline
-\multicolumn{5}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
+\multicolumn{7}{|r|}{\small\textit{Còn tiếp ở trang sau}} \\
 \hline
 \endfoot
 \hline
 \endlastfoot
-1.1.2 & Cấu hình biểu ngữ cảnh báo pháp lý (Login Banner) & $\boxtimes$ & $\square$ & Đã cấu hình trên GUI \\ \hline
-1.1.3 & Bật ghi log khi tải Data Plane cao & $\boxtimes$ & $\square$ & Checkbox Logging đã bật \\ \hline
-1.2.1 & Cấu hình Permitted IP Addresses cho Management & $\boxtimes$ & $\square$ & Đúng 2 IP Bastion \\ \hline
-1.2.3 & Tắt dịch vụ HTTP và Telnet trên cổng Management & $\boxtimes$ & $\square$ & Đã bỏ chọn cả hai \\ \hline
-1.2.4 & Tắt HTTP và Telnet trong Management Profiles & $\boxtimes$ & $\square$ & Các profile đều tuân thủ \\ \hline
-1.3.1 & Bật tính năng kiểm tra độ phức tạp mật khẩu & $\boxtimes$ & $\square$ & Complexity: Enabled \\ \hline
-1.3.2 & Độ dài mật khẩu tối thiểu từ 12 ký tự trở lên & $\boxtimes$ & $\square$ & Minimum Length = 12 \\ \hline
-1.3.3 & Mật khẩu phải chứa ít nhất 1 chữ hoa & $\boxtimes$ & $\square$ & Uppercase = 1 \\ \hline
-1.3.4 & Mật khẩu phải chứa ít nhất 1 chữ thường & $\boxtimes$ & $\square$ & Lowercase = 1 \\ \hline
-1.3.5 & Mật khẩu phải chứa ít nhất 1 chữ số & $\boxtimes$ & $\square$ & Numeric = 1 \\ \hline
-1.3.6 & Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt & $\boxtimes$ & $\square$ & Special = 1 \\ \hline
-1.3.7 & Chu kỳ đổi mật khẩu không quá 90 ngày & $\boxtimes$ & $\square$ & Expiration = 90 days \\ \hline
-1.3.8 & Mật khẩu mới khác mật khẩu cũ từ 3 ký tự & $\boxtimes$ & $\square$ & Difference = 3 chars \\ \hline
-1.3.9 & Hệ thống lưu nhớ 24 mật khẩu gần nhất & $\boxtimes$ & $\square$ & History Count = 24 \\ \hline
-1.3.10 & Không tồn tại Password Profile riêng lẻ ghi đè & $\boxtimes$ & $\square$ & Bảng Profile để trống \\ \hline
-1.4.1 & Thời gian ngắt phiên rảnh rỗi không quá 10 phút & $\boxtimes$ & $\square$ & Idle Timeout = 10 min \\ \hline
-1.4.2 & Khóa tài khoản sau không quá 5 lần đăng nhập sai & $\boxtimes$ & $\square$ & Failed Attempts = 5 \\ \hline
-1.4.3 & Thời gian khóa tài khoản tối thiểu 15 phút & $\boxtimes$ & $\square$ & Lockout Time = 15 min \\ \hline
-1.5.1 & Tắt SNMP hoặc chỉ sử dụng SNMPv3 có mã hóa & $\boxtimes$ & $\square$ & SNMPv1/v2 đã vô hiệu \\ \hline
-1.6.1 & Bật xác thực danh tính máy chủ cập nhật chính hãng & $\boxtimes$ & $\square$ & Checkbox Verify bật \\ \hline
-1.6.2 & Cấu hình máy chủ NTP chính và phụ thích hợp & $\boxtimes$ & $\square$ & Có 2 máy chủ NTP \\ \hline
-1.7.1 & Cấu hình hồ sơ máy chủ Syslog tập trung & $\boxtimes$ & $\square$ & Syslog Profile gán đầy đủ \\ \hline
-3.1 & Trạng thái đồng bộ cụm HA hoàn tất (Synchronized) & $\boxtimes$ & $\square$ & CLI: state synchronized \\ \hline
-3.2 & Cấu hình giám sát liên kết Link/Path Monitoring & $\boxtimes$ & $\square$ & Link Monitoring bật \\ \hline
-3.3 & Passive Link ở chế độ Auto và tắt Preemption & $\boxtimes$ & $\square$ & Auto và Preemption No \\ \hline
-6.15 & Chống SYN Flood bằng kỹ thuật SYN Cookies & $\boxtimes$ & $\square$ & SYN Cookies kích hoạt \\ \hline
-6.18 & Tự động hủy gói tin giả mạo IP và gói tin dị thường & $\boxtimes$ & $\square$ & Drop Spoofed IP bật \\ \hline
-7.2 & Không cho phép mở cổng ANY từ vùng Untrust & $\boxtimes$ & $\square$ & Chỉ mở port chỉ định \\ \hline
-7.3 & Đặt luật chặn IP độc hại ở đầu danh sách Rulebase & $\boxtimes$ & $\square$ & Rule Drop đặt ở Top 1 \\ \hline
-7.4 & Bật ghi log cuối phiên cho các luật mặc định & $\boxtimes$ & $\square$ & Log Session End bật \\ \hline
+
+\multicolumn{7}{|l|}{\textbf{1. Thiết lập và Quản trị Thiết bị (Device Setup and Administration)}} \\ \hline
+1.1.2 & Cấu hình biểu ngữ cảnh báo pháp lý (Login Banner) & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Đã cấu hình trên GUI và CLI \\ \hline
+1.1.3 & Bật ghi log khi tải Data Plane cao & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Checkbox Logging đã kích hoạt \\ \hline
+1.2.1 & Cấu hình Permitted IP Addresses cho Management & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Đúng 2 IP máy trạm Bastion \\ \hline
+1.2.2 & Cấu hình Permitted IP cho Interface Mgmt Profiles & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Profile mở SSH/HTTPS đều gán IP \\ \hline
+1.2.3 & Tắt dịch vụ HTTP và Telnet trên cổng Management & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Đã bỏ chọn cả hai giao thức \\ \hline
+1.2.4 & Tắt HTTP và Telnet trong Management Profiles & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Các profile giao diện đều tuân thủ \\ \hline
+1.4.1 & Thời gian ngắt phiên rảnh rỗi không quá 10 phút & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Idle Timeout = 10 min \\ \hline
+1.4.2 & Khóa tài khoản sau không quá 5 lần đăng nhập sai & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Failed Attempts = 3 (chuẩn $\leq 5$) \\ \hline
+1.4.3 & Thời gian khóa tài khoản tối thiểu 15 phút & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Lockout Time = 15 min \\ \hline
+1.5.1 & Tắt SNMP hoặc chỉ sử dụng SNMPv3 có mã hóa & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Đã tắt v2c, chuyển sang SNMPv3 \\ \hline
+
+\multicolumn{7}{|l|}{\textbf{2. Chính sách Mật khẩu (Password Profiles)}} \\ \hline
+1.3.1 & Bật tính năng kiểm tra độ phức tạp mật khẩu & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Complexity: Enabled \\ \hline
+1.3.2 & Độ dài mật khẩu tối thiểu từ 12 ký tự trở lên & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Minimum Length = 12 \\ \hline
+1.3.3 & Mật khẩu phải chứa ít nhất 1 chữ hoa & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Uppercase = 1 \\ \hline
+1.3.4 & Mật khẩu phải chứa ít nhất 1 chữ thường & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Lowercase = 1 \\ \hline
+1.3.5 & Mật khẩu phải chứa ít nhất 1 chữ số & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Numeric = 1 \\ \hline
+1.3.6 & Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Special = 1 \\ \hline
+1.3.7 & Chu kỳ đổi mật khẩu không quá 90 ngày & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Expiration = 90 days \\ \hline
+1.3.8 & Mật khẩu mới khác mật khẩu cũ từ 3 ký tự & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Difference = 3 chars \\ \hline
+1.3.9 & Hệ thống lưu nhớ 24 mật khẩu gần nhất & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & History Count = 24 \\ \hline
+1.3.10 & Không tồn tại Password Profile riêng lẻ ghi đè & $\boxtimes$ & $\square$ & $\boxtimes$ & $\square$ & Rà soát bảng rỗng trên GUI \\ \hline
+
+\multicolumn{7}{|l|}{\textbf{3. Dịch vụ Hệ thống và Ghi log (Services and Logging)}} \\ \hline
+1.6.1 & Bật xác thực danh tính máy chủ cập nhật chính hãng & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Checkbox Verify Update bật \\ \hline
+1.6.2 & Cấu hình máy chủ NTP chính và phụ thích hợp & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Có 2 máy chủ NTP tin cậy \\ \hline
+1.7.1 & Cấu hình hồ sơ máy chủ Syslog tập trung & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Syslog Profile gán đầy đủ \\ \hline
+
+\multicolumn{7}{|l|}{\textbf{4. Phân vùng Mạng và Định danh Người dùng (Zone and User-ID)}} \\ \hline
+2.3 & Chỉ bật User-ID trên vùng mạng nội bộ Trust & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Untrust Zone: User-ID Disabled \\ \hline
+
+\multicolumn{7}{|l|}{\textbf{5. Độ sẵn sàng cao (High Availability)}} \\ \hline
+3.1 & Trạng thái đồng bộ cụm HA hoàn tất (Synchronized) & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Widget GUI và CLI state sync \\ \hline
+3.2 & Cấu hình giám sát liên kết Link/Path Monitoring & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Link Monitoring kích hoạt \\ \hline
+3.3 & Passive Link ở chế độ Auto và tắt Preemption & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Auto và Preemption No \\ \hline
+
+\multicolumn{7}{|l|}{\textbf{6. Phân tích Mã độc WildFire (WildFire Analysis)}} \\ \hline
+5.1 & Thiết lập dung lượng upload tối đa WildFire (PE $\geq$ 10MB) & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & PE File Size Limit = 10 MB \\ \hline
+5.4 & Bật ghi nhận thông tin phiên WildFire Session Info & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Session Info: All Attributes Enabled \\ \hline
+
+\multicolumn{7}{|l|}{\textbf{7. Lọc bảo vệ vùng mạng (Zone Protection)}} \\ \hline
+6.15 & Chống SYN Flood bằng kỹ thuật SYN Cookies & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & SYN Cookies kích hoạt \\ \hline
+6.16 & Chống tấn công Flood UDP và ICMP & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & UDP/ICMP Flood Protection Enabled \\ \hline
+6.17 & Bật chống quét cổng Reconnaissance Protection & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & TCP/UDP Scan \& Sweep Action: Block \\ \hline
+6.18 & Tự động hủy gói tin giả mạo IP và gói tin dị thường & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Drop Spoofed IP và Bad TCP bật \\ \hline
+
+\multicolumn{7}{|l|}{\textbf{8. Chính sách Bảo mật (Security Policies)}} \\ \hline
+7.1 & Không cho phép mở Application ANY từ Untrust & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Security Policy: Explicit App-ID \\ \hline
+7.2 & Không cho phép mở cổng ANY từ vùng Untrust & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Chỉ mở cổng chỉ định rõ ràng \\ \hline
+7.3 & Đặt luật chặn IP độc hại ở đầu danh sách Rulebase & $\boxtimes$ & $\square$ & $\boxtimes$ & $\square$ & Kéo thả và quan sát Top 1 GUI \\ \hline
+7.4 & Bật ghi log cuối phiên cho các luật mặc định & $\boxtimes$ & $\boxtimes$ & $\boxtimes$ & $\square$ & Log Session End kích hoạt \\ \hline
 \end{longtable}
 \endgroup
 
 \subsection{Triển khai Automation}
 
 \subsubsection{Chuẩn bị môi trường và Cấu trúc dự án}
-Trên máy chủ điều khiển Linux Bastion (\texttt{10.0.10.20}), môi trường thực thi được thiết lập với Python 3.12 và Ansible Core 2.16. Mã nguồn dự án được tổ chức khoa học:
+\noindent Trên máy chủ điều khiển Linux Bastion (\texttt{10.0.10.20}), môi trường thực thi được thiết lập với Python 3.12 và Ansible Core 2.16. Mã nguồn dự án được tổ chức như sau:
 
 \begin{lstlisting}[language=bash,caption={Cấu trúc cây thư mục mã nguồn hệ thống tự động hóa}]
 CIS-Benchmark-PaloAlto/
 |-- main.py                  # Entry point dieu khien toan bo tien trinh
 |-- rules/
-|   `-- cis_controls.yaml    # Dinh nghia 30 quy tac kiem tra CIS
+|   `-- cis_controls.yaml    # Dinh nghia 37 quy tac kiem tra CIS
 |-- src/
 |   |-- panos_client.py      # Module ket noi HTTPS va goi PAN-OS XML API
 |   |-- cis_scanner.py       # Engine phan tich XPath va cham diem tuan thu
@@ -1018,19 +1146,19 @@ CIS-Benchmark-PaloAlto/
 \end{lstlisting}
 
 \subsubsection{Thiết lập Inventory và Quản lý bí mật an toàn}
-Danh sách các tường lửa mục tiêu được khai báo trong \texttt{ansible/inventory.yaml}. Để tuân thủ nguyên tắc mã hóa an toàn, thông tin mật khẩu quản trị tuyệt đối không lưu cứng trong code mà được truyền qua biến môi trường \texttt{PANOS\_PASSWORD} hoặc tham số dòng lệnh non-interactive \texttt{--password}, giúp tiến trình chạy nền của Ansible không bị gián đoạn ngắt TTY.
+\noindent Danh sách các tường lửa mục tiêu được khai báo trong \texttt{ansible/inventory.yaml}. Để tuân thủ nguyên tắc mã hóa an toàn, thông tin mật khẩu quản trị tuyệt đối không lưu cứng trong code mà được truyền qua biến môi trường \texttt{PANOS\_PASSWORD} hoặc tham số dòng lệnh non-interactive \texttt{--password}, giúp tiến trình chạy nền của Ansible không bị gián đoạn ngắt TTY.
 
 \subsubsection{Quy trình Audit tự động}
-Tiến trình quét tự động thực hiện theo 4 bước khép kín:
+\noindent Tiến trình quét tự động thực hiện theo 4 bước:
 \begin{enumerate}
     \item \textbf{Khởi tạo kết nối và Xác thực:} Gửi request lấy API Key qua URL \texttt{https://<IP>/api/?type=keygen}. API Key được lưu trong bộ nhớ phiên làm việc và gắn vào header \texttt{X-PAN-KEY}.
     \item \textbf{Thu thập dữ liệu:} Gửi truy vấn lấy Running Configuration qua lệnh \texttt{type=config\&action=show} và gửi lệnh Op Command lấy trạng thái High Availability qua \texttt{type=op\&cmd=<show><high-availability><state></state></high-availability></show>}.
-    \item \textbf{Phân tích cú pháp XML và Đánh giá:} Module \texttt{src/cis\_scanner.py} duyệt qua 30 quy tắc, dùng XPath trích xuất giá trị trường thông số và so khớp với logic kiểm tra.
+    \item \textbf{Phân tích cú pháp XML và Đánh giá:} Module \texttt{src/cis\_scanner.py} duyệt qua 37 quy tắc, dùng XPath trích xuất giá trị trường thông số và so khớp với logic kiểm tra.
     \item \textbf{Xuất báo cáo đa định dạng:} Kết xuất file \texttt{reports/audit\_<IP>.json} cho tích hợp tự động và sinh file \texttt{reports/audit\_<IP>.html} hiển thị giao diện đồ họa cho quản trị viên.
 \end{enumerate}
 
 \subsubsection{Quy trình Remediation và Cơ chế Rollback an toàn}
-Module \texttt{src/remediation.py} thực hiện quy trình tự động sửa lỗi theo vòng lặp nghiêm ngặt:
+\noindent Module \texttt{src/remediation.py} thực hiện quy trình tự động sửa lỗi theo vòng lặp nghiêm ngặt:
 \begin{enumerate}
     \item \textbf{Kiểm tra trạng thái (Check):} Gọi hàm đánh giá để xác định các control bị \texttt{FAIL}. Nếu cấu hình đã đạt chuẩn, hệ thống tự động bỏ qua (Skip).
     \item \textbf{Sao lưu cấu hình (Snapshot):} Trước khi thực hiện thay đổi, chương trình tự động sao lưu cấu hình ứng viên (Candidate Configuration) hiện tại để làm điểm khôi phục dự phòng.
@@ -1039,20 +1167,118 @@ Module \texttt{src/remediation.py} thực hiện quy trình tự động sửa l
 \end{enumerate}
 
 % ============================================================
-% CHƯƠNG 4: KẾT QUẢ
+% CHƯƠNG 4: KẾT QUẢ VÀ ĐÁNH GIÁ THỰC NGHIỆM
 % ============================================================
-\section{Kết quả}
+% ============================================================
+% CHƯƠNG 4: KẾT QUẢ VÀ ĐÁNH GIÁ THỰC NGHIỆM
+% ============================================================
+\section{Kết quả và Đánh giá Thực nghiệm}
 
-\subsection{Kết quả thực nghiệm Local và Remote Automation}
+\subsection{Kết quả Kiểm toán Tự động Cục bộ (Local Automation)}
+\noindent Công cụ kiểm toán tự động viết bằng Python được thực thi trực tiếp từ máy trạm điều khiển \texttt{VM-LINUX-BASTION} kết nối đến cổng quản trị của tường lửa chính \texttt{PA-CIS-01} (\texttt{10.0.10.11}) thông qua tài khoản chuyên dụng \texttt{cis-auditor} trên nền giao diện PAN-OS XML API bảo mật.
+
+\vspace{0.3cm}
+
+\noindent Lệnh thực thi kiểm toán trên môi trường thực nghiệm:
+\begin{lstlisting}[language=bash]
+(.venv) root@vm-linux-bastion:~/CIS-Benchmark-PaloAlto# python main.py --host 10.0.10.11 --lab-insecure --username cis-auditor
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\noindent Quá trình quét và đánh giá diễn ra hoàn toàn tự động với các đặc tính nổi bật:
 \begin{itemize}
-    \item \textbf{Kịch bản Local Automation:} Chạy trực tiếp trên Linux Bastion tới PA-CIS-01 (\texttt{10.0.10.11}). Kết quả thực thi cho thấy thời gian quét toàn bộ 30 CIS Controls chỉ mất 3.2 giây, toàn bộ 30/30 mục đều đạt trạng thái \texttt{PASS} tuyệt đối (100\% điểm tuân thủ).
-    \item \textbf{Kịch bản Remote Automation qua Ansible:} Kích hoạt playbook \texttt{02\_fleet\_audit.yaml}. Ansible tận dụng cơ chế đa luồng thực thi đồng thời trên cả hai thiết bị PA-CIS-01 và PA-CIS-02 trong inventory, hoàn tất toàn bộ tiến trình quét trong vòng 4.8 giây và xuất báo cáo tổng hợp tình trạng an ninh của toàn bộ fleet mà không cần người quản trị can thiệp thủ công.
+    \item \textbf{Tự động thu thập dữ liệu đa nguồn:} Chương trình tự động xác thực qua XML API, bóc tách toàn bộ cây cấu hình \textit{Running Configuration} và truy vấn đồng thời trạng thái hoạt động thực tế của cụm dự phòng (\textit{HA Operational State}).
+    \item \textbf{Đánh giá logic tự động:} Bộ máy phân tích XPath thực hiện quét toàn bộ 37 CIS Controls tiêu chuẩn định nghĩa trong \texttt{cis\_controls.yaml}, đối chiếu trực tiếp các tham số thực tế với ngưỡng khuyến nghị của CIS Benchmark.
+    \item \textbf{Kết quả tuân thủ tuyệt đối:} Toàn bộ 37/37 khuyến nghị đều đạt trạng thái \texttt{PASS} tuyệt đối (đạt tỷ lệ tuân thủ \textbf{100.00\%} và độ phủ \textbf{100.00\%}), hoàn toàn không ghi nhận mục nào bị lỗi (\texttt{ERROR}) hay cảnh báo cần can thiệp thủ công (\texttt{REVIEW}).
+    \item \textbf{Tự động lưu trữ vết kiểm toán:} Ngay khi hoàn tất, hệ thống tự động kết xuất hai tệp dữ liệu lưu trữ tại thư mục \texttt{reports/} gồm báo cáo chi tiết trực quan \texttt{10\_0\_10\_11\_...html} và tệp dữ liệu cấu trúc chuẩn hóa \texttt{10\_0\_10\_11\_...json}.
 \end{itemize}
 
-\evidence{images/automated_cis_1_4_1.png}{Kết quả quét tự động hóa toàn bộ 30 CIS Controls đạt tỷ lệ tuân thủ 100\%}{fig:automation-results-screen}
+\evidence{images/auto_local_audit_terminal.png}{Giao diện dòng lệnh Rich CLI hiển thị kết quả kiểm toán tự động đạt 100\% tuân thủ cho 37 controls trên PA-CIS-01}{fig:auto-local-audit-terminal}
+
+\noindent Bên cạnh chức năng kiểm toán chỉ đọc (Read-only Audit), hệ thống tích hợp cơ chế khắc phục tự động (\textit{Safe Remediation}) với nguyên tắc can thiệp tối thiểu và tính bất biến (\textit{Idempotency}):
+\begin{itemize}
+    \item Khi quản trị viên thử nghiệm kích hoạt kịch bản khắc phục lỗi cho một khuyến nghị (ví dụ mục 1.4.1 về thời gian ngắt phiên rảnh rỗi \textit{Management Idle Timeout}):
+    \begin{lstlisting}[language=bash]
+(.venv) root@vm-linux-bastion:~/CIS-Benchmark-PaloAlto# python main.py --host 10.0.10.11 --username admin --remediate 1.4.1 --lab-insecure
+    \end{lstlisting}
+    \item Trước khi nạp bất kỳ lệnh thay đổi cấu hình nào, hệ thống luôn tự động kích hoạt một chu trình tiền kiểm toán (\textit{Pre-remediation Audit}). Khi phát hiện mục cấu hình đã đạt chuẩn an toàn (\texttt{PASS}), hệ thống lập tức thông báo \texttt{ValueError: Control already PASS; nothing to remediate} và chủ động dừng lại mà không thực hiện Commit.
+    \item Cơ chế này ngăn chặn hoàn toàn nguy cơ ghi đè cấu hình không cần thiết, loại bỏ nguy cơ gián đoạn dịch vụ và đảm bảo tính toàn vẹn của hệ thống tường lửa đang vận hành ổn định.
+\end{itemize}
+
+\evidence{images/auto_remediation_commit.png}{Tiền kiểm toán tự động bảo vệ cấu hình, ngăn chặn việc commit dư thừa khi mục đã đạt chuẩn an toàn}{fig:auto-remediation-commit}
+
+\subsection{Kết quả Điều phối Hàng loạt từ xa (Fleet Automation với Ansible)}
+\noindent Để quản trị và kiểm soát mức độ tuân thủ đồng thời trên toàn bộ cụm tường lửa dự phòng sẵn sàng cao (High Availability), nhóm đã xây dựng giải pháp điều phối tự động từ xa bằng Ansible Playbook:
+
+\begin{lstlisting}[language=bash]
+(.venv) root@vm-linux-bastion:~/CIS-Benchmark-PaloAlto/ansible# ansible-playbook -i inventory.yaml playbooks/02_fleet_audit.yaml
+\end{lstlisting}
+
+\noindent Kết quả thực thi ghi nhận trên trạm Bastion cho thấy:
+\begin{itemize}
+    \item \textbf{Thực thi song song (Parallel Execution):} Ansible tự động khởi tạo các tiến trình con độc lập kết nối đến cả hai thiết bị \texttt{PA-CIS-01} (Node Active - \texttt{10.0.10.11}) và \texttt{PA-CIS-02} (Node Passive - \texttt{10.0.10.12}) được khai báo trong \texttt{inventory.yaml}.
+    \item \textbf{Đồng bộ trạng thái kiểm định:} Cả hai thiết bị đều hoàn tất trọn vẹn việc đánh giá 37/37 controls với điểm số tuân thủ an ninh đạt mức tối đa \textbf{100.00\%}.
+    \item \textbf{Độ tin cậy vận hành:} Tiến trình thực thi không gặp bất kỳ lỗi kết nối hay lỗi gián đoạn nào (\texttt{failed=0}, \texttt{unreachable=0}), toàn bộ các tác vụ điều phối thu thập và phân tích đều hoàn tất thành công (\texttt{ok=3}).
+\end{itemize}
+
+\evidence{images/auto_ansible_fleet_audit.png}{Kết quả thực thi Ansible Fleet Audit kiểm tra đồng thời cả hai tường lửa PA-CIS-01 và PA-CIS-02}{fig:auto-ansible-fleet-audit}
+
+\subsection{Hệ thống Báo cáo Trực quan (HTML Dashboard và JSON Artifacts)}
+\noindent Sau mỗi chu kỳ kiểm toán, chương trình tự động tổng hợp và kết xuất báo cáo dưới hai định dạng chuyên biệt phục vụ cho các đối tượng sử dụng khác nhau:
+
+\subsubsection{Giao diện Báo cáo Trực quan (HTML Compliance Dashboard)}
+\noindent Báo cáo định dạng HTML được thiết kế theo phong cách giao diện hiện đại, trực quan, hỗ trợ người quản trị hệ thống và chuyên gia đánh giá an ninh mạng:
+\begin{itemize}
+    \item \textbf{Khối tổng quan (Executive Summary):} Hiển thị đầy đủ thông tin định danh của thiết bị mục tiêu (Hostname, Management IP, phiên bản PAN-OS), nhãn thời gian quét và biểu đồ tròn thể hiện trực quan tỷ lệ tuân thủ an ninh (đạt 100\% PASS).
+    \item \textbf{Bộ lọc trạng thái tương tác:} Cho phép người dùng lọc nhanh danh sách các khuyến nghị theo từng nhóm trạng thái (\texttt{PASS}, \texttt{FAIL}, \texttt{REVIEW}).
+    \item \textbf{Bảng đối chứng chi tiết từng Control:} Mỗi bản ghi cung cấp thông tin tường minh gồm mã CIS, tên khuyến nghị, mức độ nghiêm trọng (Severity), giá trị cấu hình thực tế trích xuất từ XML đối chiếu với giá trị kỳ vọng chuẩn của CIS.
+\end{itemize}
+
+\evidence{images/auto_html_report_dashboard.png}{Báo cáo Dashboard HTML trực quan tổng hợp kết quả đánh giá tuân thủ an ninh thiết bị}{fig:auto-html-report-dashboard}
+
+\evidence{images/auto_html_report_detail.png}{Chi tiết bằng chứng đối chứng cấu hình thực tế và khuyến nghị khắc phục trên giao diện Web (1)}{fig:auto-html-report-detail}
+
+\evidence{images/auto_html_report_detailb.png}{Chi tiết bằng chứng đối chứng cấu hình thực tế và khuyến nghị khắc phục trên giao diện Web (2)}{fig:auto-html-report-detail}
+
+\evidence{images/auto_html_report_detailc.png}{Chi tiết bằng chứng đối chứng cấu hình thực tế và khuyến nghị khắc phục trên giao diện Web (3)}{fig:auto-html-report-detail}
+\subsubsection{Dữ liệu Cấu trúc Máy đọc (JSON Artifacts)}
+\noindent Song song với tệp HTML, hệ thống tự động xuất tệp dữ liệu \texttt{.json} lưu trữ tại thư mục \texttt{reports/}. Định dạng dữ liệu có cấu trúc này đóng vai trò then chốt trong việc:
+\begin{itemize}
+    \item Lưu trữ bằng chứng kiểm toán số phục vụ công tác thanh tra định kỳ mà không thể bị chỉnh sửa hay giả mạo.
+    \item Dễ dàng tích hợp với các hệ thống giám sát an ninh tập trung (SIEM/SOC) như Splunk, ElasticSearch hoặc tích hợp vào đường ống CI/CD (DevSecOps) để chặn đứng việc triển khai nếu tường lửa vi phạm tiêu chuẩn bảo mật.
+\end{itemize}
+
+\evidence{images/auto_json_artifact.png}{Tệp dữ liệu kiểm toán định dạng JSON chuẩn hóa phục vụ lưu trữ số và tích hợp hệ thống}{fig:auto-json-artifact}
+
+\subsection{Xác thực Ghi vết trên Hệ điều hành PAN-OS}
+\noindent Để chứng minh các thao tác kiểm toán và áp dụng cấu hình tự động tuân thủ nghiêm ngặt nguyên tắc an toàn vận hành, nhóm đã trích xuất nhật ký đối chứng trực tiếp từ Web GUI của tường lửa Palo Alto Networks:
+
+\subsubsection{Ghi vết Nhật ký Cấu hình (Configuration Log)}
+\noindent Mọi thao tác can thiệp thay đổi tham số bảo mật đều được hệ điều hành PAN-OS ghi nhận tường minh trong \textit{Configuration Log} với đầy đủ định danh tài khoản, địa chỉ IP thực hiện, đường dẫn XPath và giá trị cấu hình trước/sau khi thay đổi (\textit{Before/After Change}):
+\begin{itemize}
+    \item \textbf{Cấu hình quản trị cơ sở (Mục 1.1.2 \& 1.1.3):} Ghi nhận thiết lập \texttt{login-banner "Authorized Access Only"} và kích hoạt tham số \texttt{enable-log-high-dp-load yes}.
+    \item \textbf{Vô hiệu hóa dịch vụ thiếu an toàn (Mục 1.2.3 \& 1.2.4):} Hệ thống ghi nhận việc tắt bỏ giao thức HTTP và Telnet trên cổng Management (\texttt{disable-http yes}, \texttt{disable-telnet yes}) cũng như trên Interface Management Profile \texttt{MGMT\_1}.
+    \item \textbf{Chính sách mật khẩu nghiêm ngặt (Mục 1.3.1 \& 1.3.2):} Ghi nhận trạng thái kích hoạt kiểm tra độ phức tạp (\texttt{password-complexity enabled yes}) và độ dài tối thiểu 12 ký tự (\texttt{minimum-length 12}).
+    \item \textbf{Kiểm soát phiên và khóa tài khoản (Mục 1.4.1, 1.4.2 \& 1.4.3):} Cấu hình thời gian rảnh rỗi \texttt{idle-timeout 10} phút, ngưỡng khóa khi đăng nhập sai \texttt{failed-attempts 3} lần và thời gian khóa duy trì \texttt{lockout-time 15} phút.
+    \item \textbf{Bảo vệ vùng mạng (Mục 6.18):} Ghi nhận cập nhật Profile \texttt{ZP-Untrust-Protection} tự động hủy bỏ các gói tin dị thường (\texttt{tcp-reject-non-syn yes}).
+\end{itemize}
+
+\evidence{images/auto_panos_audit_log.png}{Nhật ký Configuration Log trên Web GUI tường lửa ghi vết chi tiết từng thông số làm cứng theo chuẩn CIS}{fig:auto-panos-audit-log}
+
+\subsubsection{Ghi vết Nhật ký Hệ thống và Xác thực (System Log)}
+\noindent Trong suốt quá trình kiểm toán tự động, nhật ký hệ thống (\textit{System Log}) ghi nhận đầy đủ các phiên làm việc của công cụ:
+\begin{itemize}
+    \item Hệ thống ghi nhận các bản ghi sự kiện \texttt{auth-success} dành riêng cho tài khoản kiểm toán chuyên dụng \texttt{cis-auditor}.
+    \item Địa chỉ IP nguồn thực hiện truy vấn được xác định chính xác từ máy trạm điều khiển \texttt{VM-LINUX-BASTION} (\texttt{10.0.10.20}) thông qua kết nối bảo mật HTTPS trên cổng 443, hoàn toàn cách ly với các truy cập thông thường từ bên ngoài.
+\end{itemize}
+
+\evidence{images/auto_panos_system_log.png}{Nhật ký System Log ghi vết phiên làm việc và xác thực thành công của tài khoản cis-auditor từ trạm Bastion 10.0.10.20}{fig:auto-panos-system-log}
 
 \subsection{Đánh giá và So sánh Hiệu năng giữa Manual và Automation}
-Bảng~\ref{tab:perf-comparison-final} tổng hợp các chỉ số so sánh định lượng giữa hai phương pháp.
+\noindent Để làm nổi bật tính ưu việt của giải pháp tự động hóa, nhóm đã thực hiện đánh giá đối chứng toàn diện giữa phương pháp rà soát thủ công (Manual Audit/Hardening) và phương pháp tự động hóa bằng phần mềm (Automation với Python XML API và Ansible) trên cùng một hạ tầng cụm tường lửa ảo hóa tại CMC Cloud.
+
+Bảng~\ref{tab:perf-comparison-final} tổng hợp các chỉ số định lượng chi tiết giữa hai phương pháp tiếp cận.
 
 \begin{table}[H]
 \centering\small
@@ -1061,20 +1287,28 @@ Bảng~\ref{tab:perf-comparison-final} tổng hợp các chỉ số so sánh đ�
 \renewcommand{\arraystretch}{1.45}
 \begingroup
 \setlength{\tabcolsep}{5pt}
-\begin{tabular}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{7.0cm}|}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{6.8cm}|}
 \hline
 \rowcolor{CISBlue}
 \textcolor{white}{\textbf{Tiêu chí đánh giá}} & \textcolor{white}{\textbf{Phương pháp Thủ công (Manual)}} & \textcolor{white}{\textbf{Phương pháp Tự động (Automation)}} \\
 \hline
-Thời gian quét (1 Firewall) & 45 -- 60 phút / thiết bị & Khoảng 3.2 giây / thiết bị (nhanh hơn 900 lần) \\ \hline
+Thời gian quét (1 Firewall) & 45 -- 60 phút / thiết bị & Khoảng 3.2 giây / thiết bị (rút ngắn hơn 900 lần) \\ \hline
 Thời gian sửa lỗi (1 Firewall) & 25 -- 40 phút / thiết bị & Khoảng 4.5 giây / thiết bị \\ \hline
-Khả năng mở rộng (Fleet 10 FW) & Tăng tuyến tính (8 -- 10 giờ làm việc) & Chạy song song qua Ansible (dưới 15 giây) \\ \hline
-Độ chính xác và Tính nhất quán & Dễ nhìn sót do mệt mỏi hoặc thiếu chú ý & Nhất quán 100\%, hoàn toàn không có sai sót chủ quan \\ \hline
-Lưu trữ bằng chứng kiểm toán & Chụp ảnh từng bước bằng tay, dễ thất lạc & Báo cáo HTML trực quan, xuất file JSON tự động \\ \hline
-Khả năng tích hợp định kỳ & Khó duy trì thường xuyên & Dễ dàng lập lịch định kỳ hoặc nhúng vào CI/CD \\ \hline
+Khả năng mở rộng (Fleet 10 FW) & Tăng tuyến tính (8 -- 10 giờ làm việc) & Chạy song song qua Ansible (dưới 15 giây toàn cụm) \\ \hline
+Độ chính xác và Tính nhất quán & Dễ bỏ sót do thao tác lặp lại mệt mỏi & Nhất quán 100\%, loại bỏ hoàn toàn sai sót chủ quan \\ \hline
+Lưu trữ bằng chứng kiểm toán & Chụp ảnh từng cửa sổ GUI, dễ phân tán & Xuất báo cáo HTML trực quan và tệp JSON chuẩn hóa \\ \hline
+Khả năng tích hợp định kỳ & Rất khó duy trì thường xuyên & Dễ dàng lập lịch Cron tự động hoặc nhúng vào CI/CD \\ \hline
+Mức độ an toàn vận hành & Rủi ro cấu hình nhầm gây ngắt quãng mạng & Kiểm tra an toàn trước commit (Candidate Guard) \\ \hline
 \end{tabular}
 \endgroup
 \end{table}
+
+\noindent Phân tích chuyên sâu từ kết quả so sánh định lượng:
+\begin{enumerate}
+    \item \textbf{Về tốc độ và năng suất vận hành:} Phương pháp thủ công đòi hỏi quản trị viên phải điều hướng qua hàng chục trang cấu hình Web GUI phức tạp hoặc tra cứu từng nhánh lệnh CLI, tiêu tốn từ 45 đến 60 phút cho mỗi thiết bị. Trong khi đó, công cụ Python tận dụng kết nối API và bộ phân tích cú pháp XPath tốc độ cao, hoàn tất quét toàn diện 37 khuyến nghị chỉ trong \textbf{3.2 giây}, mang lại hiệu năng vượt trội gấp hơn 900 lần.
+    \item \textbf{Về khả năng mở rộng quy mô (Scalability):} Trong môi trường doanh nghiệp sở hữu hạ tầng tường lửa phân tán, thời gian kiểm tra thủ công sẽ tăng theo cấp số nhân tuyến tính. Ngược lại, thông qua cơ chế phân luồng thực thi song song của Ansible Playbook, thời gian kiểm tra đồng thời cả hai tường lửa \texttt{PA-CIS-01} và \texttt{PA-CIS-02} chỉ mất \textbf{4.8 giây}. Khi mở rộng quy mô lên hàng chục tường lửa trong cùng một cụm hạ tầng, thời gian hoàn tất vẫn duy trì ổn định dưới 15 giây.
+    \item \textbf{Về độ tin cậy và an toàn hệ thống (Safety \& Idempotency):} Việc cấu hình thủ công luôn tiềm ẩn rủi ro thao tác sai gây mất kết nối mạng. Giải pháp tự động hóa của nhóm giải quyết triệt để vấn đề này nhờ tích hợp cơ chế bảo vệ an toàn đa lớp: tự động kiểm tra xung đột cấu hình đang chờ (\textit{Candidate Guard}) và kích hoạt kiểm tra tính bất biến (\textit{Idempotency}). Nếu một khuyến nghị đã đạt chuẩn an toàn, hệ thống sẽ chủ động từ chối can thiệp và cảnh báo tường minh, ngăn chặn mọi nguy cơ phát sinh phiên commit dư thừa làm gián đoạn hệ thống mạng.
+\end{enumerate}
 
 % ============================================================
 % CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
@@ -1082,26 +1316,31 @@ Khả năng tích hợp định kỳ & Khó duy trì thường xuyên & Dễ dà
 \section{Kết luận và Hướng phát triển}
 
 \subsection{Kết luận}
-Đồ án đã hoàn thành trọn vẹn các mục tiêu nghiên cứu và thực nghiệm đề ra:
+\noindent Sau quá trình nghiên cứu lý thuyết kết hợp với thực nghiệm hạ tầng mạng thực tế tại lab CMC Cloud, đề tài \textbf{"Xây dựng giải pháp tự động hóa đánh giá và cấu hình tăng cường bảo mật cho cụm tường lửa Palo Alto Networks thế hệ mới theo chuẩn CIS Benchmark"} đã hoàn thành xuất sắc toàn bộ các mục tiêu đặt ra:
+
 \begin{enumerate}
-    \item Nghiên cứu chuyên sâu tài liệu CIS Palo Alto Firewall 11 Benchmark v1.2.0, làm chủ các yêu cầu kỹ thuật và phương thức kiểm tra trên hệ điều hành PAN-OS 11.2.5.
-    \item Xây dựng hoàn chỉnh quy trình đánh giá thủ công cho 30 CIS Controls tiêu biểu, lập bảng kiểm tra checklist và ghi nhận hình ảnh minh chứng thực tế trên cụm tường lửa triển khai tại lab CMC Cloud.
-    \item Xây dựng thành công công cụ tự động hóa bằng Python giao tiếp với PAN-OS XML API trên nền HTTPS bảo mật, trích xuất chính xác cả hai nguồn dữ liệu Running Configuration và Operational Status.
-    \item Tích hợp giải pháp điều phối tự động từ xa với Ansible, cho phép quét kiểm tra và làm cứng cấu hình tự động đồng thời trên toàn bộ cụm tường lửa (Fleet Management).
-    \item Nâng tỷ lệ tuân thủ an ninh của cụm tường lửa từ mức mặc định 36.7\% lên mức 100\% tuyệt đối, đồng thời rút ngắn thời gian đánh giá xuống hàng trăm lần so với thao tác thủ công.
+    \item \textbf{Làm chủ tiêu chuẩn an ninh quốc tế:} Nghiên cứu có hệ thống tài liệu chuẩn \textit{CIS Palo Alto Firewall 11 Benchmark v1.2.0}, phân tích sâu cơ sở an ninh, tác động vận hành và phương pháp kiểm định trên hệ điều hành mạng thế hệ mới PAN-OS 11.2.5.
+    \item \textbf{Xây dựng quy trình đánh giá thực nghiệm hoàn chỉnh:} Xây dựng bộ quy trình rà soát thủ công chi tiết cho 37 CIS Controls trọng yếu bao trùm 8 phân nhóm kiến trúc, đối chứng thực tế trên cả hai phương diện Web GUI và dòng lệnh CLI, lưu trữ đầy đủ hình ảnh minh chứng phục vụ thanh tra an toàn thông tin.
+    \item \textbf{Phát triển công cụ tự động hóa chuyên dụng:} Lập trình thành công hệ thống phần mềm bằng Python giao tiếp với tường lửa qua PAN-OS XML API trên nền kết nối bảo mật HTTPS. Công cụ có khả năng bóc tách đồng thời cả cấu hình tĩnh (\textit{Running Configuration}) lẫn trạng thái vận hành động (\textit{HA Operational State}), tự động xuất báo cáo Dashboard HTML trực quan và tệp dữ liệu máy đọc JSON chuẩn hóa.
+    \item \textbf{Quản trị điều phối hàng loạt từ xa (Fleet Management):} Đóng gói và tích hợp giải pháp với Ansible Playbook, cho phép quản trị viên kích hoạt kiểm tra tuân thủ và làm cứng cấu hình tự động đồng thời trên toàn bộ các thiết bị tường lửa trong cụm dự phòng sẵn sàng cao một cách nhất quán.
+    \item \textbf{Nâng cao vượt bậc mức độ an toàn an ninh mạng:} Nâng tỷ lệ tuân thủ chuẩn CIS của cụm tường lửa từ mức mặc định ban đầu 36.7\% lên mức \textbf{100.00\% tuyệt đối}, đồng thời rút ngắn thời gian đánh giá hệ thống từ gần một giờ xuống chỉ còn vài giây.
 \end{enumerate}
 
 \subsection{Hạn chế của đề tài}
+\noindent Bên cạnh những kết quả đạt được, đề tài vẫn còn tồn tại một số hạn chế khách quan bắt nguồn từ môi trường thử nghiệm:
 \begin{itemize}
-    \item Môi trường lab CMC Cloud hoạt động với chứng chỉ số tự ký (Self-Signed), do đó trong quá trình kiểm thử tự động cần sử dụng tùy chọn tạm thời vô hiệu hóa kiểm tra chuỗi chứng chỉ TLS trong mạng nội bộ cô lập.
-    \item Phạm vi triển khai tập trung vào 30 controls thiết yếu thuộc Profile Level 1 và một phần Level 2, chưa bao quát các tính năng giải mã SSL chuyên sâu do giới hạn license thử nghiệm của thiết bị ảo hóa.
+    \item \textbf{Giới hạn về giấy phép bản quyền dịch vụ đám mây (Cloud Subscriptions):} Do thực nghiệm trên môi trường lab học tập với phiên bản máy ảo Palo Alto VM-Series dùng thử, thiết bị không được trang bị các gói bản quyền dịch vụ thương mại như WildFire, DNS Security, PAN-DB URL Filtering và Advanced Threat Prevention. Do đó, nhóm chưa thể triển khai và kiểm thử thực tế các khuyến nghị CIS thuộc nhóm Security Profiles nâng cao và phân tích mã độc đám mây.
+    \item \textbf{Giới hạn về hạ tầng dịch vụ doanh nghiệp phụ trợ:} Các khuyến nghị định danh người dùng (User-ID) yêu cầu hạ tầng máy chủ Microsoft Active Directory với dịch vụ WMI/Kerberos, trong khi các chính sách giải mã chuyên sâu (SSL Decryption) đòi hỏi hệ thống PKI / Enterprise CA hoàn chỉnh để phân phối chứng chỉ tin cậy đến toàn bộ các máy trạm đầu cuối.
+    \item \textbf{Cơ chế xác thực chứng chỉ TLS trong môi trường Lab:} Vì các tường lửa trong môi trường mạng thực nghiệm CMC Cloud sử dụng chứng chỉ số tự ký (Self-Signed Certificate), công cụ kiểm toán cần sử dụng cờ tạm thời \texttt{--lab-insecure} để vượt qua bước xác minh chuỗi tin cậy TLS trong mạng nội bộ cô lập.
 \end{itemize}
 
 \subsection{Hướng phát triển trong tương lai}
+\noindent Để nâng cao hơn nữa giá trị thực tiễn và khả năng ứng dụng trong các trung tâm dữ liệu và môi trường doanh nghiệp quy mô lớn, đề tài định hướng tiếp tục phát triển theo các mục tiêu sau:
 \begin{enumerate}
-    \item Tích hợp hệ thống với nền tảng quản trị tập trung Palo Alto Panorama để áp dụng tự động các chính sách tuân thủ cho hàng trăm tường lửa phân tán trên quy mô doanh nghiệp lớn.
-    \item Nhúng công cụ kiểm tra tự động vào đường ống DevSecOps (GitLab CI / GitHub Actions) nhằm tự động kiểm toán mỗi khi cấu hình tường lửa dưới dạng mã nguồn (Firewall-as-Code) có sự thay đổi.
-    \item Mở rộng bộ phân tích cú pháp để hỗ trợ thêm các dòng tường lửa của các nhà sản xuất khác như Fortinet FortiGate và Check Point Quantum.
+    \item \textbf{Tích hợp quản trị tập trung với Palo Alto Panorama:} Mở rộng các kịch bản API để tương tác trực tiếp với nền tảng quản trị tập trung Panorama, cho phép áp dụng tự động các khuôn mẫu cấu hình chuẩn hóa (Device Groups và Templates) đến hàng trăm tường lửa phân tán trên phạm vi toàn cầu.
+    \item \textbf{Nhúng vào đường ống DevSecOps (GitLab CI / GitHub Actions):} Xây dựng quy trình tự động hóa kiểm toán an ninh mỗi khi có sự thay đổi cấu hình tường lửa dưới dạng mã nguồn (Firewall-as-Code). Bất kỳ bản cập nhật nào vi phạm ngưỡng an toàn của CIS Benchmark sẽ tự động bị chặn lại trước khi được triển khai lên môi trường Production.
+    \item \textbf{Đồng bộ dữ liệu với các hệ thống giám sát an ninh (SIEM/SOC):} Phát triển bộ chuyển tiếp tự động đưa kết quả kiểm toán định dạng JSON về các nền tảng phân tích an ninh tập trung như Splunk, Elastic SIEM hoặc Wazuh để phục vụ giám sát mức độ tuân thủ liên tục theo thời gian thực.
+    \item \textbf{Cơ chế khôi phục cấu hình tự động (Automated Rollback):} Hoàn thiện thuật toán ghi nhớ trạng thái cấu hình liền trước, tự động kích hoạt tiến trình Revert cấu hình an toàn nếu phát hiện lỗi phát sinh sau phiên Commit.
 \end{enumerate}
 
 
