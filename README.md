@@ -70,6 +70,7 @@ flowchart TD
 
 | Nhóm | Control | Nội dung đánh giá |
 |---|---|---|
+| Device Logging | `1.1.1.1` | Cấu hình Syslog Logging chuyển tiếp nhật ký về SIEM/Bastion |
 | Management Interface | `1.2.2` | Permitted IP Addresses cho Interface Management Profiles |
 | Management Interface | `1.2.3` | Vô hiệu hóa HTTP và Telnet trên Management Interface |
 | Password Security | `1.3.1–1.3.9` | Bật Password Complexity; chiều dài, thành phần và chính sách mật khẩu |
@@ -79,7 +80,10 @@ flowchart TD
 | High Availability | `3.1` | Trạng thái HA peer, configuration/session synchronization |
 | High Availability | `3.2` | Link Monitoring hoặc Path Monitoring |
 | WildFire | `5.1` | Dung lượng tối đa gửi phân tích WildFire |
+| WildFire | `5.2` | Gán WildFire Analysis Profile vào tất cả Security Policies cho phép |
 | WildFire | `5.4` | Bật ghi nhận thông tin phiên WildFire Session Info |
+| Anti-Spyware | `6.3` | Anti-Spyware Profile cấu hình chặn mã độc mức Critical và High |
+| Anti-Spyware | `6.4` | Cấu hình DNS Sinkholing trên Anti-Spyware Profiles |
 | Zone Protection | `6.15` | SYN Flood Protection trên Zone Protection Profile |
 | Zone Protection | `6.16` | UDP/ICMP Flood Protection trên Zone Protection Profile |
 | Zone Protection | `6.17` | Reconnaissance Protection (chống quét cổng) |
@@ -87,7 +91,7 @@ flowchart TD
 | Security Policy | `7.1` | Application phải được chỉ định tường minh (không dùng any) từ Untrust |
 | Security Policy | `7.2` | Service phải được chỉ định tường minh (không dùng any) |
 
-Tổng cộng có **37 control được lựa chọn để triển khai**. Đây là phạm vi nghiên cứu và thử nghiệm của nhóm, **không đại diện cho toàn bộ CIS Benchmark**. Một số trường hợp cần đối chiếu thêm GUI/CLI, trạng thái vận hành hoặc chính sách tổ chức trước khi kết luận.
+Tổng cộng có **41 control được lựa chọn để triển khai**. Đây là phạm vi nghiên cứu và thử nghiệm của nhóm, **không đại diện cho toàn bộ CIS Benchmark**. Một số trường hợp cần đối chiếu thêm GUI/CLI, trạng thái vận hành hoặc chính sách tổ chức trước khi kết luận.
 
 ### Phạm vi Automated Remediation
 
@@ -101,7 +105,7 @@ Hệ thống được thử nghiệm trong môi trường **CMC Cloud**, gồm h
 
 - Chạy thành công **12/12 unit tests** với dữ liệu XML giả lập.
 - Kết nối và xác thực PAN-OS XML API trên **cả hai firewall**.
-- Thu thập Running Configuration và dữ liệu HA; thực hiện quét **37 control/thiết bị**.
+- Thu thập Running Configuration và dữ liệu HA; thực hiện quét **41 control/thiết bị**.
 - Tạo báo cáo **HTML và JSON** cho từng lần quét.
 - Ghi nhận đúng các trường hợp `PASS`, `FAIL`, `REVIEW`; một số kiểm tra HA chưa đạt vì lab tại thời điểm đó chưa bật HA.
 
@@ -149,13 +153,12 @@ CIS-PaloAlto-Auditor/
 
 - [Triển khai và vận hành](docs/DEPLOYMENT.md)
 - [Kiến trúc chi tiết](docs/ARCHITECTURE.md)
-- [Kịch bản demo](docs/DEMO_KICH_BAN.md)
 - [Kế hoạch kiểm thử](docs/TEST_PLAN.csv)
 - [Danh sách kiểm tra thủ công](docs/MANUAL_CHECKLIST.csv)
 
 ## 9. Giới hạn và định hướng phát triển
 
-Dự án là **prototype phục vụ nghiên cứu, học tập và kiểm chứng trên lab**. Các giới hạn quan trọng gồm: mới bao phủ 37 control, một số thiết lập mặc định hoặc dữ liệu HA cần xác minh thêm, chưa có rollback tự động khi Commit thất bại và chưa kiểm thử đầy đủ mọi trạng thái PAN-OS/HA. Chương trình không thay thế quy trình change management hoặc phê duyệt thay đổi cấu hình của doanh nghiệp.
+Dự án là **prototype phục vụ nghiên cứu, học tập và kiểm chứng trên lab**. Các giới hạn quan trọng gồm: mới bao phủ 41 control, một số thiết lập mặc định hoặc dữ liệu HA cần xác minh thêm, chưa có rollback tự động khi Commit thất bại và chưa kiểm thử đầy đủ mọi trạng thái PAN-OS/HA. Chương trình không thay thế quy trình change management hoặc phê duyệt thay đổi cấu hình của doanh nghiệp.
 
 Các hướng mở rộng tiếp theo:
 

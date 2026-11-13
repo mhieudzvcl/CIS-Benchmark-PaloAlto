@@ -239,15 +239,34 @@ class CISScanner:
                           "Configuration check only; actual NTP reachability not verified")
 
     def check_syslog_configured(self, rule):
-        syslog_entries = self.config.xpath(".//shared/log-settings/syslog/entry")
-        system_syslog = self.device.xpath("./deviceconfig/system/syslog-server/entry")
-        total = len(syslog_entries) + len(system_syslog)
-        evidence = "shared/log-settings/syslog"
-        if total > 0:
-            return self.make(rule, "At least one Syslog server profile configured",
-                             f"{total} profile(s)", "PASS", evidence)
-        return self.make(rule, "At least one Syslog server profile configured",
-                         "None", "FAIL", evidence, "No external syslog logging server configured")
+        evidence = "server-profile/syslog or log-settings/system"
+        profiles = (
+            self.config.xpath(".//server-profile/syslog/entry") or
+            self.config.xpath(".//shared/server-profile/syslog/entry") or
+            self.config.xpath(".//shared/log-settings/syslog/entry") or
+            self.device.xpath(".//deviceconfig/system/syslog-server/entry") or
+            self.device.xpath(".//deviceconfig/system/server-profile/syslog/entry") or
+            self.config.xpath(".//log-settings/syslog/entry")
+        )
+        log_forwarding = (
+            self.config.xpath(".//log-settings/system/match-list/entry[send-syslog]") or
+            self.config.xpath(".//log-settings/system/entry[send-syslog]") or
+            self.config.xpath(".//shared/log-settings/system/match-list/entry[send-syslog]") or
+            self.device.xpath(".//deviceconfig/system/log-settings/system/match-list/entry[send-syslog]")
+        )
+        total_profiles = len(profiles)
+        if total_profiles > 0 and log_forwarding:
+            pnames = [p.get("name", "unknown") for p in profiles]
+            return self.make(rule, "Syslog logging configured and forwarded in Log Settings",
+                             f"{total_profiles} profile(s) ({', '.join(pnames)}); forwarded in Log Settings",
+                             "PASS", evidence)
+        elif total_profiles > 0:
+            pnames = [p.get("name", "unknown") for p in profiles]
+            return self.make(rule, "Syslog logging configured",
+                             f"{total_profiles} profile(s) ({', '.join(pnames)})",
+                             "PASS", evidence)
+        return self.make(rule, "Syslog logging configured", "None", "FAIL", evidence,
+                         "No external syslog server profile or log forwarding configured")
 
     def check_ha_sync(self, rule):
         group = self.device.find("./deviceconfig/high-availability/group")
@@ -607,3 +626,117 @@ class CISScanner:
                              "Specify explicit applications instead of 'any' for allow rules from untrusted zone")
         return self.make(rule, "No rule allows application ANY from untrust",
                          "All untrust allow rules specify explicit applications", "PASS", evidence)
+
+    def check_wildfire_security_policies(self, rule):
+        evidence = "vsys/entry/rulebase/security/rules"
+        rules = (
+            self.config.xpath(".//vsys/entry/rulebase/security/rules/entry") or
+            self.config.xpath(".//rulebase/security/rules/entry")
+        )
+        if not rules:
+            return self.make(rule, "WildFire profile enabled for all security policies", "No security rules", "PASS", evidence)
+
+        allow_rules = []
+        missing_wf = []
+        for r in rules:
+            rname = r.get("name", "unknown")
+            action = (self.text(r, "./action/text()") or "allow").lower()
+            if action == "allow":
+                allow_rules.append(rname)
+                wf_profile = (
+                    r.xpath("./profile-setting/profiles/wildfire-analysis/member/text()") or
+                    r.xpath("./profile-setting/profiles/wildfire-analysis/text()") or
+                    r.xpath("./profile-setting/group/member/text()") or
+                    r.xpath("./profile-setting/group/text()")
+                )
+                if not wf_profile:
+                    missing_wf.append(rname)
+
+        if not allow_rules:
+            return self.make(rule, "WildFire profile enabled for all security policies", "No allow rules", "PASS", evidence)
+        if missing_wf:
+            return self.make(rule, "WildFire profile enabled for all allow security rules",
+                             f"Rules missing WildFire: {', '.join(missing_wf)}", "FAIL", evidence,
+                             "Enable WildFire Analysis profile on all security policies with action 'allow'")
+        return self.make(rule, "WildFire profile enabled for all allow security rules",
+                         f"All {len(allow_rules)} allow rule(s) have WildFire enabled", "PASS", evidence)
+
+    def check_antispyware_profile_blocking(self, rule):
+        evidence = "profiles/spyware/entry"
+        profiles = (
+            self.config.xpath(".//shared/profiles/spyware/entry") or
+            self.config.xpath(".//profiles/spyware/entry") or
+            self.config.xpath(".//vsys/entry/profiles/spyware/entry")
+        )
+        if not profiles:
+            strict_used = self.config.xpath(".//profile-setting//spyware/member[text()='strict']")
+            if strict_used:
+                return self.make(rule, "Anti-Spyware profile blocks critical/high severity",
+                                 "Predefined 'strict' profile applied", "PASS", evidence)
+            return self.make(rule, "Anti-Spyware profile blocks critical/high severity",
+                             "No custom Anti-Spyware profiles found", "FAIL", evidence,
+                             "Configure an Anti-Spyware profile to reset/drop critical and high severity spyware")
+
+        compliant_profiles = []
+        for p in profiles:
+            pname = p.get("name", "unknown")
+            rules = p.xpath("./rules/entry")
+            if not rules:
+                compliant_profiles.append(pname)
+                continue
+            has_blocking = False
+            for r in rules:
+                severities = [s.lower() for s in r.xpath("./severity/member/text()")]
+                action_nodes = r.xpath("./action/*")
+                action_name = action_nodes[0].tag.lower() if action_nodes else ""
+                if ("critical" in severities or "high" in severities or "any" in severities) and action_name in (
+                    "reset-both", "reset-client", "reset-server", "drop", "block"
+                ):
+                    has_blocking = True
+                    break
+            if has_blocking:
+                compliant_profiles.append(pname)
+
+        if compliant_profiles:
+            return self.make(rule, "Anti-Spyware profile blocks critical/high severity",
+                             f"Compliant profile(s): {', '.join(compliant_profiles)}", "PASS", evidence)
+        return self.make(rule, "Anti-Spyware profile blocks critical/high severity",
+                         f"Profiles ({len(profiles)}) lack critical/high blocking", "FAIL", evidence,
+                         "Set action to reset-both or drop for critical and high severity spyware")
+
+    def check_antispyware_dns_sinkholing(self, rule):
+        evidence = "profiles/spyware/entry/botnet-domains/sinkhole"
+        profiles = (
+            self.config.xpath(".//shared/profiles/spyware/entry") or
+            self.config.xpath(".//profiles/spyware/entry") or
+            self.config.xpath(".//vsys/entry/profiles/spyware/entry")
+        )
+        if not profiles:
+            return self.make(rule, "DNS sinkholing configured on anti-spyware profiles",
+                             "No Anti-Spyware profiles found", "FAIL", evidence,
+                             "Configure DNS sinkholing on Anti-Spyware profiles")
+
+        sinkhole_profiles = []
+        for p in profiles:
+            pname = p.get("name", "unknown")
+            botnet = p.find("./botnet-domains")
+            if botnet is not None:
+                has_sinkhole_action = (
+                    botnet.xpath(".//action/sinkhole") or
+                    botnet.xpath(".//sinkhole")
+                )
+                ipv4 = (
+                    self.text(botnet, ".//sinkhole/ipv4-address/text()") or
+                    self.text(p, ".//sinkhole/ipv4-address/text()") or
+                    self.text(botnet, ".//ipv4-address/text()")
+                )
+                if has_sinkhole_action or ipv4:
+                    ip_str = ipv4 if ipv4 else "sinkhole active"
+                    sinkhole_profiles.append(f"{pname} ({ip_str})")
+
+        if sinkhole_profiles:
+            return self.make(rule, "DNS sinkholing configured on anti-spyware profiles",
+                             f"Sinkhole configured: {', '.join(sinkhole_profiles)}", "PASS", evidence)
+        return self.make(rule, "DNS sinkholing configured on anti-spyware profiles",
+                         "DNS sinkholing not enabled on profiles", "FAIL", evidence,
+                         "Set DNS policy action to sinkhole and configure sinkhole IPv4 address")

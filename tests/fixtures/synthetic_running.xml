@@ -11,6 +11,60 @@
     <new-password-differs-by-characters>3</new-password-differs-by-characters>
     <password-history-count>24</password-history-count>
   </password-complexity></mgt-config>
+  <shared>
+    <server-profile>
+      <syslog>
+        <entry name="Syslog-Audit-Server">
+          <server>
+            <entry name="Linux-Bastion-Syslog">
+              <server>10.0.10.20</server>
+              <transport>UDP</transport>
+              <port>514</port>
+              <format>BSD</format>
+              <facility>LOG_USER</facility>
+            </entry>
+          </server>
+        </entry>
+      </syslog>
+    </server-profile>
+    <log-settings>
+      <system>
+        <match-list>
+          <entry name="Forward-System-Logs">
+            <send-syslog>
+              <member>Syslog-Audit-Server</member>
+            </send-syslog>
+          </entry>
+        </match-list>
+      </system>
+    </log-settings>
+    <profiles>
+      <spyware>
+        <entry name="AS-CIS-Profile">
+          <botnet-domains>
+            <lists>
+              <entry name="default-paloalto-dns">
+                <action><sinkhole/></action>
+              </entry>
+            </lists>
+            <sinkhole>
+              <ipv4-address>pan-sinkhole-default.paloaltonetworks.com</ipv4-address>
+              <ipv6-address>::1</ipv6-address>
+            </sinkhole>
+          </botnet-domains>
+          <rules>
+            <entry name="block-critical-high">
+              <severity>
+                <member>critical</member>
+                <member>high</member>
+              </severity>
+              <action><reset-both/></action>
+            </entry>
+          </rules>
+        </entry>
+      </spyware>
+    </profiles>
+  </shared>
   <devices><entry name="localhost.localdomain"><deviceconfig>
     <system>
       <login-banner>Authorized Access Only</login-banner>
@@ -50,6 +104,21 @@
       <zone><entry name="untrust"><network><zone-protection-profile>ZP-Untrust-Protection</zone-protection-profile></network></entry></zone>
       <rulebase><security><rules>
         <entry name="Block-Malicious-Threats"><action>deny</action><from><member>untrust</member></from><to><member>any</member></to><source><member>any</member></source><destination><member>any</member></destination><service><member>any</member></service></entry>
+        <entry name="allow-trust-to-untrust">
+          <action>allow</action>
+          <from><member>trust</member></from>
+          <to><member>untrust</member></to>
+          <source><member>any</member></source>
+          <destination><member>any</member></destination>
+          <application><member>web-browsing</member></application>
+          <service><member>application-default</member></service>
+          <profile-setting>
+            <profiles>
+              <wildfire-analysis><member>default</member></wildfire-analysis>
+              <spyware><member>AS-CIS-Profile</member></spyware>
+            </profiles>
+          </profile-setting>
+        </entry>
       </rules></security></rulebase>
     </entry></vsys>
   </deviceconfig></entry></devices>

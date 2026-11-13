@@ -137,3 +137,15 @@ controls:
   - id: '7.1'
     title: 'Security rules do not allow application ANY from untrusted zone'
     type: security_application_any
+  - id: '1.1.1.1'
+    title: 'Syslog logging should be configured'
+    type: syslog_configured
+  - id: '5.2'
+    title: 'Ensure a WildFire Analysis profile is enabled for all security policies'
+    type: wildfire_security_policies
+  - id: '6.3'
+    title: 'Ensure an anti-spyware profile is configured to block on critical/high severity'
+    type: antispyware_profile_blocking
+  - id: '6.4'
+    title: 'Ensure DNS sinkholing is configured on all anti-spyware profiles in use'
+    type: antispyware_dns_sinkholing

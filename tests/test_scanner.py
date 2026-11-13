@@ -94,7 +94,7 @@ def test_safe_report_files(tmp_path):
     a, b = save(report, tmp_path)
     assert a.exists() and b.exists()
     assert "CIS Palo Alto Auditor" in b.read_text()
-    assert report["summary"]["total"] == 37
+    assert report["summary"]["total"] == 41
 
 
 def test_candidate_guard_design():
