@@ -20,10 +20,10 @@ def status_map(config=None, ha=None):
     return {r["id"]: r for r in rows}
 
 
-def test_30_controls():
+def test_all_controls():
     rows = status_map()
-    assert len(rows) == 30
-    for cid in ("1.1.3", "1.2.3", "1.3.1", "1.3.2", "1.3.3", "1.3.4", "1.3.5", "1.3.6", "1.3.7", "1.3.8", "1.3.9", "1.3.10", "1.4.1", "3.2", "3.3", "6.15", "6.18", "7.3"):
+    assert len(rows) == 37
+    for cid in ("1.1.3", "1.2.2", "1.2.3", "1.3.1", "1.3.2", "1.3.3", "1.3.4", "1.3.5", "1.3.6", "1.3.7", "1.3.8", "1.3.9", "1.3.10", "1.4.1", "2.3", "3.2", "3.3", "5.1", "5.4", "6.15", "6.16", "6.17", "6.18", "7.1", "7.3"):
         assert rows[cid]["status"] == "PASS", cid
     assert rows["3.1"]["status"] == "REVIEW"     # no HA operational evidence
 

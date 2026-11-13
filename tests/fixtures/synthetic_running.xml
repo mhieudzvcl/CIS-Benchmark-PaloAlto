@@ -36,6 +36,11 @@
     </group></high-availability>
     <network><profiles><zone-protection-profile><entry name="ZP-Untrust-Protection">
       <flood><tcp-syn><enable>yes</enable><action><syn-cookies/></action></tcp-syn></flood>
+      <scan>
+        <entry name="tcp-port-scan"><action><block/></action></entry>
+        <entry name="udp-port-scan"><action><block/></action></entry>
+        <entry name="host-sweep"><action><block/></action></entry>
+      </scan>
       <packet-based-attack-protection>
         <ip-drop><drop-spoofed-ip-address>yes</drop-spoofed-ip-address></ip-drop>
         <tcp-drop><drop-mismatched-overlapping-tcp-segment>yes</drop-mismatched-overlapping-tcp-segment></tcp-drop>

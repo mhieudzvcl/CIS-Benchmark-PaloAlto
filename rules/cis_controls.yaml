@@ -116,3 +116,24 @@ controls:
   - id: '7.4'
     title: 'Default security rules log at session end'
     type: default_rule_logging
+  - id: '1.2.2'
+    title: 'Ensure Permitted IP Addresses is set for all management profiles where SSH, HTTPS, or SNMP is enabled'
+    type: interface_mgmt_profile_permitted_ip
+  - id: '2.3'
+    title: 'Ensure User-ID is only enabled for internal trusted interfaces'
+    type: user_id_trusted_only
+  - id: '5.1'
+    title: 'Ensure WildFire file size upload limits are maximized'
+    type: wildfire_max_file_size
+  - id: '5.4'
+    title: 'Ensure all WildFire session information settings are enabled'
+    type: wildfire_session_info
+  - id: '6.16'
+    title: 'Zone Protection Profile enables Flood Protection for all flood types'
+    type: zone_protection_flood_all
+  - id: '6.17'
+    title: 'Zone Protection Profile enables Reconnaissance Protection'
+    type: zone_protection_reconnaissance
+  - id: '7.1'
+    title: 'Security rules do not allow application ANY from untrusted zone'
+    type: security_application_any

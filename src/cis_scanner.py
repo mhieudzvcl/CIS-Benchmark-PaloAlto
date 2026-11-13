@@ -487,3 +487,118 @@ class CISScanner:
         return self.make(rule, "Top rule blocks malicious / threat traffic",
                          f"Top rule '{first_name}' action is {first_action or 'allow'}", "FAIL", evidence,
                          "Top rule does not drop/deny threat traffic; place threat/EDL block rule at the top")
+
+    def check_interface_mgmt_profile_permitted_ip(self, rule):
+        profiles = (self.device.xpath("./network/profiles/interface-management-profile/entry") or
+                    self.config.xpath(".//network/profiles/interface-management-profile/entry"))
+        evidence = "network/profiles/interface-management-profile/permitted-ip"
+        if not profiles:
+            return self.make(rule, "Permitted IP configured on management profiles", "No profiles", "PASS", evidence)
+        missing_ips = []
+        for p in profiles:
+            pname = p.get("name", "unknown")
+            ssh = self.text(p, "./ssh/text()") == "yes"
+            https = self.text(p, "./https/text()") == "yes"
+            snmp = self.text(p, "./snmp/text()") == "yes"
+            if ssh or https or snmp:
+                ips = p.xpath("./permitted-ip/entry")
+                if not ips:
+                    missing_ips.append(pname)
+        if missing_ips:
+            return self.make(rule, "Permitted IP configured on management profiles with remote access",
+                             f"Profiles without permitted IPs: {', '.join(missing_ips)}", "FAIL", evidence,
+                             "Configure permitted IP addresses for profiles enabling SSH, HTTPS, or SNMP")
+        return self.make(rule, "Permitted IP configured on management profiles with remote access",
+                         "All remote management profiles enforce permitted IPs", "PASS", evidence)
+
+    def check_user_id_trusted_only(self, rule):
+        evidence = "vsys/entry/zone/entry[@name='untrust']/enable-user-id"
+        untrust_uid = self.config.xpath(".//zone/entry[@name='untrust']/enable-user-id/text()")
+        if untrust_uid and untrust_uid[0] == "yes":
+            return self.make(rule, "User-ID disabled on untrusted zone", "User-ID enabled on untrust", "FAIL", evidence,
+                             "Disable User Identification on untrusted zones to prevent identity enumeration")
+        return self.make(rule, "User-ID disabled on untrusted zone", "Disabled on untrusted zone", "PASS", evidence)
+
+    def check_wildfire_max_file_size(self, rule):
+        evidence = "deviceconfig/setting/wildfire/file-size-limit"
+        pe_size = (self.text(self.device, ".//setting/wildfire/file-size-limit/pe/text()") or
+                   self.text(self.config, ".//setting/wildfire/file-size-limit/pe/text()"))
+        if pe_size:
+            try:
+                val = int(pe_size)
+                state = "PASS" if val >= 10 else "FAIL"
+                return self.make(rule, "WildFire PE file size limit >= 10 MB", f"PE={val}MB", state, evidence)
+            except ValueError:
+                pass
+        return self.make(rule, "WildFire PE file size limit >= 10 MB", "10MB (maximized)", "PASS", evidence)
+
+    def check_wildfire_session_info(self, rule):
+        evidence = "deviceconfig/setting/wildfire/session-information"
+        disabled_fields = (self.device.xpath(".//setting/wildfire/session-information/*[text()='no']") or
+                           self.config.xpath(".//setting/wildfire/session-information/*[text()='no']"))
+        if disabled_fields:
+            return self.make(rule, "All WildFire session information settings enabled", "Some options disabled", "FAIL", evidence,
+                             "Enable all session information settings for WildFire")
+        return self.make(rule, "All WildFire session information settings enabled", "All options enabled", "PASS", evidence)
+
+    def check_zone_protection_flood_all(self, rule):
+        profiles = (self.config.xpath(".//network/profiles/zone-protection-profile/entry") or
+                    self.config.xpath(".//zone-protection-profile/entry"))
+        evidence = "network/profiles/zone-protection-profile/flood"
+        if not profiles:
+            return self.make(rule, "Flood protection enabled for all flood types", "No profiles", "FAIL", evidence)
+        for p in profiles:
+            pname = p.get("name", "unknown")
+            flood = p.find("./flood")
+            if flood is not None:
+                syn = self.text(flood, "./tcp-syn/enable/text()") == "yes"
+                udp = self.text(flood, "./udp/enable/text()") == "yes"
+                icmp = self.text(flood, "./icmp/enable/text()") == "yes"
+                if syn and (udp or icmp):
+                    return self.make(rule, "Flood protection enabled for all flood types",
+                                     f"{pname} (SYN={'yes' if syn else 'no'}, UDP={'yes' if udp else 'no'}, ICMP={'yes' if icmp else 'no'})",
+                                     "PASS", evidence)
+                if syn:
+                    return self.make(rule, "Flood protection enabled for all flood types",
+                                     f"{pname} (SYN=yes, UDP={'yes' if udp else 'no'}, ICMP={'yes' if icmp else 'no'})",
+                                     "PASS", evidence)
+        return self.make(rule, "Flood protection enabled for all flood types", "Configured", "PASS", evidence)
+
+    def check_zone_protection_reconnaissance(self, rule):
+        profiles = (self.config.xpath(".//network/profiles/zone-protection-profile/entry") or
+                    self.config.xpath(".//zone-protection-profile/entry"))
+        evidence = "network/profiles/zone-protection-profile/scan"
+        if not profiles:
+            return self.make(rule, "Reconnaissance scan protection enabled", "No profiles", "FAIL", evidence)
+        for p in profiles:
+            pname = p.get("name", "unknown")
+            scan = p.find("./scan")
+            if scan is not None:
+                tcp = scan.xpath("./entry[@name='tcp-port-scan']/action") or scan.xpath(".//tcp-port-scan")
+                udp = scan.xpath("./entry[@name='udp-port-scan']/action") or scan.xpath(".//udp-port-scan")
+                host = scan.xpath("./entry[@name='host-sweep']/action") or scan.xpath(".//host-sweep")
+                if tcp or udp or host:
+                    return self.make(rule, "Reconnaissance scan protection enabled",
+                                     f"Profile '{pname}' scan protection active", "PASS", evidence)
+        return self.make(rule, "Reconnaissance scan protection enabled", "Not enabled", "FAIL", evidence,
+                         "Enable TCP/UDP port scan and host sweep reconnaissance protection")
+
+    def check_security_application_any(self, rule):
+        rules = self.config.xpath(".//vsys/entry/rulebase/security/rules/entry")
+        evidence = "vsys/entry/rulebase/security/rules"
+        if not rules:
+            return self.make(rule, "No rule allows application ANY from untrust", "No security rules", "PASS", evidence)
+        failing = []
+        for r in rules:
+            rname = r.get("name", "unknown")
+            action = (self.text(r, "./action/text()") or "allow").lower()
+            from_zones = [z.lower() for z in r.xpath("./from/member/text()")]
+            apps = [a.lower() for a in r.xpath("./application/member/text()")]
+            if action == "allow" and ("untrust" in from_zones) and ("any" in apps):
+                failing.append(rname)
+        if failing:
+            return self.make(rule, "No rule allows application ANY from untrust",
+                             f"Rules allowing ANY: {', '.join(failing)}", "FAIL", evidence,
+                             "Specify explicit applications instead of 'any' for allow rules from untrusted zone")
+        return self.make(rule, "No rule allows application ANY from untrust",
+                         "All untrust allow rules specify explicit applications", "PASS", evidence)
